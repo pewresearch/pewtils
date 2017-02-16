@@ -1,0 +1,334 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pewtils.http &#8212; pewtils 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pewtils.http</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">threading</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">uniform</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span>
+
+
+<div class="viewcode-block" id="hash_url"><a class="viewcode-back" href="../../index.html#pewtils.http.hash_url">[docs]</a><span class="k">def</span> <span class="nf">hash_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Clears out http/https prefix and returns an MD5 hash of the URL</span>
+
+<span class="sd">    :param url: string of the url</span>
+<span class="sd">    :return: hashed string</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">http_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^http(s)?\:\/\/&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_hash</span><span class="p">(</span><span class="n">unidecode</span><span class="p">(</span><span class="n">http_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">lower</span><span class="p">())),</span> <span class="n">hash_function</span><span class="o">=</span><span class="s2">&quot;md5&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="newtime"><a class="viewcode-back" href="../../index.html#pewtils.http.newtime">[docs]</a><span class="k">def</span> <span class="nf">newtime</span><span class="p">(</span><span class="n">attempt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">baseInterval</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">maxSleep</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generate a variable waiting time in seconds which exponentially increases with each attempt. Note that this function does NOT itself sleep or block execution, it just adds newtime to your timer.</span>
+<span class="sd">    :param attempt: Increasing attempt will probably raise the sleep interval.</span>
+<span class="sd">    :param baseInterval: The minimum time. Must be greater than zero.</span>
+<span class="sd">    :param maxSleep: The maximum amount of time allowed.</span>
+<span class="sd">    :return: Seconds to sleep</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">maxSleep</span><span class="p">,</span> <span class="n">baseInterval</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">))</span></div>
+
+
+<span class="c1">### NEEDS MORE REVIEW (WHERE IS THIS USED?)</span>
+<span class="c1">#should be released because is garbage and useless</span>
+<div class="viewcode-block" id="rate_limiter"><a class="viewcode-back" href="../../index.html#pewtils.http.rate_limiter">[docs]</a><span class="k">def</span> <span class="nf">rate_limiter</span><span class="p">(</span><span class="n">interval</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">max_rate</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">x_rate</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param interval:</span>
+<span class="sd">    :param max_rate:</span>
+<span class="sd">    :param x_rate:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">timeLeft</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_rate</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">rate_limited_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">callCount</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">callCount</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;callCount&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">resetTime</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">resetTime</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;resetTime&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">x_rate</span> <span class="k">else</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">left_to_wait</span> <span class="o">=</span> <span class="n">timeLeft</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">resetTime</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">left_to_wait</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="n">callCount</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sleeping </span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left_to_wait</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">left_to_wait</span><span class="p">)</span>
+
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">x_rate</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="s1">&#39;headers&#39;</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="s1">&#39;x-rate-limit-remaining&#39;</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">headers</span> \
+                <span class="ow">and</span> <span class="s1">&#39;x-rate-limit-reset&#39;</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">headers</span> \
+                <span class="ow">and</span> <span class="s1">&#39;x-rate-limit-limit&#39;</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">func</span><span class="o">.</span><span class="n">resetTime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;x-rate-limit-reset&#39;</span><span class="p">])</span>
+                        <span class="n">func</span><span class="o">.</span><span class="n">callCount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;x-rate-limit-remaining&#39;</span><span class="p">])</span>
+                        <span class="n">func</span><span class="o">.</span><span class="n">callCountMax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;x-rate-limit-limit&#39;</span><span class="p">])</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calls Remaining: </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">callCount</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">callCountMax</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Resets at: </span><span class="si">{}</span><span class="s2"> (Time left: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span>
+                                <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">resetTime</span><span class="p">)),</span> <span class="n">left_to_wait</span><span class="p">))</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">func</span><span class="o">.</span><span class="n">resetTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">return</span> <span class="n">rate_limited_function</span>
+
+    <span class="k">return</span> <span class="n">decorate</span></div>
+
+
+
+<div class="viewcode-block" id="strip_html"><a class="viewcode-back" href="../../index.html#pewtils.http.strip_html">[docs]</a><span class="k">def</span> <span class="nf">strip_html</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses Django&#39;s built-in strip_tags utility to intelligently remove HTML tags from a string</span>
+<span class="sd">    :param text: String to filter</span>
+<span class="sd">    :return: String with HTML tags removed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># For now, I&#39;m removing anything encapsulated by &lt;/&gt;, but we may eventually want to restrict it to tags only</span>
+    <span class="c1"># html_tags = [&quot;a&quot;, &quot;img&quot;, &quot;table&quot;, &quot;tr&quot;, &quot;td&quot;, &quot;p&quot;, &quot;b&quot;, &quot;u&quot;, &quot;i&quot;, &quot;em&quot;, &quot;strong&quot;, &quot;span&quot;]</span>
+    <span class="c1"># modified to use Django&#39;s built-in strip_tags utility (which is more intelligent)</span>
+    <span class="c1"># modified to use BeautifulSoup, which is even better</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">break_tags</span><span class="p">:</span>
+        <span class="n">break_tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">simple</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="n">split_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s{2,}&#39;</span><span class="p">)</span>
+            <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;menu&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;header&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]):</span>
+                    <span class="n">tag</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="s2">&quot;menu&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;header&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+                    <span class="n">tag</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">([</span><span class="s2">&quot;script&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">]):</span>
+                <span class="n">tag</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
+                <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">(</span><span class="n">break_tags</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">t</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">UnicodeEncodeError</span><span class="p">):</span>
+                    <span class="n">t</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">decode_text</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l2</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">for</span> <span class="n">l2</span> <span class="ow">in</span> <span class="n">split_re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span><span class="p">])</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\sA){2,}\s&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">+(\s+)?&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; +&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">text</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;strip_html error&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&lt;[^&gt;]*&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+                          <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+                          <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">text</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\&lt;[^\&gt;]+\&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">section</span><span class="p">))</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\&lt;\/?div\&gt;|\&lt;\/?p\&gt;|\&lt;br\&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="p">])</span></div>
+
+
+<span class="c1">### RELEASE</span>
+<span class="n">LINK_SHORTENER_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wapo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nyti.ms&quot;</span><span class="p">:</span> <span class="s2">&quot;nytimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fxn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;foxnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wh.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;whitehouse.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;goo.gl&quot;</span><span class="p">:</span> <span class="s2">&quot;google.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huff.to&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n.pr&quot;</span><span class="p">:</span> <span class="s2">&quot;npr.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;apne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;apnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ap.org&quot;</span><span class="p">:</span> <span class="s2">&quot;apnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;youtu.be&quot;</span><span class="p">:</span> <span class="s2">&quot;youtube.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;washex.am&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonexaminer.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wpo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;usat.ly&quot;</span><span class="p">:</span> <span class="s2">&quot;usatoday.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cbsloc.al&quot;</span><span class="p">:</span> <span class="s2">&quot;cbslocal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cbsn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;cbsnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bloom.bg&quot;</span><span class="p">:</span> <span class="s2">&quot;bloomberg.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;abcn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;abcnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;reut.rs&quot;</span><span class="p">:</span> <span class="s2">&quot;reuters.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ti.me&quot;</span><span class="p">:</span> <span class="s2">&quot;time.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;politi.co&quot;</span><span class="p">:</span> <span class="s2">&quot;politico.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnn.it&quot;</span><span class="p">:</span> <span class="s2">&quot;cnn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cs.pn&quot;</span><span class="p">:</span> <span class="s2">&quot;c-span.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;t.co&quot;</span><span class="p">:</span> <span class="s2">&quot;twitter.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bzfd.it&quot;</span><span class="p">:</span> <span class="s2">&quot;buzzfeed.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;c-spanvideo.org&quot;</span><span class="p">:</span> <span class="s2">&quot;c-span.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lat.ms&quot;</span><span class="p">:</span> <span class="s2">&quot;latimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nbcnews.to&quot;</span><span class="p">:</span> <span class="s2">&quot;nbcnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onforb.es&quot;</span><span class="p">:</span> <span class="s2">&quot;forbes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;theatln.tc&quot;</span><span class="p">:</span> <span class="s2">&quot;theatlantic.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yhoo.it&quot;</span><span class="p">:</span> <span class="s2">&quot;yahoo.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sen.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;senate.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;es.pn&quot;</span><span class="p">:</span> <span class="s2">&quot;espn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dot.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;transportation.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wrd.cm&quot;</span><span class="p">:</span> <span class="s2">&quot;wired.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cour.at&quot;</span><span class="p">:</span> <span class="s2">&quot;courant.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;read.bi&quot;</span><span class="p">:</span> <span class="s2">&quot;businessinsider.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dailysign.al&quot;</span><span class="p">:</span> <span class="s2">&quot;dailysignal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnnmon.ie&quot;</span><span class="p">:</span> <span class="s2">&quot;cnn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnb.cx&quot;</span><span class="p">:</span> <span class="s2">&quot;cnbc.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;atxne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;statesman.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slate.me&quot;</span><span class="p">:</span> <span class="s2">&quot;slate.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;detroitnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huffpost.com&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;injo.com&quot;</span><span class="p">:</span> <span class="s2">&quot;ijr.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fb.me&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;amzn.to&quot;</span><span class="p">:</span> <span class="s2">&quot;amazon.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fb.com&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lnkd.in&quot;</span><span class="p">:</span> <span class="s2">&quot;linkedin.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mailchi.mp&quot;</span><span class="p">:</span> <span class="s2">&quot;mailchimp.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hrld.us&quot;</span><span class="p">:</span> <span class="s2">&quot;miamiherald.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;oh.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.oh.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ofa.bo&quot;</span><span class="p">:</span> <span class="s2">&quot;ofa.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;indy.st&quot;</span><span class="p">:</span> <span class="s2">&quot;indystar.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;strib.mn&quot;</span><span class="p">:</span> <span class="s2">&quot;startribune.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nydn.us&quot;</span><span class="p">:</span> <span class="s2">&quot;nydailynews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bsun.md&quot;</span><span class="p">:</span> <span class="s2">&quot;baltimoresun.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bayareane.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;eastbaytimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pa.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.pa.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;g.co&quot;</span><span class="p">:</span> <span class="s2">&quot;google.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mn.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.mn.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thebea.st&quot;</span><span class="p">:</span> <span class="s2">&quot;thedailybeast.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dmreg.co&quot;</span><span class="p">:</span> <span class="s2">&quot;desmoinesregister.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bernie.to&quot;</span><span class="p">:</span> <span class="s2">&quot;berniesanders.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dpo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;denverpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;delonline.us&quot;</span><span class="p">:</span> <span class="s2">&quot;delawareonline.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fb.me&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;azc.cc&quot;</span><span class="p">:</span> <span class="s2">&quot;azcentral.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ptrtvoic.es&quot;</span><span class="p">:</span> <span class="s2">&quot;patriotvoices.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cjky.it&quot;</span><span class="p">:</span> <span class="s2">&quot;courier-journal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;md.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.md.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;goldenisles.news&quot;</span><span class="p">:</span> <span class="s2">&quot;thebrunswicknews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ohne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;newarkadvocate.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thkpr.gs&quot;</span><span class="p">:</span> <span class="s2">&quot;thinkprogress.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hrld.us&quot;</span><span class="p">:</span> <span class="s2">&quot;miamiherald.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ma.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.ma.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ny.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.ny.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nm.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.nm.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huffpost.com&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">pewtils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, pew research center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

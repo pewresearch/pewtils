@@ -1,0 +1,334 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pewtils.io &#8212; pewtils 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pewtils.io</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="k">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+
+<span class="kn">from</span> <span class="nn">scandir</span> <span class="k">import</span> <span class="n">scandir</span>
+<span class="k">try</span><span class="p">:</span> <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="k">except</span><span class="p">:</span> <span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="c1"># TODO: make this compatible for both 2 and 3</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">closing</span>
+<span class="kn">from</span> <span class="nn">boto.s3.key</span> <span class="k">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">boto.s3.connection</span> <span class="k">import</span> <span class="n">S3Connection</span><span class="p">,</span> <span class="n">OrdinaryCallingFormat</span>
+
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">is_not_null</span>
+
+
+<div class="viewcode-block" id="FileHandler"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler">[docs]</a><span class="k">class</span> <span class="nc">FileHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3.</span>
+<span class="sd">    :param path: The path to the folder (or S3 bucket) that you&#39;ll be writing to or reading from</span>
+<span class="sd">    :param use_s3: Whether the path is an S3 location or local location \</span>
+<span class="sd">    (if bucket is not None, it assumes it&#39;s an S3 path, otherwise it&#39;ll default to local)</span>
+<span class="sd">    :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</span>
+<span class="sd">    :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</span>
+<span class="sd">    :param bucket: The name of the S3 bucket; required to use S3, obvs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">use_s3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aws_access</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aws_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bucket</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">aws_access</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">aws_access</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">aws_secret</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">aws_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bucket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">bucket</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;S3_BUCKET&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span> <span class="o">=</span> <span class="n">use_s3</span> <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">s3_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+                <span class="k">if</span> <span class="n">aws_access</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># s3_params[&#39;aws_access&#39;] = aws_access</span>
+                    <span class="c1"># s3_params[&#39;aws_secret&#39;] = aws_secret</span>
+                    <span class="n">s3_params</span><span class="p">[</span><span class="s1">&#39;aws_access_key_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aws_access</span>
+                    <span class="n">s3_params</span><span class="p">[</span><span class="s1">&#39;aws_secret_access_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aws_secret</span>
+
+                <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">bucket</span><span class="p">:</span>
+                    <span class="n">s3_params</span><span class="p">[</span><span class="s1">&#39;calling_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrdinaryCallingFormat</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">s3</span> <span class="o">=</span> <span class="n">S3Connection</span><span class="p">(</span><span class="o">**</span><span class="n">s3_params</span><span class="p">)</span><span class="o">.</span><span class="n">get_bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t find or access the specified bucket, using local storage: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Warning: couldn&#39;t make directory &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="n">e</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FileHandler.iterate_path"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler.iterate_path">[docs]</a>    <span class="k">def</span> <span class="nf">iterate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterates over the directory/bucket and returns a list of filenames or S3 object keys</span>
+<span class="sd">        :return: Yields a list of filenames or S3 keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">key</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">scandir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span></div>
+
+<div class="viewcode-block" id="FileHandler.clear_folder"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler.clear_folder">[docs]</a>    <span class="k">def</span> <span class="nf">clear_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">key</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">scandir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="FileHandler.get_key_hash"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler.get_key_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_key_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a key to a hashed representation; useful for caching</span>
+<span class="sd">        :param key: A raw string</span>
+<span class="sd">        :return: A SHA224 hash representation of that key</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha224</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FileHandler.write"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_timestamp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes arbitrary data objects to a variety of file formats.  If you save something to csv/tab/xlsx/xls/dta, \</span>
+<span class="sd">        it assumes you&#39;ve passed it a Pandas DataFrame object.  Same goes for JSON - if you&#39;re trying to save an \</span>
+<span class="sd">        object to JSON, it assumes that you&#39;re passing it valid JSON.  By default, though, the handler attemps to use \</span>
+<span class="sd">        pickling, allowing you to save (mostly) anything you want.</span>
+<span class="sd">        :param key: The name of the file or key (without a file suffix!)</span>
+<span class="sd">        :param data: The actual data to write to the file</span>
+<span class="sd">        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json).  Defaults to pkl.</span>
+<span class="sd">        :param hash_key: Whether or not to hash the provided key before saving the file. (Default=False)</span>
+<span class="sd">        :param add_timestamp: Optionally add a timestamp to the filename</span>
+<span class="sd">        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of \</span>
+<span class="sd">        the file you want to save.  Dta uses pandas.DataFrame.to_stata; csv uses to_csv; pkl uses pickle.dumps; \</span>
+<span class="sd">        json uses json.dumps</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hash_key</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_key_hash</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">add_timestamp</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;xls&quot;</span><span class="p">,</span> <span class="s2">&quot;xlsx&quot;</span><span class="p">,</span> <span class="s2">&quot;tab&quot;</span><span class="p">,</span> <span class="s2">&quot;dta&quot;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;tab&quot;</span><span class="p">:</span>
+                    <span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;delimiter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;tab&quot;</span><span class="p">]:</span> <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;dta&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">to_stata</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not convert data to </span><span class="si">{}</span><span class="s2">; writing as raw text&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">format</span><span class="p">))</span>
+                <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;txt&quot;</span>
+        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">+=</span> <span class="s2">&quot;.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">format</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+
+            <span class="n">k</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s3</span><span class="p">)</span>
+            <span class="n">k</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="p">])</span>
+            <span class="n">k</span><span class="o">.</span><span class="n">set_contents_from_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FileHandler.read"><a class="viewcode-back" href="../../index.html#pewtils.io.FileHandler.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param key: The name of the file to read (without a suffix!)</span>
+<span class="sd">        :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab)</span>
+<span class="sd">        :param hash_key: Whether the key should be hashed prior to looking for and retrieving the file.</span>
+<span class="sd">        :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)</span>
+<span class="sd">        :return: The file contents, in the requested format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hash_key</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_key_hash</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
+
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">k</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">get_contents_as_string</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;attempt_count&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">io_kwargs</span><span class="p">:</span>
+                    <span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;attempt_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Insecure pickle string; probably a concurrent read-write, </span><span class="se">\</span>
+<span class="s2">                    will try again in 5 seconds (attempt #</span><span class="si">{}</span><span class="s2">)&quot;</span>\
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;attempt_count&quot;</span><span class="p">]))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;attempt_count&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;attempt_count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="n">hash_key</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t load pickle!  </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">elif</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;tab&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;tab&quot;</span><span class="p">:</span>
+                <span class="n">io_kwargs</span><span class="p">[</span><span class="s2">&quot;delimiter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;xlsx&quot;</span><span class="p">,</span> <span class="s2">&quot;xls&quot;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;dta&quot;</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_stata</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">pewtils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, pew research center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
