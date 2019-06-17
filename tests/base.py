@@ -13,8 +13,8 @@ class BaseTests(unittest.TestCase):
 
     def test_decode_text(self):
 
+        import datetime
         from pewtils import decode_text
-
         text = decode_text("one two three")
         self.assertTrue(text == "one two three")
         # below examples taken from unidecode documentation
@@ -24,6 +24,8 @@ class BaseTests(unittest.TestCase):
         self.assertTrue(text == "30 km/h")
         text = decode_text(u"\u5317\u4EB0")
         self.assertTrue(text == "Bei Jing ")
+        text = decode_text(datetime.date(2019, 1, 1))
+        self.assertTrue(text == "2019-01-01")
 
     def test_is_null(self):
 
