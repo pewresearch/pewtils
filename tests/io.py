@@ -30,8 +30,8 @@ class IOTests(unittest.TestCase):
         files = []
         for file in h.iterate_path():
             files.append(file)
-        files = [f for f in files if not f.endswith(".pyc")]
-        self.assertTrue(files == ['subfolder', '__init__.py', 'example.html', 'example_stripped_simple.html',
+        files = [f for f in files if not f.endswith(".pyc") and f not in ['__pycache__', '.DS_Store']]
+        self.assertEquals(files, ['subfolder', '__init__.py', 'example.html', 'example_stripped_simple.html',
                                   'json.json', 'example_stripped.html', 'py.py'])
 
     def test_filehandler_clear_folder(self):
