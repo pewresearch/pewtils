@@ -32,7 +32,7 @@ def decode_text(text, throw_loud_fail=False):
     """
 
     output_text = ''
-    if text:
+    if is_not_null(text):
         try:
             text = u"{}".format(text)
             output_text = text.decode("ascii").encode("ascii")
