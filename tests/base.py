@@ -13,19 +13,36 @@ class BaseTests(unittest.TestCase):
 
     def test_decode_text(self):
 
+        class FakeObject(object):
+            def __str__(self):
+                return "str"
+            def __repr__(self):
+                return "repr"
+
         import datetime
+        import numpy as np
         from pewtils import decode_text
         text = decode_text("one two three")
-        self.assertTrue(text == "one two three")
+        self.assertEquals(text, "one two three")
         # below examples taken from unidecode documentation
         text = decode_text(u'ko\u017eu\u0161\u010dek')
-        self.assertTrue(text == "kozuscek")
+        self.assertEquals(text, "kozuscek")
         text = decode_text(u'30 \U0001d5c4\U0001d5c6/\U0001d5c1')
-        self.assertTrue(text == "30 km/h")
+        self.assertIn(text, ["30 km/h", "30 /"])
+        # Python 2.7 does not have support for UTF-16 so it will fail on the above
         text = decode_text(u"\u5317\u4EB0")
-        self.assertTrue(text == "Bei Jing ")
+        self.assertEquals(text, "Bei Jing ")
         text = decode_text(datetime.date(2019, 1, 1))
-        self.assertTrue(text == "2019-01-01")
+        self.assertEquals(text, "2019-01-01")
+        text = decode_text(None)
+        self.assertEquals(text, '')
+        text = decode_text("")
+        self.assertEquals(text, "")
+        text = decode_text(np.nan)
+        self.assertEquals(text, '')
+        text = decode_text(FakeObject())
+        self.assertEquals(text, 'str')
+
 
     def test_is_null(self):
 
@@ -121,11 +138,10 @@ class BaseTests(unittest.TestCase):
         result = concat(
             "one two three",
             u'ko\u017eu\u0161\u010dek',
-            u'30 \U0001d5c4\U0001d5c6/\U0001d5c1',
             u"\u5317\u4EB0",
             None
         )
-        self.assertTrue(result == "one two three kozuscek 30 km/h Bei Jing ")
+        self.assertEquals(result, "one two three kozuscek Bei Jing ")
 
     def test_cached_series_mapper(self):
         import pandas as pd
