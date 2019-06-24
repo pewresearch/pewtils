@@ -274,14 +274,11 @@ def get_hash(text, hash_function="ssdeep"):
         except (UnicodeEncodeError, UnicodeDecodeError):
             hash = md5(decode_text(text)).hexdigest()
     else:
+        import ssdeep
         try:
-            import ssdeep
-            try:
-                hash = ssdeep.hash(text)
-            except (UnicodeEncodeError, UnicodeDecodeError):
-                hash = ssdeep.hash(decode_text(text))
-        except ImportError:
-            print("You need to install the ssdeep package in order to use this option")
+            hash = ssdeep.hash(text)
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            hash = ssdeep.hash(decode_text(text))
 
     return hash
 
