@@ -22,3 +22,4 @@ tld>=0.7.9
 tqdm>=4.11.2
 unicode
 Unidecode>=0.4.20
+xlsxwriter>=1.1.8
