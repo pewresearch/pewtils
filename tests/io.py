@@ -34,19 +34,19 @@ class IOTests(unittest.TestCase):
         self.assertEqual(files, ['subfolder', '__init__.py', 'example.html', 'example_stripped_simple.html',
                                   'json.json', 'example_stripped.html', 'py.py'])
 
-    # def test_filehandler_clear_folder(self):
-    #     from pewtils.io import FileHandler
-    #     h = FileHandler("tests/files/temp", use_s3=False)
-    #     from contextlib import closing
-    #     with closing(open("tests/files/temp/temp.txt", "wb")) as output:
-    #         output.write("test")
-    #     h.clear_folder()
-    #     files = []
-    #     for file in h.iterate_path():
-    #         files.append(file)
-    #     self.assertTrue(len(files) == 0)
-    #     import os
-    #     os.rmdir("tests/files/temp")
+    def test_filehandler_clear_folder(self):
+        from pewtils.io import FileHandler
+        h = FileHandler("tests/files/temp", use_s3=False)
+        from contextlib import closing
+        with closing(open("tests/files/temp/temp.txt", "wb")) as output:
+            output.write("test")
+        h.clear_folder()
+        files = []
+        for file in h.iterate_path():
+            files.append(file)
+        self.assertTrue(len(files) == 0)
+        import os
+        os.rmdir("tests/files/temp")
 
     def test_filehandler_get_key_hash(self):
         from pewtils.io import FileHandler
@@ -81,44 +81,43 @@ class IOTests(unittest.TestCase):
         os.unlink("tests/files/temp.txt")
         self.assertTrue(read == "test")
 
-    # def test_filehandler_read_write_tab(self):
-    #     from pewtils.io import FileHandler
-    #     h = FileHandler("tests/files", use_s3=False)
-    #     h.write("temp", self.test_df, format="tab")
-    #     read = h.read("temp", format="tab")
-    #     del read['Unnamed: 0']
-    #     import os
-    #     os.unlink("tests/files/temp.tab")
-    #     self.assertTrue(repr(self.test_df) == repr(read))
-    #
-    # def test_filehandler_read_write_xlsx(self):
-    #     from pewtils.io import FileHandler
-    #     h = FileHandler("tests/files", use_s3=False)
-    #     h.write("temp", self.test_df, format="xlsx")
-    #     read = h.read("temp", format="xlsx")
-    #     import os
-    #     os.unlink("tests/files/temp.xlsx")
-    #     self.assertTrue(repr(self.test_df) == repr(read))
-    #
-    # def test_filehandler_read_write_xls(self):
-    #     from pewtils.io import FileHandler
-    #     h = FileHandler("tests/files", use_s3=False)
-    #     h.write("temp", self.test_df, format="xls")
-    #     read = h.read("temp", format="xls")
-    #     import os
-    #     os.unlink("tests/files/temp.xls")
-    #     self.assertTrue(repr(self.test_df) == repr(read))
-    #
-    # def test_filehandler_read_write_dta(self):
-    #     from pewtils.io import FileHandler
-    #     h = FileHandler("tests/files", use_s3=False)
-    #     h.write("temp", self.test_df, format="dta")
-    #     read = h.read("temp", format="dta")
-    #     import pdb; pdb.set_trace()
-    #     del read['index']
-    #     import os
-    #     os.unlink("tests/files/temp.dta")
-    #     self.assertTrue(repr(self.test_df) == repr(read))
+    def test_filehandler_read_write_tab(self):
+        from pewtils.io import FileHandler
+        h = FileHandler("tests/files", use_s3=False)
+        h.write("temp", self.test_df, format="tab")
+        read = h.read("temp", format="tab")
+        del read['Unnamed: 0']
+        import os
+        os.unlink("tests/files/temp.tab")
+        self.assertTrue(repr(self.test_df) == repr(read))
+
+    def test_filehandler_read_write_xlsx(self):
+        from pewtils.io import FileHandler
+        h = FileHandler("tests/files", use_s3=False)
+        h.write("temp", self.test_df, format="xlsx")
+        read = h.read("temp", format="xlsx")
+        import os
+        os.unlink("tests/files/temp.xlsx")
+        self.assertTrue(repr(self.test_df) == repr(read))
+
+    def test_filehandler_read_write_xls(self):
+        from pewtils.io import FileHandler
+        h = FileHandler("tests/files", use_s3=False)
+        h.write("temp", self.test_df, format="xls")
+        read = h.read("temp", format="xls")
+        import os
+        os.unlink("tests/files/temp.xls")
+        self.assertTrue(repr(self.test_df) == repr(read))
+
+    def test_filehandler_read_write_dta(self):
+        from pewtils.io import FileHandler
+        h = FileHandler("tests/files", use_s3=False)
+        h.write("temp", self.test_df, format="dta")
+        read = h.read("temp", format="dta")
+        del read['index']
+        import os
+        os.unlink("tests/files/temp.dta")
+        self.assertTrue(repr(self.test_df) == repr(read))
 
     def test_filehandler_read_write_json(self):
         from pewtils.io import FileHandler
