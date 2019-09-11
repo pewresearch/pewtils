@@ -151,16 +151,15 @@ def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_n
             if subdir:
                 subdirs.append(subdir)
 
-    if include_subdirs:
-        if len(subdirs) > 0:
-            for subdir in subdirs[0]:
-                if subdir != "__pycache__":
-                    results = extract_json_from_folder(os.path.join(folder_path, subdir), include_subdirs=True, concat_subdir_names=concat_subdir_names)
-                    if not concat_subdir_names:
-                        attributes[subdir] = results
-                    else:
-                        for subattr_name, subattr in results.items():
-                            attributes["_".join([subdir, subattr_name])] = subattr
+    if include_subdirs and len(subdirs) > 0:
+        for subdir in subdirs[0]:
+            if subdir != "__pycache__":
+                results = extract_json_from_folder(os.path.join(folder_path, subdir), include_subdirs=True, concat_subdir_names=concat_subdir_names)
+                if not concat_subdir_names:
+                    attributes[subdir] = results
+                else:
+                    for subattr_name, subattr in results.items():
+                        attributes["_".join([subdir, subattr_name])] = subattr
 
     return attributes
 
