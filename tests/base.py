@@ -23,25 +23,25 @@ class BaseTests(unittest.TestCase):
         import numpy as np
         from pewtils import decode_text
         text = decode_text("one two three")
-        self.assertEquals(text, "one two three")
+        self.assertEqual(text, "one two three")
         # below examples taken from unidecode documentation
         text = decode_text(u'ko\u017eu\u0161\u010dek')
-        self.assertEquals(text, "kozuscek")
+        self.assertEqual(text, "kozuscek")
         text = decode_text(u'30 \U0001d5c4\U0001d5c6/\U0001d5c1')
         self.assertIn(text, ["30 km/h", "30 /"])
         # Python 2.7 does not have support for UTF-16 so it will fail on the above
         text = decode_text(u"\u5317\u4EB0")
-        self.assertEquals(text, "Bei Jing ")
+        self.assertEqual(text, "Bei Jing ")
         text = decode_text(datetime.date(2019, 1, 1))
-        self.assertEquals(text, "2019-01-01")
+        self.assertEqual(text, "2019-01-01")
         text = decode_text(None)
-        self.assertEquals(text, '')
+        self.assertEqual(text, '')
         text = decode_text("")
-        self.assertEquals(text, "")
+        self.assertEqual(text, "")
         text = decode_text(np.nan)
-        self.assertEquals(text, '')
+        self.assertEqual(text, '')
         text = decode_text(FakeObject())
-        self.assertEquals(text, 'str')
+        self.assertEqual(text, 'str')
 
 
     def test_is_null(self):
@@ -141,7 +141,7 @@ class BaseTests(unittest.TestCase):
             u"\u5317\u4EB0",
             None
         )
-        self.assertEquals(result, "one two three kozuscek Bei Jing ")
+        self.assertEqual(result, "one two three kozuscek Bei Jing ")
 
     def test_cached_series_mapper(self):
         import pandas as pd
@@ -157,7 +157,22 @@ class BaseTests(unittest.TestCase):
 
     def test_scale_range(self):
         from pewtils import scale_range
-        self.assertTrue(scale_range(10, 3, 12, 0, 20) == 15)
+        self.assertTrue(int(scale_range(10, 3, 12, 0, 20)) == 15)
+
+    def test_scan_dictionary(self):
+        from pewtils import scan_dictionary
+        test_dict = {
+            "one": {
+                "two": {
+                    "three": "woot"
+                }
+            }
+        }
+        vals, paths = scan_dictionary(test_dict, "three")
+        self.assertEqual(vals[0], "woot")
+        self.assertEqual(paths[0], "one/two/three/")
 
     def tearDown(self):
         pass
+
+

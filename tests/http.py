@@ -30,19 +30,22 @@ class HTTPTests(unittest.TestCase):
     def test_strip_html(self):
         # example.html taken from example.com on 3/5/19
         from contextlib import closing
-        with closing(open("tests/files/example.html", "rb")) as input:
+        with closing(open("tests/files/example.html", "r")) as input:
             html = input.read()
         from pewtils.http import strip_html
         stripped_html = strip_html(html, simple=False)
         stripped_simple_html = strip_html(html, simple=True)
-        # with closing(open("tests/files/example_stripped.html", "wb")) as output:
+        # with closing(open("tests/files/example_stripped.html", "w")) as output:
         #     output.write(stripped_html)
-        # with closing(open("tests/files/example_stripped_simple.html", "wb")) as output:
+        # with closing(open("tests/files/example_stripped_simple.html", "w")) as output:
         #     output.write(stripped_simple_html)
-        with closing(open("tests/files/example_stripped.html", "rb")) as input:
-            self.assertTrue(input.read() == stripped_html)
-        with closing(open("tests/files/example_stripped_simple.html", "rb")) as input:
-            self.assertTrue(input.read() == stripped_simple_html)
+
+        with closing(open("tests/files/example_stripped.html", "r")) as input:
+            text = input.read()
+            self.assertTrue(text == stripped_html)
+        with closing(open("tests/files/example_stripped_simple.html", "r")) as input:
+            text = input.read()
+            self.assertTrue(text == stripped_simple_html)
 
     def tearDown(self):
         pass

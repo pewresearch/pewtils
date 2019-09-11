@@ -8,11 +8,11 @@ import json
 import time
 import pandas as pd
 import pickle as pickle
-
 from scandir import scandir
-try: from io import StringIO
-except: from StringIO import StringIO
-# TODO: make this compatible for both 2 and 3
+try:
+    from io import StringIO, BytesIO
+except ImportError:
+    from StringIO import StringIO
 from contextlib import closing
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat
@@ -99,7 +99,7 @@ class FileHandler(object):
         :return: A SHA224 hash representation of that key
         """
 
-        return hashlib.sha224(key).hexdigest()
+        return hashlib.sha224(key.encode("utf8")).hexdigest()
 
     def write(self, key, data, format="pkl", hash_key=False, add_timestamp=False, **io_kwargs):
         """
@@ -126,24 +126,30 @@ class FileHandler(object):
         if add_timestamp:
             key = "{}_{}".format(key, datetime.datetime.now())
 
+        def _get_output(output, data, io_kwargs):
+            if format == "tab":
+                io_kwargs["sep"] = "\t"
+            if format in ["csv", "tab"]:
+                data.to_csv(output, encoding="utf8", **io_kwargs)
+            elif format == "dta":
+                data.to_stata(output, **io_kwargs)
+            elif format in ["xls", "xlsx"]:
+                writer = pd.ExcelWriter(output, engine='xlsxwriter')
+                data.to_excel(writer, **io_kwargs)
+                writer.save()
+            data = output.getvalue()
+            return data
+
         if format in ["csv", "xls", "xlsx", "tab", "dta"]:
             try:
-                output = StringIO()
-                if format == "tab":
-                    io_kwargs["sep"] = "\t"
-                if format in ["csv", "tab"]:
-                    data.to_csv(output, encoding="utf8", **io_kwargs)
-                elif format == "dta":
-                    data.to_stata(output, **io_kwargs)
-                elif format in ["xls", "xlsx"]:
-                    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-                    data.to_excel(writer, **io_kwargs)
-                    writer.save()
-                data = output.getvalue()
+                data = _get_output(BytesIO(), data, io_kwargs)
             except Exception as e:
-                print(e)
-                print("Could not convert data to {}; writing as raw text".format(format))
-                format = "txt"
+                try:
+                    data = _get_output(StringIO(), data, io_kwargs)
+                except Exception as e:
+                    print(e)
+                    print("Could not convert data to {}; writing as raw text".format(format))
+                    format = "txt"
         elif format == "pkl":
             data = pickle.dumps(data, **io_kwargs)
         elif format == "json":
@@ -161,8 +167,12 @@ class FileHandler(object):
 
             path = os.path.join(self.path, key)
             if os.path.exists(self.path):
-                with closing(open(path, "wb")) as output:
-                    output.write(data)
+                try:
+                    with closing(open(path, "w")) as output:
+                        output.write(data)
+                except:
+                    with closing(open(path, "wb")) as output:
+                        output.write(data)
 
     def read(self, key, format="pkl", hash_key=False, **io_kwargs):
         """
@@ -190,10 +200,15 @@ class FileHandler(object):
         else:
 
             if os.path.exists(filepath):
-                with closing(open(filepath, "rb")) as input:
-                    data = input.read()
+                try:
+                    with closing(open(filepath, "r")) as input:
+                        data = input.read()
+                except:
+                    with closing(open(filepath, "rb")) as input:
+                        data = input.read()
 
         if format == "pkl":
+
 
             try: data = pickle.loads(data)
             except TypeError: data = None

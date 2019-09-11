@@ -152,15 +152,15 @@ def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_n
                 subdirs.append(subdir)
 
     if include_subdirs:
-        for subdir in subdirs:
-            if len(subdir) == 1:
-                subdir = subdir[0]
-                results = extract_json_from_folder(os.path.join(folder_path, subdir), include_subdirs=True)
-                if not concat_subdir_names:
-                    attributes[subdir] = results
-                else:
-                    for subattr_name, subattr in results.items():
-                        attributes["_".join([subdir, subattr_name])] = subattr
+        if len(subdirs) > 0:
+            for subdir in subdirs[0]:
+                if subdir != "__pycache__":
+                    results = extract_json_from_folder(os.path.join(folder_path, subdir), include_subdirs=True, concat_subdir_names=concat_subdir_names)
+                    if not concat_subdir_names:
+                        attributes[subdir] = results
+                    else:
+                        for subattr_name, subattr in results.items():
+                            attributes["_".join([subdir, subattr_name])] = subattr
 
     return attributes
 
@@ -201,7 +201,7 @@ def extract_attributes_from_folder_modules(folder_path,
                             # right now this is a hack so that django_queries Query objects
                             # can access their root name as they're referenced in this dictionary
                             # while preserving a more unique name for the actual imported module
-                            #so it doesnt collide with other things
+                            # so it doesnt collide with other things
 
             if subdir_list:
                 subdirs.extend(subdir_list)
@@ -266,19 +266,19 @@ def get_hash(text, hash_function="ssdeep"):
         from nilsimsa import Nilsimsa
         try:
             hash = Nilsimsa(text).hexdigest()
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            hash = Nilsimsa(decode_text(text)).hexdigest()
+        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
+            hash = Nilsimsa(decode_text(text).encode("utf8")).hexdigest()
     elif hash_function == "md5":
         try:
             hash = md5(text).hexdigest()
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            hash = md5(decode_text(text)).hexdigest()
+        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
+            hash = md5(decode_text(text).encode("utf8")).hexdigest()
     else:
         import ssdeep
         try:
             hash = ssdeep.hash(text)
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            hash = ssdeep.hash(decode_text(text))
+        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
+            hash = ssdeep.hash(decode_text(text).encode("utf8"))
 
     return hash
 

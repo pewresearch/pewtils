@@ -49,6 +49,8 @@ def strip_html(html, simple=False, break_tags=None):
     :return: String with HTML tags removed
     """
 
+    html = re.sub(r"\n", " ", html)
+    html = re.sub(r"\s+", " ", html)
     if not break_tags:
         break_tags = ["strong", "em", "i", "b", "p"]
     if not simple:
@@ -77,9 +79,9 @@ def strip_html(html, simple=False, break_tags=None):
             lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
             text = "\n".join([l for l in lines if l])
             text = re.sub(r'(\sA){2,}\s', ' ', text)
-            text = re.sub("\n+(\s+)?", "\n\n", text)
-            text = re.sub(" +", " ", text)
-            text = re.sub("\t+", " ", text)
+            text = re.sub(r"\n+(\s+)?", "\n\n", text)
+            text = re.sub(r" +", " ", text)
+            text = re.sub(r"\t+", " ", text)
 
             return text
 
@@ -87,7 +89,7 @@ def strip_html(html, simple=False, break_tags=None):
 
             print("strip_html error")
             print(e)
-            text = re.sub("<[^>]*>", " ",
+            text = re.sub(r"<[^>]*>", " ",
                           re.sub("\\s+", " ", html)
                           ).strip()
             return text
