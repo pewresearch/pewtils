@@ -1,4 +1,5 @@
-from __future__ import print_function
+# from __future__ import print_function
+# from __future__ import unicode_literals
 
 from builtins import object
 import os
@@ -9,10 +10,12 @@ import time
 import pandas as pd
 import pickle as pickle
 from scandir import scandir
+# from six import StringIO
 try:
     from io import StringIO, BytesIO
 except ImportError:
-    from StringIO import StringIO
+    from StringIO import StringIO as BytesIO
+    # from io import BytesIO
 from contextlib import closing
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat
@@ -141,15 +144,12 @@ class FileHandler(object):
             return data
 
         if format in ["csv", "xls", "xlsx", "tab", "dta"]:
-            try:
-                data = _get_output(BytesIO(), data, io_kwargs)
+            try: data = _get_output(BytesIO(), data, io_kwargs)
             except Exception as e:
-                try:
-                    data = _get_output(StringIO(), data, io_kwargs)
-                except Exception as e:
-                    print(e)
-                    print("Could not convert data to {}; writing as raw text".format(format))
-                    format = "txt"
+                print(e)
+                try: data = _get_output(StringIO(), data, io_kwargs)
+                except: raise Exception("Couldn't convert data into '{}' format".format(format))
+
         elif format == "pkl":
             data = pickle.dumps(data, **io_kwargs)
         elif format == "json":
@@ -232,12 +232,12 @@ class FileHandler(object):
 
             if format == "tab":
                 io_kwargs["delimiter"] = "\t"
-            try: data = pd.read_csv(StringIO(data), **io_kwargs)
-            except: pass
+            try: data = pd.read_csv(BytesIO(data), **io_kwargs)
+            except: data = pd.read_csv(StringIO(data), **io_kwargs)
 
         elif format in ["xlsx", "xls"]:
-            try: data = pd.read_excel(StringIO(data), **io_kwargs)
-            except: pass
+            try: data = pd.read_excel(BytesIO(data), **io_kwargs)
+            except: data = pd.read_excel(StringIO(data), **io_kwargs)
 
         elif format == "json":
             try: data = json.loads(data)
@@ -245,7 +245,7 @@ class FileHandler(object):
 
         elif format == "dta":
 
-            try: data = pd.read_stata(StringIO(data), **io_kwargs)
-            except: pass
+            try: data = pd.read_stata(BytesIO(data), **io_kwargs)
+            except: data = pd.read_stata(StringIO(data), **io_kwargs)
 
         return data

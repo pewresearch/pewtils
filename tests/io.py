@@ -39,7 +39,7 @@ class IOTests(unittest.TestCase):
         h = FileHandler("tests/files/temp", use_s3=False)
         from contextlib import closing
         with closing(open("tests/files/temp/temp.txt", "wb")) as output:
-            output.write("test")
+            output.write(b"test")
         h.clear_folder()
         files = []
         for file in h.iterate_path():
@@ -96,6 +96,8 @@ class IOTests(unittest.TestCase):
         h = FileHandler("tests/files", use_s3=False)
         h.write("temp", self.test_df, format="xlsx")
         read = h.read("temp", format="xlsx")
+        if "Unnamed: 0" in read.columns:
+            del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.xlsx")
         self.assertTrue(repr(self.test_df) == repr(read))
@@ -105,6 +107,8 @@ class IOTests(unittest.TestCase):
         h = FileHandler("tests/files", use_s3=False)
         h.write("temp", self.test_df, format="xls")
         read = h.read("temp", format="xls")
+        if "Unnamed: 0" in read.columns:
+            del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.xls")
         self.assertTrue(repr(self.test_df) == repr(read))

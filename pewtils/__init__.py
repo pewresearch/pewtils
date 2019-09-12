@@ -1,7 +1,8 @@
 import chardet
 
 import os, re, itertools, json, sys
-import imp
+try: from importlib.machinery import SourceFileLoader
+except ImportError: import imp
 
 import pandas as pd
 import numpy as np
@@ -190,10 +191,13 @@ def extract_attributes_from_folder_modules(folder_path,
                     if file.endswith(".py") and not file.startswith("__init__"):
                         module_name = file.split(".")[0]
                         unique_name = "_".join(current_subdirs + [current_folder, module_name])
-                        module = imp.load_source(
-                            unique_name,
-                            os.path.join(path, file)
-                        )
+                        try:
+                            module = SourceFileLoader(unique_name, os.path.join(path, file)).load_module()
+                        except NameError:
+                            module = imp.load_source(
+                                unique_name,
+                                os.path.join(path, file)
+                            )
                         if hasattr(module, attribute_name):
                             attributes[module_name] = getattr(module, attribute_name)
                             attributes[module_name].__file__ = module_name
