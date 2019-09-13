@@ -131,9 +131,9 @@ class BaseTests(unittest.TestCase):
         hash = get_hash(text, hash_function = "ssdeep")
         self.assertTrue(hash == "3:HI2:Hl")
 
-    def test_concat(self):
-        from pewtils import concat
-        result = concat(
+    def test_concat_text(self):
+        from pewtils import concat_text
+        result = concat_text(
             "one two three",
             u'ko\u017eu\u0161\u010dek',
             u"\u5317\u4EB0",
