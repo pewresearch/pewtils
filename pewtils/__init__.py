@@ -1,6 +1,4 @@
-import chardet
-
-import os, re, itertools, json, sys
+import os, re, itertools, json, sys, chardet, copy
 try: from importlib.machinery import SourceFileLoader
 except ImportError: import imp
 
@@ -110,7 +108,7 @@ def recursive_update(existing, new):
     :param existing: An object or dictionary
     :param new: A dictionary where keys correspond to the names of keys in the existing dictionary or attributes on
     the existing object
-    :return: A copy of the original object or dictionary, with the values updated based on that provided map
+    :return: A copy of the original object or dictionary, with the values updated based on the provided map
     """
 
     def _hasattr(obj, attr):
@@ -160,7 +158,13 @@ def chunk_list(seq, size):
 
 def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_names=False):
     """
-    :param folder_path: takes local or remote path
+    Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it
+    to a dictionary, with the key being the name of the file and the value being the JSON itself.  Has options for
+    recursively traversing a folder, and for optionally concatenating the subfolder names into the dictionary keys
+    as prefixes.
+    :param folder_path: The path of the folder to scan
+    :param include_subdirs: Whether or not to recursively scan subfolders
+    :param concat_subdir_names: Whether or not to prefix the dictionary keys with the names of subfolders
     :return:
     """
 
@@ -197,14 +201,19 @@ def extract_attributes_from_folder_modules(folder_path,
                             include_subdirs=False,
                             concat_subdir_names=False,
                             current_subdirs=None):
-
     """
-    Returns folder attributes
-
-
+    Similar to `extract_json_from_folder`, this function iterates over a folder and looks for Python files that
+    contain an attribute (like a class, function, or variable) with a given name. It extracts those attributes and
+    returns a dictionary where the keys are the names of the files that contained the attributes, and the values
+    are the attributes themselves.
+    :param folder_path: The path of a folder/module to scan
+    :param attribute_name: The name of the attribute (class, function, variable, etc.) to extract from files
+    :param include_subdirs: Whether or not to recursively scan subfolders
+    :param concat_subdir_names: Whether or not to prefix the dictionary keys with the names of subfolders
+    :param current_subdirs: Used to track location when recursively iterating a module
+    :return:
     """
 
-    # os.path.basename(os.path.dirname(folder_path))
     current_folder = folder_path.split("/")[-1]
     if not current_subdirs:
         current_subdirs = []
@@ -280,6 +289,12 @@ def zipcode_num_to_string(zip):
 
 def flatten_list(l):
 
+    """
+    Takes a list of lists and flattens it into a single list
+    :param l: A list of lists
+    :return: A flattened list of all of the elements contained in the original list of lists
+    """
+
     return [item for sublist in l for item in sublist]
 
 
@@ -313,18 +328,27 @@ def get_hash(text, hash_function="ssdeep"):
     return hash
 
 
-def concat(*args):
+def concat_text(*args):
+    """
+    A helper function for concatenating text values; useful for mapping onto a variable in Pandas
+    :param args:
+    :return:
+    """
     strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
     return ' '.join(strs) if strs else np.nan
 
 
-vector_concat = np.vectorize(concat)
+vector_concat = np.vectorize(concat_text)
+
 
 
 def cached_series_mapper(series, function):
     """
-    caches things in pandas DataFrame
-    great if you're doing database lookups and have duplicates
+    Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.
+    Great if you're doing database lookups, etc.
+    :param series: A Pandas Series
+    :param function: A function to apply to values in the series
+    :return: The resulting series
     """
 
     val_map = {}
@@ -335,6 +359,15 @@ def cached_series_mapper(series, function):
 
 
 def scale_range(old_val, old_min, old_max, new_min, new_max):
+    """
+    Scales a value from one range to another.  Useful for comparing values from different scales, for example.
+    :param old_val: The value to convert
+    :param old_min: The minimum of the old range
+    :param old_max: The maximum of the old range
+    :param new_min: The minimum of the new range
+    :param new_max: The maximum of the new range
+    :return:
+    """
 
     return (((old_val - old_min) * (new_max - new_min)) / (old_max - old_min)) + new_min
 
