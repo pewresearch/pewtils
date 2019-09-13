@@ -102,20 +102,47 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
 
 def recursive_update(existing, new):
-    for k, v in new.items():
-        if k in existing and type(new[k]) == dict and is_not_null(existing[k]):
-            existing[k] = recursive_update(existing[k], new[k])
+    """
+    Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
+    new values and updates the object.  Doesn't care if the keys in the dictionary correspond to attribute names or
+    dictionary keys; you can use this to iterate through a nested hierarchy of objects and dictionaries and update
+    whatever you like.
+    :param existing: An object or dictionary
+    :param new: A dictionary where keys correspond to the names of keys in the existing dictionary or attributes on
+    the existing object
+    :return: A copy of the original object or dictionary, with the values updated based on that provided map
+    """
+
+    def _hasattr(obj, attr):
+        if isinstance(obj, dict):
+            return attr in obj
         else:
-            existing[k] = new[k]
-    return existing
+            return hasattr(obj, attr)
 
+    def _setattr(obj, attr, val):
+        if isinstance(obj, dict):
+            obj[attr] = val
+        else:
+            setattr(obj, attr, val)
+        return obj
 
-def recursive_setattr(object, attr, value):
-    if type(value) == dict:
-        for subattr, value in value.items():
-            recursive_setattr(getattr(object, attr), subattr, value)
+    def _getattr(obj, attr):
+        if isinstance(obj, dict):
+            return obj[attr]
+        else:
+            return getattr(obj, attr)
+
+    existing = copy.deepcopy(existing)
+    if isinstance(new, dict):
+        for k, v in new.items():
+
+            if _hasattr(existing, k):
+                _setattr(existing, k, recursive_update(_getattr(existing, k), _getattr(new, k)))
+            else:
+                _setattr(existing, k, _getattr(new, k))
+        return existing
     else:
-        setattr(object, attr, value)
+        return new
 
 
 def chunk_list(seq, size):

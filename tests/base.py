@@ -57,12 +57,18 @@ class BaseTests(unittest.TestCase):
 
     def test_recursive_update(self):
         from pewtils import recursive_update
+        class TestObject(object):
+            def __init__(self, val):
+                self.val = val
+                self.val_dict = {"key": "value"}
+        test_obj = TestObject("1")
         base = {
             "level1": {
                 "level2": {
                     "val2": "test2"
                 },
-                "val1": "test1"
+                "val1": "test1",
+                "val2": test_obj
             }
         }
         update = {
@@ -70,26 +76,18 @@ class BaseTests(unittest.TestCase):
                 "level2": {
                     "val2": "test123456"
                 },
-                "val1": "test123"
+                "val1": "test123",
+                "val2": {
+                    "val": "2",
+                    "val_dict": {"key": "new_value"}
+                }
             }
         }
         result = recursive_update(base, update)
-        self.assertTrue(result == update)
-
-    def test_recursive_setattr(self):
-        from pewtils import recursive_setattr
-        class TestObject(object):
-            def __init__(self, val):
-                self.val = val
-        class ParentTestObject(object):
-            def __init__(self, obj):
-                self.obj = obj
-
-        test_obj = ParentTestObject(
-            TestObject("1")
-        )
-        recursive_setattr(test_obj, "obj", {"val": "2"})
-        self.assertTrue(test_obj.obj.val == "2")
+        self.assertEqual(result['level1']['level2']['val2'], "test123456")
+        self.assertEqual(result['level1']['val1'], "test123")
+        self.assertEqual(result['level1']['val2'].val, "2")
+        self.assertEqual(result['level1']['val2'].val_dict['key'], 'new_value')
 
     def test_chunk_list(self):
         from pewtils import chunk_list
