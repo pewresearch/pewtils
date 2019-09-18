@@ -27,6 +27,7 @@ class FileHandler(object):
 
     """
     A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3.
+    Does not work with Stata (.dta) files in Python 2.
     :param path: The path to the folder (or S3 bucket) that you'll be writing to or reading from
     :param use_s3: Whether the path is an S3 location or local location \
     (if bucket is not None, it assumes it's an S3 path, otherwise it'll default to local)
@@ -110,6 +111,7 @@ class FileHandler(object):
         it assumes you've passed it a Pandas DataFrame object.  Same goes for JSON - if you're trying to save an \
         object to JSON, it assumes that you're passing it valid JSON.  By default, though, the handler attemps to use \
         pickling, allowing you to save (mostly) anything you want.
+        # TODO: caveat about it not working for stata in python2
         :param key: The name of the file or key (without a file suffix!)
         :param data: The actual data to write to the file
         :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json).  Defaults to pkl.
