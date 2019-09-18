@@ -141,6 +141,13 @@ class BaseTests(unittest.TestCase):
         )
         self.assertEqual(result, "one two three kozuscek Bei Jing ")
 
+    def test_vector_concat_text(self):
+        from pewtils import vector_concat_text
+        result = vector_concat_text(["one", "two", "three"], ["a", "b", "c"])
+        self.assertEqual(result[0], 'one a')
+        self.assertEqual(result[1], 'two b')
+        self.assertEqual(result[2], 'three c')
+
     def test_cached_series_mapper(self):
         import pandas as pd
         from pewtils import cached_series_mapper

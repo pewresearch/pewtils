@@ -93,10 +93,11 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
     """
     :param val: the value to check
     :param empty_lists_are_null: bool (default=False)
+    :param custom_nulls: list or None - if None defaults to global NULL_VALUES
     :return: bool (True if the value is null)
     """
 
-    return (not is_not_null(val, empty_lists_are_null=empty_lists_are_null, custom_nulls=custom_nulls))
+    return not is_not_null(val, empty_lists_are_null=empty_lists_are_null, custom_nulls=custom_nulls)
 
 
 def recursive_update(existing, new):
@@ -331,14 +332,21 @@ def get_hash(text, hash_function="ssdeep"):
 def concat_text(*args):
     """
     A helper function for concatenating text values; useful for mapping onto a variable in Pandas
-    :param args:
-    :return:
+    :param args: A list of text values that will be returned as a single space-separated string
+    :return: A single string of the values concatenated by spaces
     """
     strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
     return ' '.join(strs) if strs else np.nan
 
 
-vector_concat = np.vectorize(concat_text)
+def vector_concat_text(*args):
+    """
+    Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces
+    :param args: A list of lists or Pandas series that contain text values
+    :return: A single list with all of the text values for each row concatenated
+    """
+
+    return np.vectorize(concat_text)(*args)
 
 
 
