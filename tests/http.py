@@ -99,10 +99,23 @@ class HTTPTests(unittest.TestCase):
                 self.assertIn(resolved, ["bitly.com", v])
         session.close()
 
-
     def test_extract_domain_from_url(self):
-
-        pass
+        from pewtils.http import extract_domain_from_url
+        for url, domain, include_subdomain, resolve in [
+            ("https://pewrsr.ch/2lxB0EX", "pewresearch.org", False, False),
+            ("https://pewrsr.ch/2lxB0EX", "pewresearch.org", False, True),
+            ("https://nbcnews.to/2Yc5JVz", "nbcnews.com", False, False),
+            ("https://nbcnews.to/2Yc5JVz", "nbcnews.com", False, True),
+            ("https://news.ycombinator.com", "ycombinator.com", False, False),
+            ("https://news.ycombinator.com", "news.ycombinator.com", True, False),
+            ("http://forums.bbc.co.uk", "forums.bbc.co.uk", True, False),
+            ("http://forums.bbc.co.uk", "bbc.co.uk", False, False),
+            ("http://www.worldbank.org.kg/", "worldbank.org.kg", True, False),
+            ("http://forums.news.cnn.com/", "forums.news.cnn.com", True, False),
+            ("http://forums.news.cnn.com/", "cnn.com", False, False)
+        ]:
+            extracted_domain = extract_domain_from_url(url, include_subdomain=include_subdomain, resolve_url=resolve)
+            self.assertEqual(extracted_domain, domain)
 
 
     def tearDown(self):

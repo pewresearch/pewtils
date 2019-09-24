@@ -1,14 +1,13 @@
 from __future__ import print_function
 from __future__ import division
 from builtins import str
-import re, time, threading, requests
+import re, time, threading, requests, tldextract
 from six.moves.urllib import parse as urlparse
 
 from functools import wraps
 from random import uniform
 from bs4 import BeautifulSoup
 from unidecode import unidecode
-from tld import get_tld
 
 from pewtils import get_hash, decode_text
 
@@ -529,11 +528,11 @@ def extract_domain_from_url(url, include_subdomain=True, resolve_url=False, time
 
     if resolve_url:
         url = canonical_link(url, timeout=timeout)
-    domain = get_tld(url, fix_protocol=True, as_object=True, fail_silently=True)
+    domain = tldextract.extract(url)
     if domain:
-        if include_subdomain and domain.subdomain:
-            domain = ".".join([domain.subdomain, domain.tld])
+        if include_subdomain and domain.subdomain and domain.subdomain != "www":
+            domain = ".".join([domain.subdomain, domain.domain, domain.suffix])
         else:
-            domain = domain.tld
+            domain = ".".join([domain.domain, domain.suffix])
         domain = VANITY_LINK_SHORTENERS.get(domain, domain)
     return domain
