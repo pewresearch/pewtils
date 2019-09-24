@@ -13,9 +13,9 @@ class HTTPTests(unittest.TestCase):
     def test_hash_url(self):
         from pewtils.http import hash_url
         url = hash_url("http://www.example.com")
-        self.assertTrue(url == "7c1767b30512b6003fd3c2e618a86522")
+        self.assertEqual(url, "7c1767b30512b6003fd3c2e618a86522")
         url = hash_url("www.example.com")
-        self.assertTrue(url == "7c1767b30512b6003fd3c2e618a86522")
+        self.assertEqual(url, "7c1767b30512b6003fd3c2e618a86522")
 
     def test_new_random_number(self):
         from pewtils.http import new_random_number
@@ -24,8 +24,8 @@ class HTTPTests(unittest.TestCase):
         avgs = [1, 1, 2, 4, 6]
         for attempt, attempt_max, attempt_avg in zip(range(5), maxes, avgs):
             attempts = [new_random_number(attempt=attempt) for i in range(500)]
-            self.assertTrue(round(np.average(attempts)) <= attempt_avg)
-            self.assertTrue(max(attempts) < attempt_max)
+            self.assertLessEqual(round(np.average(attempts)), attempt_avg)
+            self.assertLess(max(attempts), attempt_max)
 
     def test_strip_html(self):
         # example.html taken from example.com on 3/5/19
@@ -42,10 +42,10 @@ class HTTPTests(unittest.TestCase):
 
         with closing(open("tests/files/example_stripped.html", "r")) as input:
             text = input.read()
-            self.assertTrue(text == stripped_html)
+            self.assertEqual(text, stripped_html)
         with closing(open("tests/files/example_stripped_simple.html", "r")) as input:
             text = input.read()
-            self.assertTrue(text == stripped_simple_html)
+            self.assertEqual(text, stripped_simple_html)
 
     def test_canonical_link(self):
 

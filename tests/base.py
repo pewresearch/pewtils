@@ -93,43 +93,43 @@ class BaseTests(unittest.TestCase):
         from pewtils import chunk_list
         test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         chunked = [c for c in chunk_list(test, 3)]
-        self.assertTrue(len(chunked) == 4)
-        self.assertTrue(chunked[-1] == [10])
+        self.assertEqual(len(chunked), 4)
+        self.assertEqual(chunked[-1], [10])
 
     def test_extract_json_from_folder(self):
         from pewtils import extract_json_from_folder
         results = extract_json_from_folder("tests/files", include_subdirs=False, concat_subdir_names=False)
-        self.assertTrue(results == {'json': {u'test_val': 1}})
+        self.assertEqual(results, {'json': {u'test_val': 1}})
         results = extract_json_from_folder("tests/files", include_subdirs=True, concat_subdir_names=False)
-        self.assertTrue(results == {'json': {u'test_val': 1}, 'subfolder': {'subfolder': {u'test_val': 2}}})
+        self.assertEqual(results, {'json': {u'test_val': 1}, 'subfolder': {'subfolder': {u'test_val': 2}}})
         results = extract_json_from_folder("tests/files", include_subdirs=True, concat_subdir_names=True)
-        self.assertTrue(results == {'json': {u'test_val': 1}, 'subfolder_subfolder': {u'test_val': 2}})
+        self.assertEqual(results, {'json': {u'test_val': 1}, 'subfolder_subfolder': {u'test_val': 2}})
 
     def test_extract_attributes_from_folder_modules(self):
         from pewtils import extract_attributes_from_folder_modules
         results = extract_attributes_from_folder_modules("tests/files", "test")
-        self.assertTrue(results['py']() == "test1")
+        self.assertEqual(results['py'](), "test1")
         results = extract_attributes_from_folder_modules("tests/files", "test", include_subdirs=True)
-        self.assertTrue(results['py']() == "test1")
-        self.assertTrue(results['subfolder']['subfolder_py']() == "test2")
+        self.assertEqual(results['py'](), "test1")
+        self.assertEqual(results['subfolder']['subfolder_py'](), "test2")
         results = extract_attributes_from_folder_modules("tests/files", "test", include_subdirs=True, concat_subdir_names=True)
-        self.assertTrue(results['py']() == "test1")
-        self.assertTrue(results['subfolder_subfolder_py']() == "test2")
+        self.assertEqual(results['py'](), "test1")
+        self.assertEqual(results['subfolder_subfolder_py'](), "test2")
 
     def test_flatten_list(self):
         from pewtils import flatten_list
         results = flatten_list([[1, 2, 3], [4, 5, 6]])
-        self.assertTrue(results == [1, 2, 3, 4, 5, 6])
+        self.assertEqual(results, [1, 2, 3, 4, 5, 6])
 
     def test_get_hash(self):
         from pewtils import get_hash
         text = "test_string"
         hash = get_hash(text, hash_function="nilsimsa")
-        self.assertTrue(hash == "49c808104092202004009004800200084a0240a0c09040a1113a04a821210016")
+        self.assertEqual(hash, "49c808104092202004009004800200084a0240a0c09040a1113a04a821210016")
         hash = get_hash(text, hash_function = "md5")
-        self.assertTrue(hash == "3474851a3410906697ec77337df7aae4")
+        self.assertEqual(hash, "3474851a3410906697ec77337df7aae4")
         hash = get_hash(text, hash_function = "ssdeep")
-        self.assertTrue(hash == "3:HI2:Hl")
+        self.assertEqual(hash, "3:HI2:Hl")
 
     def test_concat_text(self):
         from pewtils import concat_text
@@ -158,11 +158,11 @@ class BaseTests(unittest.TestCase):
             {"test": 3}
         ])
         df['mapped'] = cached_series_mapper(df['test'], lambda x: str(float(x)))
-        self.assertTrue(list(df['mapped'].values) == ["1.0", "2.0", "3.0", "3.0"])
+        self.assertEqual(list(df['mapped'].values), ["1.0", "2.0", "3.0", "3.0"])
 
     def test_scale_range(self):
         from pewtils import scale_range
-        self.assertTrue(int(scale_range(10, 3, 12, 0, 20)) == 15)
+        self.assertEqual(int(scale_range(10, 3, 12, 0, 20)), 15)
 
     def test_scan_dictionary(self):
         from pewtils import scan_dictionary

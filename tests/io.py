@@ -44,7 +44,7 @@ class IOTests(unittest.TestCase):
         files = []
         for file in h.iterate_path():
             files.append(file)
-        self.assertTrue(len(files) == 0)
+        self.assertEqual(len(files), 0)
         import os
         os.rmdir("tests/files/temp")
 
@@ -60,7 +60,7 @@ class IOTests(unittest.TestCase):
         read = h.read("temp", format="pkl")
         import os
         os.unlink("tests/files/temp.pkl")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_csv(self):
         from pewtils.io import FileHandler
@@ -70,7 +70,7 @@ class IOTests(unittest.TestCase):
         del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.csv")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_txt(self):
         from pewtils.io import FileHandler
@@ -79,7 +79,7 @@ class IOTests(unittest.TestCase):
         read = h.read("temp", format="txt")
         import os
         os.unlink("tests/files/temp.txt")
-        self.assertTrue(read == "test")
+        self.assertEqual(read, "test")
 
     def test_filehandler_read_write_tab(self):
         from pewtils.io import FileHandler
@@ -89,7 +89,7 @@ class IOTests(unittest.TestCase):
         del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.tab")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_xlsx(self):
         from pewtils.io import FileHandler
@@ -100,7 +100,7 @@ class IOTests(unittest.TestCase):
             del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.xlsx")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_xls(self):
         from pewtils.io import FileHandler
@@ -111,7 +111,7 @@ class IOTests(unittest.TestCase):
             del read['Unnamed: 0']
         import os
         os.unlink("tests/files/temp.xls")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_dta(self):
         from pewtils.io import FileHandler
@@ -121,7 +121,7 @@ class IOTests(unittest.TestCase):
         del read['index']
         import os
         os.unlink("tests/files/temp.dta")
-        self.assertTrue(repr(self.test_df) == repr(read))
+        self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_json(self):
         from pewtils.io import FileHandler
@@ -130,7 +130,7 @@ class IOTests(unittest.TestCase):
         read = h.read("temp", format="json")
         import os
         os.unlink("tests/files/temp.json")
-        self.assertTrue(repr(self.test_json) == repr(dict(read)))
+        self.assertEqual(repr(self.test_json), repr(dict(read)))
 
     def tearDown(self):
 
