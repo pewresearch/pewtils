@@ -1,4 +1,6 @@
-import os, re, itertools, json, sys, chardet, copy
+from __future__ import absolute_import
+
+import os, re, itertools, json, sys, chardet, copy, warnings
 
 try:
     from importlib.machinery import SourceFileLoader
@@ -241,6 +243,15 @@ def extract_attributes_from_folder_modules(
     :return:
     """
 
+    if not folder_path.startswith(os.getcwd()):
+        folder_path = os.path.join(os.getcwd(), folder_path)
+    test_path, _ = os.path.split(folder_path)
+    while test_path != "/":
+        if "__init__.py" not in os.listdir(test_path):
+            break
+        test_path, _ = os.path.split(test_path)
+    module_location = test_path
+
     current_folder = folder_path.split("/")[-1]
     if not current_subdirs:
         current_subdirs = []
@@ -252,25 +263,49 @@ def extract_attributes_from_folder_modules(
             if folder_path == path:
                 for file in files:
                     if file.endswith(".py") and not file.startswith("__init__"):
-                        module_name = file.split(".")[0]
+                        file_name = file.split(".")[0]
+                        module_name = re.sub(
+                            "/",
+                            ".",
+                            re.sub(
+                                module_location,
+                                "",
+                                os.path.splitext(os.path.join(path, file))[0],
+                            ),
+                        ).strip(".")
                         unique_name = "_".join(
-                            current_subdirs + [current_folder, module_name]
+                            current_subdirs + [current_folder, file_name]
                         )
-                        try:
-                            module = SourceFileLoader(
-                                unique_name, os.path.join(path, file)
-                            ).load_module()
-                        except NameError:
-                            module = imp.load_source(
-                                unique_name, os.path.join(path, file)
-                            )
+                        if module_name in sys.modules:
+                            module = sys.modules[module_name]
+                            # https://github.com/ansible/ansible/issues/13110
+                        else:
+                            try:
+                                module = SourceFileLoader(
+                                    module_name, os.path.join(path, file)
+                                ).load_module()
+                            except NameError:
+                                file, pathname, description = imp.find_module(
+                                    file_name, [path]
+                                )
+                                warnings.simplefilter("error", RuntimeWarning)
+                                try:
+                                    module = imp.load_module(
+                                        module_name, file, pathname, description
+                                    )
+                                except RuntimeWarning:
+                                    try:
+                                        module = imp.load_module(
+                                            module_name, file, pathname, description
+                                        )
+                                    except RuntimeWarning:
+                                        module = None
+                                    except (ImportError, AttributeError):
+                                        module = None
+                                except (ImportError, AttributeError):
+                                    module = None
                         if hasattr(module, attribute_name):
-                            attributes[module_name] = getattr(module, attribute_name)
-                            attributes[module_name].__file__ = module_name
-                            # right now this is a hack so that django_queries Query objects
-                            # can access their root name as they're referenced in this dictionary
-                            # while preserving a more unique name for the actual imported module
-                            # so it doesnt collide with other things
+                            attributes[file_name] = getattr(module, attribute_name)
 
             if subdir_list:
                 subdirs.extend(subdir_list)
@@ -289,6 +324,13 @@ def extract_attributes_from_folder_modules(
             else:
                 for subattr_name, subattr in results.items():
                     attributes["_".join([subdir, subattr_name])] = subattr
+
+    if is_null(current_subdirs, empty_lists_are_null=True):
+        for name in attributes.keys():
+            try:
+                attributes[name]._name = name
+            except AttributeError:
+                pass
 
     return attributes
 
