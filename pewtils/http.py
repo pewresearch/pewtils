@@ -5,7 +5,6 @@ import re, time, threading, requests, tldextract
 from six.moves.urllib import parse as urlparse
 
 from functools import wraps
-from random import uniform
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 
@@ -150,7 +149,6 @@ GENERAL_LINK_SHORTENERS = [
     "su.pr",
 ]
 
-# TODO: perhaps separate out active and inactive URL shorteners
 VANITY_LINK_SHORTENERS = {
     "pdora.co": "pandora.com",
     "tgam.ca": "theglobeandmail.com",
@@ -161,7 +159,6 @@ VANITY_LINK_SHORTENERS = {
     "ampr.gs": "americanprogress.org",
     "rol.st": "rollingstone.com",
     "mapq.st": "mapquest.com",
-    "nws.mx": "newsmax.com",
     "newspr.es": "news-press.com",
     "interc.pt": "theintercept.com",
     "ind.pn": "independent.co.uk",
@@ -280,6 +277,7 @@ VANITY_LINK_SHORTENERS = {
 }
 
 HISTORICAL_VANITY_LINK_SHORTENERS = {
+    "nws.mx": "newsmax.com",
     "tonyr.co": "tonyrobbins.com",
     "d-news.co": "dallasnews.com",
     "fanda.co": "fandango.com",
