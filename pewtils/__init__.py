@@ -10,6 +10,7 @@ except ImportError:
 import pandas as pd
 import numpy as np
 
+from random import uniform
 from contextlib import closing
 from scandir import walk
 from unidecode import unidecode
@@ -513,3 +514,18 @@ def scan_dictionary(search_dict, field):
                         key_path.append(new_str)
 
     return fields_found, key_path
+
+
+def new_random_number(attempt=1, base_interval=1.0, max_sleep=10):
+
+    """
+    Generate a variable waiting time in seconds which exponentially increases with each attempt. \
+    Note that this function does NOT itself sleep or block execution, it just adds new_random_number to your timer.
+
+    :param attempt: Increasing attempt will probably raise the sleep interval.
+    :param base_interval: The minimum time. Must be greater than zero.
+    :param max_sleep: The maximum amount of time allowed.
+    :return: Seconds to sleep
+    """
+
+    return uniform(0, min(max_sleep, base_interval * 2 ** attempt))

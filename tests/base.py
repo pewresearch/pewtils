@@ -182,5 +182,16 @@ class BaseTests(unittest.TestCase):
         self.assertEqual(vals[0], "woot")
         self.assertEqual(paths[0], "one/two/three/")
 
+    def test_new_random_number(self):
+        from pewtils import new_random_number
+        import numpy as np
+
+        maxes = [1, 2, 4, 8, 10]
+        avgs = [1, 1, 2, 4, 6]
+        for attempt, attempt_max, attempt_avg in zip(range(5), maxes, avgs):
+            attempts = [new_random_number(attempt=attempt) for i in range(500)]
+            self.assertLessEqual(round(np.average(attempts)), attempt_avg)
+            self.assertLess(max(attempts), attempt_max)
+
     def tearDown(self):
         pass
