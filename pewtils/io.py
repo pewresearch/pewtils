@@ -16,6 +16,7 @@ try:
     from io import StringIO, BytesIO
 except ImportError:
     from StringIO import StringIO as BytesIO
+    from StringIO import StringIO
 
     # from io import BytesIO
 from contextlib import closing
