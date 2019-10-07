@@ -29,14 +29,15 @@ from pewtils import is_not_null
 class FileHandler(object):
 
     """
-    A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3.
-    Does not work with Stata (.dta) files in Python 2.
-    :param path: The path to the folder (or S3 bucket) that you'll be writing to or reading from
-    :param use_s3: Whether the path is an S3 location or local location \
-    (if bucket is not None, it assumes it's an S3 path, otherwise it'll default to local)
+    A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3. File
+    extensions are standardized to promote consistency; Pickle files must have the extension ".pkl", etc.
+
+    :param path: The path to the folder that you'll be writing to or reading from
+    :param use_s3: Whether the path is an S3 location or local location
     :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID
     :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY
-    :param bucket: The name of the S3 bucket; required to use S3, obvs
+    :param bucket: The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as \
+    S3_BUCKET
     """
 
     def __init__(
@@ -54,27 +55,19 @@ class FileHandler(object):
 
         self.use_s3 = use_s3 if is_not_null(bucket) else False
         if self.use_s3:
-            try:
-                s3_params = {}
 
-                if aws_access is not None:
-                    s3_params["aws_access_key_id"] = aws_access
-                    s3_params["aws_secret_access_key"] = aws_secret
+            s3_params = {}
 
-                if "." in bucket:
-                    s3_params["calling_format"] = OrdinaryCallingFormat()
+            if aws_access is not None:
+                s3_params["aws_access_key_id"] = aws_access
+                s3_params["aws_secret_access_key"] = aws_secret
 
-                self.s3 = S3Connection(**s3_params).get_bucket(bucket)
+            if "." in bucket:
+                s3_params["calling_format"] = OrdinaryCallingFormat()
 
-            except Exception as e:
-                print(
-                    "Couldn't find or access the specified bucket, using local storage: {}".format(
-                        e
-                    )
-                )
-                self.use_s3 = False
+            self.s3 = S3Connection(**s3_params).get_bucket(bucket)
 
-        if not self.use_s3:
+        else:
             self.path = os.path.join(self.path)
             if not os.path.exists(self.path):
                 try:
@@ -84,8 +77,10 @@ class FileHandler(object):
                     print(e)
 
     def iterate_path(self):
+
         """
-        Iterates over the directory/bucket and returns a list of filenames or S3 object keys
+        Iterates over the directory and returns a list of filenames or S3 object keys
+
         :return: Yields a list of filenames or S3 keys
         """
 
@@ -97,8 +92,10 @@ class FileHandler(object):
                 yield f.name
 
     def clear_folder(self):
+
         """
         Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)
+
         :return:
         """
 
@@ -110,8 +107,10 @@ class FileHandler(object):
                 os.unlink(os.path.join(self.path, f.name))
 
     def get_key_hash(self, key):
+
         """
         Converts a key to a hashed representation; useful for caching
+
         :param key: A raw string
         :return: A SHA224 hash representation of that key
         """
@@ -121,20 +120,22 @@ class FileHandler(object):
     def write(
         self, key, data, format="pkl", hash_key=False, add_timestamp=False, **io_kwargs
     ):
+
         """
-        Writes arbitrary data objects to a variety of file formats.  If you save something to csv/tab/xlsx/xls/dta, \
-        it assumes you've passed it a Pandas DataFrame object.  Same goes for JSON - if you're trying to save an \
-        object to JSON, it assumes that you're passing it valid JSON.  By default, though, the handler attemps to use \
-        pickling, allowing you to save (mostly) anything you want.
-        # TODO: caveat about it not working for stata in python2
+        Writes arbitrary data objects to a variety of file formats.  If you save something to csv/tab/xlsx/xls/dta,
+        it assumes you've passed it a Pandas DataFrame object. If you're trying to save an object to JSON, it assumes
+        that you're passing it valid JSON. By default, though, the handler attempts to use pickling, allowing you to
+        save (mostly) anything you want.
+
         :param key: The name of the file or key (without a file suffix!)
         :param data: The actual data to write to the file
-        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json).  Defaults to pkl.
+        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl. This
+        will be used as the file's suffix.
         :param hash_key: Whether or not to hash the provided key before saving the file. (Default=False)
         :param add_timestamp: Optionally add a timestamp to the filename
-        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of \
-        the file you want to save.  Dta uses pandas.DataFrame.to_stata; csv uses to_csv; pkl uses pickle.dumps; \
-        json uses json.dumps
+        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of
+        the file you want to save.  The "dta" format uses `pandas.DataFrame.to_stata`; csv uses `to_csv`; pkl uses
+        `pickle.dumps`; json uses `json.dumps`
         :return:
         """
 
@@ -197,9 +198,12 @@ class FileHandler(object):
                         output.write(data)
 
     def read(self, key, format="pkl", hash_key=False, **io_kwargs):
+
         """
+        Reads a file from the directory, returning its contents.
+
         :param key: The name of the file to read (without a suffix!)
-        :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab)
+        :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match
         :param hash_key: Whether the key should be hashed prior to looking for and retrieving the file.
         :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)
         :return: The file contents, in the requested format
