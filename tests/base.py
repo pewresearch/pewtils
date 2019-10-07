@@ -190,6 +190,18 @@ class BaseTests(unittest.TestCase):
         vals, paths = scan_dictionary(test_dict, "three")
         self.assertEqual(vals[0], "woot")
         self.assertEqual(paths[0], "one/two/three/")
+        vals, paths = scan_dictionary(test_dict, "doesnt_exist")
+        self.assertEqual(vals, [])
+        self.assertEqual(vals, [])
+
+        test_dict = {"one": {"two": {"three": "woot"}, "three": {"four": "five"}}}
+        vals, paths = scan_dictionary(test_dict, "three")
+        self.assertEqual(len(vals), 2)
+        self.assertEqual(len(paths), 2)
+        self.assertIn("woot", vals)
+        self.assertIn({"four": "five"}, vals)
+        self.assertIn("one/two/three/", paths)
+        self.assertIn("one/three/", paths)
 
     def test_new_random_number(self):
         from pewtils import new_random_number
