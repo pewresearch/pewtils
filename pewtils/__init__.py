@@ -36,7 +36,7 @@ def decode_text(text, throw_loud_fail=False):
 
     output_text = ""
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore", RuntimeWarning)
+        warnings.simplefilter("ignore")
         if is_not_null(text):
             try:
                 text = u"{}".format(text)
