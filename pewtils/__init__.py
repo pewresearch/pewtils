@@ -22,42 +22,62 @@ NULL_VALUES = [None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
 
 def decode_text(text, throw_loud_fail=False):
     """
-    Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string's encoding, decode it, and convert it to ASCII.
-    If both these attempts fail, it will attempt to use the "unidecode" package to transliterate into ASCII.
-    And finally, if that doesn't work, it will forcibly encode the text as ASCII and ignore non-ASCII characters.
-    In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used to transliterate.
-    In general, you shouldn't need to use this function in Python 3, but it can be used to convert unicode strings to bytes if you need to do so.
-    Please be warned, this function is potentially destructive to source input and should be used with some care.
-    Input text which cannot be decoded may be stripped out, replaced with a similar ASCII character or other placeholder,
-    potentially resulting in an empty string.
+    Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string's encoding,
+    decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the "unidecode" package to
+    transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII and ignore
+    non-ASCII characters. In Python 3, the decode/encode attempts will fail by default, and the unidecode package will
+    be used to transliterate. In general, you shouldn't need to use this function in Python 3, but it can be used to
+    convert unicode strings to bytes if you need to do so. Please be warned, this function is potentially destructive
+    to source input and should be used with some care. Input text which cannot be decoded may be stripped out, replaced
+    with a similar ASCII character or other placeholder, potentially resulting in an empty string.
 
     :param text: text to process
-    :param throw_loud_fail: bool - if True will break on ascii
+    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and
+    return an empty string (default False)
     :return: decoded text, or empty string ''
     """
 
     output_text = ""
-    if is_not_null(text):
-        try:
-            text = u"{}".format(text)
-            output_text = text.decode("ascii").encode("ascii")
-        except:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        if is_not_null(text):
             try:
-                output_text = text.decode(chardet.detect(text)["encoding"])
-                output_text = output_text.encode("ascii")
-            except:
+                text = u"{}".format(text)
+                output_text = text.decode("ascii").encode("ascii")
+            except (AttributeError, TypeError, UnicodeEncodeError, UnicodeDecodeError):
                 try:
-                    output_text = unidecode(text)
-                except:
-                    if throw_loud_fail:
-                        output_text = text.decode("ascii", "ignore").encode("ascii")
-                    else:
-                        try:
+                    output_text = text.decode(chardet.detect(text)["encoding"])
+                    output_text = output_text.encode("ascii")
+                except (
+                    AttributeError,
+                    TypeError,
+                    UnicodeEncodeError,
+                    UnicodeDecodeError,
+                ):
+                    try:
+                        output_text = unidecode(text)
+                    except (
+                        AttributeError,
+                        TypeError,
+                        UnicodeEncodeError,
+                        UnicodeDecodeError,
+                    ):
+                        if throw_loud_fail:
                             output_text = text.decode("ascii", "ignore").encode("ascii")
-                        except:
-                            print("could not decode")
-                            print(text)
-        output_text = output_text.replace("\x00", "").replace("\u0000", "")
+                        else:
+                            try:
+                                output_text = text.decode("ascii", "ignore").encode(
+                                    "ascii"
+                                )
+                            except (
+                                AttributeError,
+                                TypeError,
+                                UnicodeEncodeError,
+                                UnicodeDecodeError,
+                            ):
+                                print("Could not decode")
+                                print(text)
+                output_text = output_text.replace("\x00", "").replace("\u0000", "")
 
     return output_text
 
