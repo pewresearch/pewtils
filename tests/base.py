@@ -135,15 +135,24 @@ class BaseTests(unittest.TestCase):
     def test_get_hash(self):
         from pewtils import get_hash
 
-        text = "test_string"
-        hash = get_hash(text, hash_function="nilsimsa")
-        self.assertEqual(
-            hash, "49c808104092202004009004800200084a0240a0c09040a1113a04a821210016"
-        )
-        hash = get_hash(text, hash_function="md5")
-        self.assertEqual(hash, "3474851a3410906697ec77337df7aae4")
-        hash = get_hash(text, hash_function="ssdeep")
-        self.assertEqual(hash, "3:HI2:Hl")
+        for text, method, expected_value in [
+            (
+                "test_string",
+                "nilsimsa",
+                "49c808104092202004009004800200084a0240a0c09040a1113a04a821210016",
+            ),
+            ("test_string", "md5", "3474851a3410906697ec77337df7aae4"),
+            ("test_string", "ssdeep", "3:HI2:Hl"),
+            (
+                u"\u5317\u4EB0",
+                "nilsimsa",
+                "0100000044110004290804002820001002844001200601000101002800394081",
+            ),
+            (u"\u5317\u4EB0", "md5", "3261ad50fccf7ced43d944bbfd2acb5c"),
+            (u"\u5317\u4EB0", "ssdeep", "3:I2n:l"),
+        ]:
+            hash = get_hash(text, hash_function=method)
+            self.assertEqual(hash, expected_value)
 
     def test_concat_text(self):
         from pewtils import concat_text

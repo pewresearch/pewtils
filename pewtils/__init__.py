@@ -400,33 +400,34 @@ def flatten_list(l):
 
 
 def get_hash(text, hash_function="ssdeep"):
+
     """
-    Generate hashed text
+    Generates hashed text. The string will be passed through `decode_text` and the returned value will be used instead
+    of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and 3. By
+    default the function uses the ssdeep algorithm, which generates context-triggered hashes that are useful for
+    computing document similarities at scale. The other options are the Nilsimsa locally-sensitive hashing algorithm,
+    and the more traditional MD5 algorithm.
 
     :param text: The string to hash
     :param hash_function: The specific algorithm to use (default = 'ssdeep'); \
     options are 'nilsimsa', 'md5', and 'ssdeep'
     :return: A hashed representation of the provided string
     """
+
+    decoded_text = decode_text(text).encode("utf8").strip()
+    if decoded_text == "":
+        decoded_text = text
+    text = decoded_text
     if hash_function == "nilsimsa":
         from nilsimsa import Nilsimsa
 
-        try:
-            hash = Nilsimsa(text).hexdigest()
-        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
-            hash = Nilsimsa(decode_text(text).encode("utf8")).hexdigest()
+        hash = Nilsimsa(text).hexdigest()
     elif hash_function == "md5":
-        try:
-            hash = md5(text).hexdigest()
-        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
-            hash = md5(decode_text(text).encode("utf8")).hexdigest()
+        hash = md5(text).hexdigest()
     else:
         import ssdeep
 
-        try:
-            hash = ssdeep.hash(text)
-        except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
-            hash = ssdeep.hash(decode_text(text).encode("utf8"))
+        hash = ssdeep.hash(text)
 
     return hash
 
