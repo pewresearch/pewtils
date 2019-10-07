@@ -12,22 +12,31 @@ from pewtils import get_hash, decode_text
 
 
 def hash_url(url):
+
     """
     Clears out http/https prefix and returns an MD5 hash of the URL
 
     :param url: string of the url
     :return: hashed string
     """
+
     http_regex = re.compile(r"^http(s)?\:\/\/")
     return get_hash(unidecode(http_regex.sub("", url.lower())), hash_function="md5")
 
 
 def strip_html(html, simple=False, break_tags=None):
-    """
-    Removes anything between </> tags
 
-    :param text: String to filter
-    :return: String with HTML tags removed
+    """
+    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.
+    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document
+    using a process that we have found to work fairly well. Setting `simple=True` will make the function use
+    a much simpler regular expression approach to parsing. This function isn't always 100% effective, but it does a
+    decent job of usually removing the vast majority of HTML without stripping out valuable content.
+
+    :param html: The HTML to process
+    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
+    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"]
+    :return: The text with HTML components removed (perfection not guaranteed)
     """
 
     html = re.sub(r"\n", " ", html)
@@ -294,18 +303,19 @@ VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
 
 
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
+
     """
     Tries to resolve a link to the "most correct" version. Especially useful for expanding short URLs \
     from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not
     perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases
     while (usually) avoiding redirects to generic error pages.
+
     :param url: The URL to test. Should be fully qualified.
     :param timeout: How long to wait for a response before giving up (default is one second)
     :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
     :return: The "canonical" URL as supplied by the server, or the original URL if the server was not helpful.
     """
 
-    # GOOD_STATUS_CODES = [200, 301, 303]
     BAD_STATUS_CODES = [
         302,
         307,
@@ -375,7 +385,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                     for param, val in urlparse.parse_qs(parsed.query).items():
                         if len(val) == 1 and val[0].startswith("http"):
                             parsed_possible_url = urlparse.urlparse(val[0])
-                            # print("POSSIBLE URL: {}".format(parsed_possible_url))
                             if (
                                 parsed_possible_url.scheme
                                 and parsed_possible_url.netloc
@@ -407,7 +416,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                         # If it's the same link but only the domain, protocol, or casing changed, it's fine
                         last_good_url = response_url
                         last_good_status = status_code
-                        # print("GOOD: {}, {}".format(status_code, response_url))
                     elif i != 0 and status_code in CHECK_LENGTH:
                         # For these codes, we're going to see how much the link changed
                         # Redirects and 404s sometimes preserve a decent URL, sometimes they go to a landing page
@@ -440,24 +448,16 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                             # print("GOOD: {}, {}".format(status_code, response_url))
                         else:
                             # These can sometimes resolve further though, so we continue onward
-                            # print("SHORT URL, SKIPPING: {}".format(response_url))
                             prev_path = None
                             prev_query = None
-                            # break
                     else:
-                        # if status_code in GOOD_STATUS_CODES:
-                        #     print("GOOD: {}, {}".format(status_code, response_url))
-                        # elif status_code in BAD_STATUS_CODES:
-                        #     print("BAD: {}, {}".format(status_code, response_url))
-                        # else:
-                        #     print("UNKNOWN: {}, {}".format(status_code, response_url))
                         if status_code not in BAD_STATUS_CODES:
                             last_good_status = status_code
                             last_good_url = response_url
                         else:
                             break
                 else:
-                    # print("Resolved to a general URL, breaking off")
+                    # Resolved to a general URL
                     break
 
             prev_was_shortener = is_shortener
@@ -470,13 +470,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                 last_good_url, session=session, timeout=timeout, user_agent=user_agent
             )
 
-        # if last_good_status in GOOD_STATUS_CODES:
-        #     print("FINAL GOOD: {}, {}".format(last_good_status, last_good_url))
-        # elif last_good_status in BAD_STATUS_CODES:
-        #     print("FINAL BAD: {}, {}".format(last_good_status, last_good_url))
-        # else:
-        #     print("FINAL UNKNOWN: {}, {}".format(last_good_status, last_good_url))
-
         url = last_good_url
 
     if close_session:
@@ -486,9 +479,11 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
 
 def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
+
     """
     Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
     ones that can be removed without generating any redirects.
+
     :param url: The URL to trim
     :param session: Requests session (optional)
     :param timeout: Timeout for requests
@@ -554,12 +549,15 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
 def extract_domain_from_url(
     url, include_subdomain=True, resolve_url=False, timeout=1.0
 ):
+
     """
     Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
+
     :param url:  The link from which to extract the domain
     :param include_subdomain: Whether or not to include the subdomain (e.g. 'news.google.com'); default is True
     :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \
     return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they're permanent)
+    :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)
     :return: The domain for the link
     """
 
