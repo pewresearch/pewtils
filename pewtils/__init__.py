@@ -140,11 +140,13 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
 
 def recursive_update(existing, new):
+
     """
     Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
     new values and updates the object.  Doesn't care if the keys in the dictionary correspond to attribute names or
     dictionary keys; you can use this to iterate through a nested hierarchy of objects and dictionaries and update
     whatever you like.
+
     :param existing: An object or dictionary
     :param new: A dictionary where keys correspond to the names of keys in the existing dictionary or attributes on
     the existing object
@@ -197,21 +199,22 @@ def chunk_list(seq, size):
     :return: list - A list of lists
     """
 
-    return (seq[pos : pos + size] for pos in range(0, len(seq), size))
+    return (seq[pos : (pos + size)] for pos in range(0, len(seq), size))
 
 
 def extract_json_from_folder(
     folder_path, include_subdirs=False, concat_subdir_names=False
 ):
+
     """
-    Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it
-    to a dictionary, with the key being the name of the file and the value being the JSON itself.  Has options for
-    recursively traversing a folder, and for optionally concatenating the subfolder names into the dictionary keys
-    as prefixes.
+    Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it to a dictionary,
+    with the key being the name of the file and the value being the JSON itself.  Has options for recursively
+    traversing a folder, and for optionally concatenating the subfolder names into the dictionary keys as prefixes.
+
     :param folder_path: The path of the folder to scan
     :param include_subdirs: Whether or not to recursively scan subfolders
     :param concat_subdir_names: Whether or not to prefix the dictionary keys with the names of subfolders
-    :return:
+    :return: A dictionary containing all of the abstracted JSON files as values
     """
 
     attributes = {}
@@ -254,17 +257,21 @@ def extract_attributes_from_folder_modules(
     concat_subdir_names=False,
     current_subdirs=None,
 ):
+
     """
     Similar to `extract_json_from_folder`, this function iterates over a folder and looks for Python files that
     contain an attribute (like a class, function, or variable) with a given name. It extracts those attributes and
     returns a dictionary where the keys are the names of the files that contained the attributes, and the values
     are the attributes themselves.
+    NOTE: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files that
+    you want to scan and import using this function.
+
     :param folder_path: The path of a folder/module to scan
     :param attribute_name: The name of the attribute (class, function, variable, etc.) to extract from files
     :param include_subdirs: Whether or not to recursively scan subfolders
     :param concat_subdir_names: Whether or not to prefix the dictionary keys with the names of subfolders
     :param current_subdirs: Used to track location when recursively iterating a module
-    :return:
+    :return: A dictionary with all of the extracted attributes as values
     """
 
     if not folder_path.startswith(os.getcwd()):
@@ -360,6 +367,7 @@ def extract_attributes_from_folder_modules(
 
 
 def zipcode_num_to_string(zip):
+
     """
     Attempts to standardize a string/integer/float that contains a zipcode.
 
@@ -392,6 +400,7 @@ def flatten_list(l):
 
     """
     Takes a list of lists and flattens it into a single list
+
     :param l: A list of lists
     :return: A flattened list of all of the elements contained in the original list of lists
     """
@@ -433,18 +442,24 @@ def get_hash(text, hash_function="ssdeep"):
 
 
 def concat_text(*args):
+
     """
-    A helper function for concatenating text values; useful for mapping onto a variable in Pandas
+    A helper function for concatenating text values; useful for mapping onto a variable in Pandas. Text
+    values are passed through `decode_text` before concatenation.
+
     :param args: A list of text values that will be returned as a single space-separated string
     :return: A single string of the values concatenated by spaces
     """
+
     strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
     return " ".join(strs) if strs else np.nan
 
 
 def vector_concat_text(*args):
+
     """
     Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces
+
     :param args: A list of lists or Pandas series that contain text values
     :return: A single list with all of the text values for each row concatenated
     """
@@ -454,9 +469,11 @@ def vector_concat_text(*args):
 
 
 def cached_series_mapper(series, function):
+
     """
     Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.
     Great if you're doing database lookups, etc.
+
     :param series: A Pandas Series
     :param function: A function to apply to values in the series
     :return: The resulting series
@@ -470,8 +487,10 @@ def cached_series_mapper(series, function):
 
 
 def scale_range(old_val, old_min, old_max, new_min, new_max):
+
     """
     Scales a value from one range to another.  Useful for comparing values from different scales, for example.
+
     :param old_val: The value to convert
     :param old_min: The minimum of the old range
     :param old_max: The maximum of the old range
@@ -486,13 +505,21 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
 class classproperty(object):
 
     """
-    #galen found it on stackoverflow!
-    https://stackoverflow.com/a/3203659
-
-    #work on this
-    this is a decorator that allows you to:::
-        query.name rather than Query().name()
-        evaluate names in models
+    Borrowed from a StackOverflow post (https://stackoverflow.com/a/3203659), this decorator allows you to define
+    functions on a class that are accessible directly from the class itself (rather than an instance of the class).
+    Essentially, this allows you to access `classproperty` attributes directly, like `obj.property`, rather than as
+    a function on a class instance (like `obj = Obj(); obj.property()`).  Use like so:
+    ```python
+        class Foo(object):
+            x = 4
+            @classproperty
+            def number(cls):
+                return cls.x
+        >>> Foo().number
+        4
+        >>> Foo.number
+        4
+    ```
     """
 
     def __init__(self, fget):
@@ -505,9 +532,13 @@ class classproperty(object):
 def scan_dictionary(search_dict, field):
 
     """
-    Takes a dict with nested lists and dicts,
-    and searches all dicts for a key of the field
-    provided.
+    Takes a dictionary with nested lists and dictionaries, and searches recursively for a specific key. Since keys can
+    occur more than once, the function returns a list of all of the found values along with a list of equal length
+    that specifies the nested key path to each value.
+
+    :param search_dict: The dictionary to search
+    :param field: The field to find
+    :return: A tuple of the found values and file path-style strings representing their locations
     """
 
     fields_found = []
