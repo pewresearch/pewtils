@@ -186,12 +186,27 @@ class BaseTests(unittest.TestCase):
         from pewtils import new_random_number
         import numpy as np
 
-        maxes = [1, 2, 4, 8, 10]
-        avgs = [1, 1, 2, 4, 6]
-        for attempt, attempt_max, attempt_avg in zip(range(5), maxes, avgs):
-            attempts = [new_random_number(attempt=attempt) for i in range(500)]
-            self.assertLessEqual(round(np.average(attempts)), attempt_avg)
-            self.assertLess(max(attempts), attempt_max)
+        for attempt, minimum, maximum, avg in [
+            (1, 1, 2, 1),
+            (1, 1, 10, 1),
+            (2, 1, 10, 2),
+            (3, 1, 10, 4),
+            (4, 1, 10, 5),
+            (5, 1, 10, 5),
+            (1, 2, 2, 2),
+            (1, 2, 10, 3),
+            (2, 2, 10, 4),
+            (3, 2, 10, 5),
+            (4, 2, 10, 5),
+            (5, 2, 10, 5),
+        ]:
+            attempts = [
+                new_random_number(attempt=attempt, minimum=minimum, maximum=maximum)
+                for i in range(500)
+            ]
+            self.assertGreaterEqual(np.min(attempts), minimum)
+            self.assertLessEqual(np.max(attempts), maximum)
+            self.assertGreaterEqual(round(np.average(attempts)), avg)
 
     def tearDown(self):
         pass

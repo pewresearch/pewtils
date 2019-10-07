@@ -536,16 +536,22 @@ def scan_dictionary(search_dict, field):
     return fields_found, key_path
 
 
-def new_random_number(attempt=1, base_interval=1.0, max_sleep=10):
+def new_random_number(attempt=1, minimum=1.0, maximum=10):
 
     """
-    Generate a variable waiting time in seconds which exponentially increases with each attempt. \
-    Note that this function does NOT itself sleep or block execution, it just adds new_random_number to your timer.
+    Returns a random number between `minimum` (default 1) and a computed upper bound that exponentially increases
+    based on the `attempt` parameter. The upper bound is capped using the `maximum` parameter (default 10) but is
+    otherwise determined by the function `minimum * 2 ** attempt`. In effect, this means that when `attempt` is 1,
+    the number returned will be in the range of the minimum and twice the minimum's value.  As you increase `attempt`,
+    the possible range of returned values expands exponentially until it hits the `maximum` ceiling. One useful
+    application of this function is rate limiting: a script can pause in between requests at a reasonably fast pace,
+    but then moderate itself and pause for longer periods if it begins encountering errors, simply by increasing the
+    `attempt` variable (hence its name).
 
-    :param attempt: Increasing attempt will probably raise the sleep interval.
-    :param base_interval: The minimum time. Must be greater than zero.
-    :param max_sleep: The maximum amount of time allowed.
-    :return: Seconds to sleep
+    :param attempt: Increasing attempt will expand the upper-bound of the range from which the random number is drawn
+    :param minimum: The minimum allowed value that can be returned; must be greater than zero.
+    :param maximum: The maximum allowed value that can be returned; must be greater than `minimum`.
+    :return: A random number drawn uniformly from across the range determined by the provided arguments.
     """
 
-    return uniform(0, min(max_sleep, base_interval * 2 ** attempt))
+    return uniform(minimum, min(maximum, minimum * 2 ** attempt))
