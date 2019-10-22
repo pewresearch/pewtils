@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import division
 from builtins import str
-import re, time, threading, requests, tldextract
+import re, time, threading, requests, tldextract, warnings
 from six.moves.urllib import parse as urlparse
 
 from functools import wraps
@@ -21,7 +21,12 @@ def hash_url(url):
     """
 
     http_regex = re.compile(r"^http(s)?\:\/\/")
-    return get_hash(unidecode(http_regex.sub("", url.lower())), hash_function="md5")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        result = get_hash(
+            unidecode(http_regex.sub("", url.lower())), hash_function="md5"
+        )
+        return result
 
 
 def strip_html(html, simple=False, break_tags=None):
