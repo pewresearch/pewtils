@@ -5,7 +5,8 @@ import unittest
 class BaseTests(unittest.TestCase):
 
     """
-    To test, navigate to pewtils root folder and run `python -m unittest tests`
+    To test, navigate to pewtils root folder and run `python -m unittest tests`.
+    To assess unit test coverage, run `coverage run --source=pewtils -m unittest tests` and then `coverage report -m`.
     """
 
     def setUp(self):
@@ -47,6 +48,7 @@ class BaseTests(unittest.TestCase):
     def test_is_null(self):
 
         import numpy as np
+        import pandas as pd
         from pewtils import is_null, is_not_null
 
         for val in [None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"]:
@@ -55,6 +57,11 @@ class BaseTests(unittest.TestCase):
         self.assertTrue(is_not_null(0.0))
         self.assertTrue(is_null("-9", custom_nulls=["-9"]))
         self.assertTrue(is_null([], empty_lists_are_null=True))
+        self.assertFalse(is_null([], empty_lists_are_null=False))
+        self.assertTrue(is_null(pd.Series(), empty_lists_are_null=True))
+        self.assertFalse(is_null(pd.Series(), empty_lists_are_null=False))
+        self.assertTrue(is_null(pd.DataFrame(), empty_lists_are_null=True))
+        self.assertFalse(is_null(pd.DataFrame(), empty_lists_are_null=False))
 
     def test_recursive_update(self):
         from pewtils import recursive_update
@@ -73,6 +80,7 @@ class BaseTests(unittest.TestCase):
                 "level2": {"val2": "test123456"},
                 "val1": "test123",
                 "val2": {"val": "2", "val_dict": {"key": "new_value"}},
+                "val3": {"test": "test"},
             }
         }
         result = recursive_update(base, update)
@@ -80,6 +88,7 @@ class BaseTests(unittest.TestCase):
         self.assertEqual(result["level1"]["val1"], "test123")
         self.assertEqual(result["level1"]["val2"].val, "2")
         self.assertEqual(result["level1"]["val2"].val_dict["key"], "new_value")
+        self.assertEqual(result["level1"]["val3"]["test"], "test")
 
     def test_chunk_list(self):
         from pewtils import chunk_list
@@ -133,7 +142,7 @@ class BaseTests(unittest.TestCase):
         for val in [20002, 20002.0, "20002", "20002.0"]:
             zip = zipcode_num_to_string(val)
             self.assertEqual(zip, "20002")
-        for val in ["abcde", "12", "99999", "200", "1.0"]:
+        for val in ["abcde", "12", "99999", "200", "1.0", None]:
             zip = zipcode_num_to_string(val)
             self.assertIsNone(zip)
 
@@ -205,14 +214,22 @@ class BaseTests(unittest.TestCase):
         self.assertEqual(vals, [])
         self.assertEqual(vals, [])
 
-        test_dict = {"one": {"two": {"three": "woot"}, "three": {"four": "five"}}}
+        test_dict = {
+            "one": {
+                "two": {"three": "woot"},
+                "three": {"four": "five"},
+                "six": [{"three": "seven"}],
+            }
+        }
         vals, paths = scan_dictionary(test_dict, "three")
-        self.assertEqual(len(vals), 2)
-        self.assertEqual(len(paths), 2)
+        self.assertEqual(len(vals), 3)
+        self.assertEqual(len(paths), 3)
         self.assertIn("woot", vals)
         self.assertIn({"four": "five"}, vals)
+        self.assertIn("seven", vals)
         self.assertIn("one/two/three/", paths)
         self.assertIn("one/three/", paths)
+        self.assertIn("one/six/three/", paths)
 
     def test_new_random_number(self):
         from pewtils import new_random_number

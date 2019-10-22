@@ -48,6 +48,10 @@ class HTTPTests(unittest.TestCase):
 
         for original_url, canonical_url in [
             (
+                "t.co/H9tE3IlTAH",
+                "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
+            ),
+            (
                 "https://t.co/H9tE3IlTAH",
                 "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
             ),
