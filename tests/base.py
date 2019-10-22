@@ -6,7 +6,7 @@ class BaseTests(unittest.TestCase):
 
     """
     To test, navigate to pewtils root folder and run `python -m unittest tests`.
-    To assess unit test coverage, run `coverage run --source=pewtils -m unittest tests` and then `coverage report -m`.
+    To assess unit test coverage, run `coverage run -m unittest tests` and then `coverage report -m`.
     """
 
     def setUp(self):
