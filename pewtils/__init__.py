@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import os, re, itertools, json, sys, chardet, copy, warnings
+import os, re, itertools, json, sys, chardet, copy, warnings, zipcodes
 
 try:
     from importlib.machinery import SourceFileLoader
@@ -383,12 +383,11 @@ def zipcode_num_to_string(zip):
             zip = None
 
         if zip:
-            if len(zip) == 3:
-                zip = "00" + zip
-            elif len(zip) == 4:
-                zip = "0" + zip
-            elif len(zip) < 3:
-                zip = None
+            zip = zip.zfill(5)
+            if zipcodes.is_real(zip):
+                return zip
+            else:
+                return None
     else:
 
         zip = None
