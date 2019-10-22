@@ -12,7 +12,6 @@ ignore_errors = True
 exclude_lines =
     pragma: no cover
     def __repr__
-    except
 omit =
     */site-packages/*
     pewtils/internal/*
