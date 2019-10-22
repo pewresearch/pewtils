@@ -232,6 +232,7 @@ class FileHandler(object):
                     with closing(open(filepath, "r")) as input:
                         data = input.read()
                 except:
+                    # TODO: handle this exception more explicitly
                     with closing(open(filepath, "rb")) as input:
                         data = input.read()
 
