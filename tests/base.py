@@ -126,6 +126,17 @@ class BaseTests(unittest.TestCase):
         self.assertEqual(results["py"](), "test1")
         self.assertEqual(results["subfolder_subfolder_py"](), "test2")
 
+    def test_zipcode_num_to_string(self):
+
+        from pewtils import zipcode_num_to_string
+
+        for val in [20002, 20002.0, "20002", "20002.0"]:
+            zip = zipcode_num_to_string(val)
+            self.assertEqual(zip, "20002")
+        for val in ["abcde", "12", "99999", "200", "1.0"]:
+            zip = zipcode_num_to_string(val)
+            self.assertIsNone(zip)
+
     def test_flatten_list(self):
         from pewtils import flatten_list
 
