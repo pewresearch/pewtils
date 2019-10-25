@@ -1,5 +1,7 @@
 from __future__ import print_function
 import unittest
+import os
+from contextlib import closing
 
 
 class IOTests(unittest.TestCase):
@@ -48,7 +50,6 @@ class IOTests(unittest.TestCase):
         from pewtils.io import FileHandler
 
         h = FileHandler("tests/files/temp", use_s3=False)
-        from contextlib import closing
 
         with closing(open("tests/files/temp/temp.txt", "wb")) as output:
             output.write(b"test")
@@ -57,8 +58,32 @@ class IOTests(unittest.TestCase):
         for file in h.iterate_path():
             files.append(file)
         self.assertEqual(len(files), 0)
-        import os
+        os.rmdir("tests/files/temp")
 
+    def test_clear_file(self):
+        from pewtils.io import FileHandler
+
+        h = FileHandler("tests/files/temp", use_s3=False)
+        with closing(open("tests/files/temp/temp.txt", "wb")) as output:
+            output.write(b"test")
+        h.clear_file("temp", format="txt")
+        files = []
+        for file in h.iterate_path():
+            files.append(file)
+        self.assertNotIn("temp.txt", files)
+        self.assertEqual(len(files), 0)
+        os.rmdir("tests/files/temp")
+
+        h = FileHandler("tests/files/temp", use_s3=False)
+        key = h.get_key_hash("temp")
+        with closing(open("tests/files/temp/{}.txt".format(key), "wb")) as output:
+            output.write(b"test")
+        h.clear_file("temp", format="txt", hash_key=True)
+        files = []
+        for file in h.iterate_path():
+            files.append(file)
+        self.assertNotIn("{}.txt".format(key), files)
+        self.assertEqual(len(files), 0)
         os.rmdir("tests/files/temp")
 
     def test_filehandler_get_key_hash(self):

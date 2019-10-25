@@ -106,6 +106,24 @@ class FileHandler(object):
             for f in scandir(self.path):
                 os.unlink(os.path.join(self.path, f.name))
 
+    def clear_file(self, key, format="pkl", hash_key=False):
+
+        """
+        Deletes a file.
+        :param key: The name of the file.
+        """
+
+        if hash_key:
+            key = self.get_key_hash(key)
+        if self.use_s3:
+            filepath = "/".join([self.path, "{}.{}".format(key, format)])
+            k = self.s3.get_key(filepath)
+            self.s3.delete_key(key.name)
+        else:
+            key += ".{}".format(format)
+            path = os.path.join(self.path, key)
+            os.unlink(path)
+
     def get_key_hash(self, key):
 
         """
