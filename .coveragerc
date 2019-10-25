@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-branch = True
+branch = False
 cover_pylib = False
 source = pewtils
 omit =
@@ -12,6 +12,7 @@ ignore_errors = True
 exclude_lines =
     pragma: no cover
     def __repr__
+    except
 omit =
     */site-packages/*
     pewtils/internal/*
