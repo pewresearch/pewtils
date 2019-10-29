@@ -26,7 +26,7 @@ Pew Research Center is a subsidiary of The Pew Charitable Trusts, its primary fu
 
 ## Use Policy 
 
-In addition to the [license](https://github.com/pewreasearch/pewtils/blob/master/LICENSE), Users must abide by the following conditions:
+In addition to the [license](https://github.com/pewresearch/pewtils/blob/master/LICENSE), Users must abide by the following conditions:
 
 - User may not use the Center's logo
 - User may not use the Center's name in any advertising, marketing or promotional materials.
