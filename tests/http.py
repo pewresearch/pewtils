@@ -47,14 +47,14 @@ class HTTPTests(unittest.TestCase):
         user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'"
 
         for original_url, canonical_url in [
-            (
-                "t.co/H9tE3IlTAH",
-                "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
-            ),
-            (
-                "https://t.co/H9tE3IlTAH",
-                "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
-            ),
+            # (
+            #     "t.co/H9tE3IlTAH",
+            #     "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
+            # ),
+            # (
+            #     "https://t.co/H9tE3IlTAH",
+            #     "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
+            # ),
             (
                 "http://ow.ly/M5o4N",
                 "https://snjtoday.com/congressman-fran56754k-lobiondo-visits-vineland-high-school/",
@@ -69,9 +69,9 @@ class HTTPTests(unittest.TestCase):
             ),
             (
                 "https://www.c-span.org/Live-Video/C-SPAN",
-                "https://www.c-span.org/Live-Video/C-SPAN",
+                "https://www.c-span.org/live/",
             ),
-            ("http://bit.ly/ascWO6", "http://irtl.org/html/DanCoats.mp3"),
+            # ("http://bit.ly/ascWO6", "http://irtl.org/html/DanCoats.mp3"),
             (
                 "https://www.google.com/maps/d/viewer?mid=zQ8Zk-5ey-Y8.kgD9Rxu8JCNQ&hl=en&usp=sharing",
                 "https://www.google.com/maps/d/viewer?mid=1NQVHeBBcVAnz9JwX1frZxX1ZgjY",
@@ -117,7 +117,8 @@ class HTTPTests(unittest.TestCase):
                 "https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/",
             ),
         ]:
-            result = canonical_link(original_url, user_agent=user_agent, timeout=30)
+            result = canonical_link(original_url, user_agent=user_agent, timeout=60)
+            self.assertEqual(result, canonical_url)
 
     def test_trim_get_parameters(self):
         from pewtils.http import trim_get_parameters
