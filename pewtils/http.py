@@ -367,7 +367,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
         original_parsed = urlparse.urlparse(last_good_url)
         has_path = original_parsed.path not in ["/", ""]
         has_query = original_parsed.query != ""
-        last_good_status = None
         prev_was_shortener = False
         prev_path = None
         prev_query = None
@@ -405,7 +404,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                 if status_code in PROXY_REQUIRED:
                     # These codes tend to indicate the last good URL in the chain
                     last_good_url = response_url
-                    last_good_status = status_code
                     break
                 good_path = not has_path or parsed.path not in ["/", ""]
                 good_query = not has_query or parsed.query != ""
@@ -420,7 +418,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                     ) or response_url.lower() == last_good_url.lower():
                         # If it's the same link but only the domain, protocol, or casing changed, it's fine
                         last_good_url = response_url
-                        last_good_status = status_code
                     elif i != 0 and status_code in CHECK_LENGTH:
                         # For these codes, we're going to see how much the link changed
                         # Redirects and 404s sometimes preserve a decent URL, sometimes they go to a landing page
@@ -437,9 +434,7 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                             and len(parsed.path) < 20
                             and len(parsed.query) == 0
                             and prev_path != parsed.path
-                        ):
-                            bad = True
-                        elif (
+                        ) or (
                             has_query
                             and len(parsed.netloc) > 7
                             and len(parsed.query) < 20
@@ -449,7 +444,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                             bad = True
                         if not bad or prev_was_shortener:
                             last_good_url = response_url
-                            last_good_status = status_code
                             # print("GOOD: {}, {}".format(status_code, response_url))
                         else:
                             # These can sometimes resolve further though, so we continue onward
@@ -457,7 +451,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                             prev_query = None
                     else:
                         if status_code not in BAD_STATUS_CODES:
-                            last_good_status = status_code
                             last_good_url = response_url
                         else:
                             break

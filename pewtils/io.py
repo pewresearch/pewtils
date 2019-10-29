@@ -1,6 +1,3 @@
-# from __future__ import print_function
-# from __future__ import unicode_literals
-
 from builtins import object
 import os
 import hashlib
@@ -11,14 +8,12 @@ import pandas as pd
 import pickle as pickle
 from scandir import scandir
 
-# from six import StringIO
 try:
     from io import StringIO, BytesIO
 except ImportError:
     from StringIO import StringIO as BytesIO
     from StringIO import StringIO
 
-    # from io import BytesIO
 from contextlib import closing
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat
@@ -117,7 +112,7 @@ class FileHandler(object):
             key = self.get_key_hash(key)
         if self.use_s3:
             filepath = "/".join([self.path, "{}.{}".format(key, format)])
-            k = self.s3.get_key(filepath)
+            key = self.s3.get_key(filepath)
             self.s3.delete_key(key.name)
         else:
             key += ".{}".format(format)

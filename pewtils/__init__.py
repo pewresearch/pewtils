@@ -304,9 +304,6 @@ def extract_attributes_from_folder_modules(
                                 os.path.splitext(os.path.join(path, file))[0],
                             ),
                         ).strip(".")
-                        unique_name = "_".join(
-                            current_subdirs + [current_folder, file_name]
-                        )
                         if module_name in sys.modules:
                             module = sys.modules[module_name]
                             # https://github.com/ansible/ansible/issues/13110
