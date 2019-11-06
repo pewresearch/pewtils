@@ -1,6 +1,13 @@
 from __future__ import absolute_import
-
-import os, re, itertools, json, sys, chardet, copy, warnings, zipcodes
+import os
+import re
+import itertools
+import json
+import sys
+import chardet
+import copy
+import warnings
+import zipcodes
 
 try:
     from importlib.machinery import SourceFileLoader
@@ -15,7 +22,6 @@ from contextlib import closing
 from scandir import walk
 from unidecode import unidecode
 from hashlib import md5
-
 
 def decode_text(text, throw_loud_fail=False):
     """
