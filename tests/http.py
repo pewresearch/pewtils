@@ -1,4 +1,3 @@
-from __future__ import print_function
 import unittest, re
 
 
@@ -106,11 +105,11 @@ class HTTPTests(unittest.TestCase):
             ),
             (
                 "https://pewrsr.ch/2kk3VvY",
-                "https://www.pewinternet.org/internet/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
+                "https://www.pewresearch.org/internet/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
             ),
             (
                 "https://pewrsr.ch/2ly4LFE",
-                "https://www.pewinternet.org/essay/the-challenges-of-using-machine-learning-to-identify-gender-in-images/",
+                "https://www.pewresearch.org/internet/2019/09/05/the-challenges-of-using-machine-learning-to-identify-gender-in-images/",
             ),
             (
                 "https://pewrsr.ch/2lxB0EX",
