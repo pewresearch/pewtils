@@ -106,7 +106,7 @@ class HTTPTests(unittest.TestCase):
             ),
             (
                 "https://pewrsr.ch/2kk3VvY",
-                "https://www.pewinternet.org/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
+                "https://www.pewinternet.org/internet/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
             ),
             (
                 "https://pewrsr.ch/2ly4LFE",
