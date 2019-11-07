@@ -1,13 +1,16 @@
 from __future__ import division
-from builtins import str
-import re, time, threading, requests, tldextract, warnings
-from six.moves.urllib import parse as urlparse
-
-from functools import wraps
 from bs4 import BeautifulSoup
-from unidecode import unidecode
-
+from builtins import str
+from functools import wraps
 from pewtils import get_hash, decode_text
+from six.moves.urllib import parse as urlparse
+from unidecode import unidecode
+import re
+import requests
+import threading
+import time
+import tldextract
+import warnings
 
 
 def hash_url(url):
