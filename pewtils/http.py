@@ -320,6 +320,7 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
     :param url: The URL to test. Should be fully qualified.
     :param timeout: How long to wait for a response before giving up (default is one second)
     :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
+    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided
     :return: The "canonical" URL as supplied by the server, or the original URL if the server was not helpful.
     """
 
@@ -547,7 +548,7 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
 
 
 def extract_domain_from_url(
-    url, include_subdomain=True, resolve_url=False, timeout=1.0
+    url, include_subdomain=True, resolve_url=False, timeout=1.0, session=None, user_agent=None
 ):
 
     """
@@ -558,11 +559,13 @@ def extract_domain_from_url(
     :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \
     return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they're permanent)
     :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)
+    :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
+    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided
     :return: The domain for the link
     """
 
     if resolve_url:
-        url = canonical_link(url, timeout=timeout)
+        url = canonical_link(url, timeout=timeout, session=session, user_agent=user_agent)
     domain = tldextract.extract(url)
     if domain:
         if include_subdomain and domain.subdomain and domain.subdomain != "www":
