@@ -548,7 +548,12 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
 
 
 def extract_domain_from_url(
-    url, include_subdomain=True, resolve_url=False, timeout=1.0, session=None, user_agent=None
+    url,
+    include_subdomain=True,
+    resolve_url=False,
+    timeout=1.0,
+    session=None,
+    user_agent=None,
 ):
 
     """
@@ -565,7 +570,9 @@ def extract_domain_from_url(
     """
 
     if resolve_url:
-        url = canonical_link(url, timeout=timeout, session=session, user_agent=user_agent)
+        url = canonical_link(
+            url, timeout=timeout, session=session, user_agent=user_agent
+        )
     domain = tldextract.extract(url)
     if domain:
         if include_subdomain and domain.subdomain and domain.subdomain != "www":

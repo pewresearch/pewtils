@@ -23,6 +23,7 @@ from scandir import walk
 from unidecode import unidecode
 from hashlib import md5
 
+
 def decode_text(text, throw_loud_fail=False):
     """
     Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string's encoding,
@@ -330,7 +331,10 @@ def extract_attributes_from_folder_modules(
                                 except RuntimeWarning:
                                     try:
                                         module = imp.load_module(
-                                            module_name.split(".")[-1], file, pathname, description
+                                            module_name.split(".")[-1],
+                                            file,
+                                            pathname,
+                                            description,
                                         )
                                     except RuntimeWarning:
                                         module = None
