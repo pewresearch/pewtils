@@ -330,7 +330,7 @@ def extract_attributes_from_folder_modules(
                                 except RuntimeWarning:
                                     try:
                                         module = imp.load_module(
-                                            module_name, file, pathname, description
+                                            module_name.split(".")[-1], file, pathname, description
                                         )
                                     except RuntimeWarning:
                                         module = None
