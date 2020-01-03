@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pewtils.http &#8212; pewtils 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pewtils.http</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span>
+<span class="kn">from</span> <span class="nn">six.moves.urllib</span> <span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">urlparse</span>
+<span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">tldextract</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+
+<div class="viewcode-block" id="hash_url"><a class="viewcode-back" href="../../index.html#pewtils.http.hash_url">[docs]</a><span class="k">def</span> <span class="nf">hash_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clears out http/https prefix and returns an MD5 hash of the URL</span>
+
+<span class="sd">    :param url: string of the url</span>
+<span class="sd">    :return: hashed string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">http_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^http(s)?\:\/\/&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">get_hash</span><span class="p">(</span>
+            <span class="n">unidecode</span><span class="p">(</span><span class="n">http_regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">lower</span><span class="p">())),</span> <span class="n">hash_function</span><span class="o">=</span><span class="s2">&quot;md5&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="strip_html"><a class="viewcode-back" href="../../index.html#pewtils.http.strip_html">[docs]</a><span class="k">def</span> <span class="nf">strip_html</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</span>
+<span class="sd">    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document</span>
+<span class="sd">    using a process that we have found to work fairly well. Setting `simple=True` will make the function use</span>
+<span class="sd">    a much simpler regular expression approach to parsing. This function isn&#39;t always 100% effective, but it does a</span>
+<span class="sd">    decent job of usually removing the vast majority of HTML without stripping out valuable content.</span>
+
+<span class="sd">    :param html: The HTML to process</span>
+<span class="sd">    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)</span>
+<span class="sd">    :param break_tags: A custom list of tags on which to break (default is [&quot;strong&quot;, &quot;em&quot;, &quot;i&quot;, &quot;b&quot;, &quot;p&quot;]</span>
+<span class="sd">    :return: The text with HTML components removed (perfection not guaranteed)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">html</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">break_tags</span><span class="p">:</span>
+        <span class="n">break_tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">simple</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="n">split_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s{2,}&quot;</span><span class="p">)</span>
+            <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">():</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span>
+                    <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;menu&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;header&quot;</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">])</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;menu&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;header&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="p">)):</span>
+                    <span class="n">tag</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">([</span><span class="s2">&quot;script&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">]):</span>
+                <span class="n">tag</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
+                <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">(</span><span class="n">break_tags</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">t</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">UnicodeDecodeError</span><span class="p">,</span> <span class="ne">UnicodeEncodeError</span><span class="p">):</span>
+                    <span class="n">t</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">decode_text</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l2</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">for</span> <span class="n">l2</span> <span class="ow">in</span> <span class="n">split_re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span><span class="p">])</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\sA){2,}\s&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n+(\s+)?&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; +&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\t+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">text</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;strip_html error&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;[^&gt;]*&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">text</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\&lt;[^\&gt;]+\&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">section</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\&lt;\/?div\&gt;|\&lt;\/?p\&gt;|\&lt;br\&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<span class="n">GENERAL_LINK_SHORTENERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;wp.me&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trib.al&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;t.co&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spr.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shout.lt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shar.es&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scr.bi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ow.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ora.cl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is.gd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ht.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;goo.gl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fw.to&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dlvr.it&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cutt.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;buff.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;j.mp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hubs.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bit.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hub.am&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ht.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;every.tw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;crwd.fr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bit.do&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;snp.tv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;snip.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shr.gs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;qoo.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;po.st&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fwdaga.in&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fw.to&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tiny.cc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;owl.li&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mvnt.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;msgp.pl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;flip.it&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;urlm.in&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trib.it&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shoo.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;loom.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;disq.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;abre.ai&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bit.do&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;adf.ly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;su.pr&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">VANITY_LINK_SHORTENERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pdora.co&quot;</span><span class="p">:</span> <span class="s2">&quot;pandora.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tgam.ca&quot;</span><span class="p">:</span> <span class="s2">&quot;theglobeandmail.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;stjr.nl&quot;</span><span class="p">:</span> <span class="s2">&quot;statesmanjournal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;amzn.com&quot;</span><span class="p">:</span> <span class="s2">&quot;amazon.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;meetu.ps&quot;</span><span class="p">:</span> <span class="s2">&quot;meetup.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;flic.kr&quot;</span><span class="p">:</span> <span class="s2">&quot;flickr.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ampr.gs&quot;</span><span class="p">:</span> <span class="s2">&quot;americanprogress.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rol.st&quot;</span><span class="p">:</span> <span class="s2">&quot;rollingstone.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mapq.st&quot;</span><span class="p">:</span> <span class="s2">&quot;mapquest.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;newspr.es&quot;</span><span class="p">:</span> <span class="s2">&quot;news-press.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;interc.pt&quot;</span><span class="p">:</span> <span class="s2">&quot;theintercept.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ind.pn&quot;</span><span class="p">:</span> <span class="s2">&quot;independent.co.uk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bizj.us&quot;</span><span class="p">:</span> <span class="s2">&quot;bizjournals.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pewrsr.ch&quot;</span><span class="p">:</span> <span class="s2">&quot;pewresearch.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;on.fb.me&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fb.me&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dbtg.tv&quot;</span><span class="p">:</span> <span class="s2">&quot;bundestag.de&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;m.me&quot;</span><span class="p">:</span> <span class="s2">&quot;messenger.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;trib.in&quot;</span><span class="p">:</span> <span class="s2">&quot;chicagotribune.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wtrne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;timesrecordnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icont.ac&quot;</span><span class="p">:</span> <span class="s2">&quot;icontact-archive.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;entm.ag&quot;</span><span class="p">:</span> <span class="s2">&quot;entrepreneur.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;engt.co&quot;</span><span class="p">:</span> <span class="s2">&quot;engadget.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nyti.ms&quot;</span><span class="p">:</span> <span class="s2">&quot;nytimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gph.is&quot;</span><span class="p">:</span> <span class="s2">&quot;giphy.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fxn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;foxnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;conta.cc&quot;</span><span class="p">:</span> <span class="s2">&quot;constantcontact.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wh.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;whitehouse.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;harlem.in&quot;</span><span class="p">:</span> <span class="s2">&quot;harlemunited.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n.pr&quot;</span><span class="p">:</span> <span class="s2">&quot;npr.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;apne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;apnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ap.org&quot;</span><span class="p">:</span> <span class="s2">&quot;apnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;youtu.be&quot;</span><span class="p">:</span> <span class="s2">&quot;youtube.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grnol.co&quot;</span><span class="p">:</span> <span class="s2">&quot;greenvilleonline.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;washex.am&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonexaminer.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;usat.ly&quot;</span><span class="p">:</span> <span class="s2">&quot;usatoday.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cbsloc.al&quot;</span><span class="p">:</span> <span class="s2">&quot;cbslocal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cbsn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;cbsnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bloom.bg&quot;</span><span class="p">:</span> <span class="s2">&quot;bloomberg.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wtr.ie&quot;</span><span class="p">:</span> <span class="s2">&quot;water.ie&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;reut.rs&quot;</span><span class="p">:</span> <span class="s2">&quot;reuters.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ti.me&quot;</span><span class="p">:</span> <span class="s2">&quot;time.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;politi.co&quot;</span><span class="p">:</span> <span class="s2">&quot;politico.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnn.it&quot;</span><span class="p">:</span> <span class="s2">&quot;cnn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bzfd.it&quot;</span><span class="p">:</span> <span class="s2">&quot;buzzfeed.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bcove.me&quot;</span><span class="p">:</span> <span class="s2">&quot;brightcove.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;c-spanvideo.org&quot;</span><span class="p">:</span> <span class="s2">&quot;c-span.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lat.ms&quot;</span><span class="p">:</span> <span class="s2">&quot;latimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nbcnews.to&quot;</span><span class="p">:</span> <span class="s2">&quot;nbcnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ab.co&quot;</span><span class="p">:</span> <span class="s2">&quot;abc.net.au&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onforb.es&quot;</span><span class="p">:</span> <span class="s2">&quot;forbes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nwsdy.li&quot;</span><span class="p">:</span> <span class="s2">&quot;newsday.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spon.de&quot;</span><span class="p">:</span> <span class="s2">&quot;spiegel.de&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mol.im&quot;</span><span class="p">:</span> <span class="s2">&quot;dailymail.co.uk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;theatln.tc&quot;</span><span class="p">:</span> <span class="s2">&quot;theatlantic.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yhoo.it&quot;</span><span class="p">:</span> <span class="s2">&quot;yahoo.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;jrnl.ie&quot;</span><span class="p">:</span> <span class="s2">&quot;thejournal.ie&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sen.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;senate.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;es.pn&quot;</span><span class="p">:</span> <span class="s2">&quot;espn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wrd.cm&quot;</span><span class="p">:</span> <span class="s2">&quot;wired.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cour.at&quot;</span><span class="p">:</span> <span class="s2">&quot;courant.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;read.bi&quot;</span><span class="p">:</span> <span class="s2">&quot;businessinsider.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dailysign.al&quot;</span><span class="p">:</span> <span class="s2">&quot;dailysignal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;buswk.co&quot;</span><span class="p">:</span> <span class="s2">&quot;bloomberg.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnnmon.ie&quot;</span><span class="p">:</span> <span class="s2">&quot;cnn.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cnb.cx&quot;</span><span class="p">:</span> <span class="s2">&quot;cnbc.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;atxne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;statesman.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slate.me&quot;</span><span class="p">:</span> <span class="s2">&quot;slate.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;detroitnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;injo.com&quot;</span><span class="p">:</span> <span class="s2">&quot;ijr.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;njersy.co&quot;</span><span class="p">:</span> <span class="s2">&quot;northjersey.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nj-ne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;nj.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;amzn.to&quot;</span><span class="p">:</span> <span class="s2">&quot;amazon.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fb.com&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lnkd.in&quot;</span><span class="p">:</span> <span class="s2">&quot;linkedin.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;linkd.in&quot;</span><span class="p">:</span> <span class="s2">&quot;linkedin.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;histv.co&quot;</span><span class="p">:</span> <span class="s2">&quot;history.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mailchi.mp&quot;</span><span class="p">:</span> <span class="s2">&quot;mailchimp.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;indy.st&quot;</span><span class="p">:</span> <span class="s2">&quot;indystar.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;strib.mn&quot;</span><span class="p">:</span> <span class="s2">&quot;startribune.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nydn.us&quot;</span><span class="p">:</span> <span class="s2">&quot;nydailynews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bsun.md&quot;</span><span class="p">:</span> <span class="s2">&quot;baltimoresun.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bayareane.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;eastbaytimes.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thebea.st&quot;</span><span class="p">:</span> <span class="s2">&quot;thedailybeast.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dmreg.co&quot;</span><span class="p">:</span> <span class="s2">&quot;desmoinesregister.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bernie.to&quot;</span><span class="p">:</span> <span class="s2">&quot;berniesanders.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dpo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;denverpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;delonline.us&quot;</span><span class="p">:</span> <span class="s2">&quot;delawareonline.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;azc.cc&quot;</span><span class="p">:</span> <span class="s2">&quot;azcentral.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;goldenisles.news&quot;</span><span class="p">:</span> <span class="s2">&quot;thebrunswicknews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ohne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;newarkadvocate.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thkpr.gs&quot;</span><span class="p">:</span> <span class="s2">&quot;thinkprogress.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wef.ch&quot;</span><span class="p">:</span> <span class="s2">&quot;weforum.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comsen.se&quot;</span><span class="p">:</span> <span class="s2">&quot;commonsensemedia.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huffpost.com&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huffp.st&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;huff.to&quot;</span><span class="p">:</span> <span class="s2">&quot;huffingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bbc.in&quot;</span><span class="p">:</span> <span class="s2">&quot;bbc.co.uk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;brook.gs&quot;</span><span class="p">:</span> <span class="s2">&quot;brookings.edu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lp.ca&quot;</span><span class="p">:</span> <span class="s2">&quot;lapresse.ca&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;virg.in&quot;</span><span class="p">:</span> <span class="s2">&quot;virgin.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hill.cm&quot;</span><span class="p">:</span> <span class="s2">&quot;thehill.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tnw.to&quot;</span><span class="p">:</span> <span class="s2">&quot;thenextweb.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dailym.ai&quot;</span><span class="p">:</span> <span class="s2">&quot;dailymail.co.uk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;instagr.am&quot;</span><span class="p">:</span> <span class="s2">&quot;instagram.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chng.it&quot;</span><span class="p">:</span> <span class="s2">&quot;change.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tws.io&quot;</span><span class="p">:</span> <span class="s2">&quot;weeklystandard.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spoti.fi&quot;</span><span class="p">:</span> <span class="s2">&quot;spotify.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nyp.st&quot;</span><span class="p">:</span> <span class="s2">&quot;nypost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bv.ms&quot;</span><span class="p">:</span> <span class="s2">&quot;bloomberg.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;glo.bo&quot;</span><span class="p">:</span> <span class="s2">&quot;globo.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gizmo.do&quot;</span><span class="p">:</span> <span class="s2">&quot;gizmodo.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;prn.to&quot;</span><span class="p">:</span> <span class="s2">&quot;prnewswire.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;usm.ag&quot;</span><span class="p">:</span> <span class="s2">&quot;usmagazine.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;txnne.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;thetexan.news&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;u.pw&quot;</span><span class="p">:</span> <span class="s2">&quot;upworthy.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ihr.fm&quot;</span><span class="p">:</span> <span class="s2">&quot;iheart.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hulu.tv&quot;</span><span class="p">:</span> <span class="s2">&quot;hulu.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;herit.ag&quot;</span><span class="p">:</span> <span class="s2">&quot;heritage.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;econ.st&quot;</span><span class="p">:</span> <span class="s2">&quot;economist.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dai.ly&quot;</span><span class="p">:</span> <span class="s2">&quot;dailymotion.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chn.ge&quot;</span><span class="p">:</span> <span class="s2">&quot;change.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ble.ac&quot;</span><span class="p">:</span> <span class="s2">&quot;bleacherreport.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;aje.io&quot;</span><span class="p">:</span> <span class="s2">&quot;aljazeera.com&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">HISTORICAL_VANITY_LINK_SHORTENERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;nws.mx&quot;</span><span class="p">:</span> <span class="s2">&quot;newsmax.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tonyr.co&quot;</span><span class="p">:</span> <span class="s2">&quot;tonyrobbins.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;d-news.co&quot;</span><span class="p">:</span> <span class="s2">&quot;dallasnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fanda.co&quot;</span><span class="p">:</span> <span class="s2">&quot;fandango.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uni.vi&quot;</span><span class="p">:</span> <span class="s2">&quot;univision.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;jwatch.us&quot;</span><span class="p">:</span> <span class="s2">&quot;judicialwatch.org&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nm.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.nm.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hrld.us&quot;</span><span class="p">:</span> <span class="s2">&quot;miamiherald.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ma.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.ma.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nyer.cm&quot;</span><span class="p">:</span> <span class="s2">&quot;newyorker.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ny.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.ny.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ptrtvoic.es&quot;</span><span class="p">:</span> <span class="s2">&quot;patriotvoices.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cjky.it&quot;</span><span class="p">:</span> <span class="s2">&quot;courier-journal.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;md.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.md.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pa.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.pa.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;g.co&quot;</span><span class="p">:</span> <span class="s2">&quot;google.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mn.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.mn.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hrld.us&quot;</span><span class="p">:</span> <span class="s2">&quot;miamiherald.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;oh.us&quot;</span><span class="p">:</span> <span class="s2">&quot;state.oh.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ofa.bo&quot;</span><span class="p">:</span> <span class="s2">&quot;ofa.us&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dot.gov&quot;</span><span class="p">:</span> <span class="s2">&quot;transportation.gov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wapo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hrld.us&quot;</span><span class="p">:</span> <span class="s2">&quot;miamiherald.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wpo.st&quot;</span><span class="p">:</span> <span class="s2">&quot;washingtonpost.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;abcn.ws&quot;</span><span class="p">:</span> <span class="s2">&quot;abcnews.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cs.pn&quot;</span><span class="p">:</span> <span class="s2">&quot;c-span.org&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">VANITY_LINK_SHORTENERS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">HISTORICAL_VANITY_LINK_SHORTENERS</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="canonical_link"><a class="viewcode-back" href="../../index.html#pewtils.http.canonical_link">[docs]</a><span class="k">def</span> <span class="nf">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tries to resolve a link to the &quot;most correct&quot; version. Especially useful for expanding short URLs \</span>
+<span class="sd">    from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not</span>
+<span class="sd">    perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases</span>
+<span class="sd">    while (usually) avoiding redirects to generic error pages.</span>
+
+<span class="sd">    :param url: The URL to test. Should be fully qualified.</span>
+<span class="sd">    :param timeout: How long to wait for a response before giving up (default is one second)</span>
+<span class="sd">    :param session: A persistent session that can optionally be passed (useful if you&#39;re processing many links at once)</span>
+<span class="sd">    :return: The &quot;canonical&quot; URL as supplied by the server, or the original URL if the server was not helpful.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">BAD_STATUS_CODES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">302</span><span class="p">,</span>
+        <span class="mi">307</span><span class="p">,</span>
+        <span class="mi">400</span><span class="p">,</span>
+        <span class="mi">404</span><span class="p">,</span>
+        <span class="mi">405</span><span class="p">,</span>
+        <span class="mi">407</span><span class="p">,</span>
+        <span class="mi">500</span><span class="p">,</span>
+        <span class="mi">501</span><span class="p">,</span>
+        <span class="mi">502</span><span class="p">,</span>
+        <span class="mi">503</span><span class="p">,</span>
+        <span class="mi">504</span><span class="p">,</span>
+        <span class="mi">520</span><span class="p">,</span>
+        <span class="mi">530</span><span class="p">,</span>
+        <span class="mi">404</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">PROXY_REQUIRED</span> <span class="o">=</span> <span class="p">[</span><span class="mi">307</span><span class="p">,</span> <span class="mi">407</span><span class="p">]</span>
+    <span class="n">CHECK_LENGTH</span> <span class="o">=</span> <span class="p">[</span><span class="mi">301</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">404</span><span class="p">]</span>
+
+    <span class="n">close_session</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">close_session</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="n">user_agent</span><span class="p">})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">url</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">response</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">history</span> <span class="o">=</span> <span class="p">[(</span><span class="n">h</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">history</span><span class="p">]</span>
+        <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
+        <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">original_parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">last_good_url</span><span class="p">)</span>
+        <span class="n">has_path</span> <span class="o">=</span> <span class="n">original_parsed</span><span class="o">.</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+        <span class="n">has_query</span> <span class="o">=</span> <span class="n">original_parsed</span><span class="o">.</span><span class="n">query</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">prev_was_shortener</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">prev_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">prev_query</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">resp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">history</span><span class="p">):</span>
+            <span class="n">status_code</span><span class="p">,</span> <span class="n">response_url</span> <span class="o">=</span> <span class="n">resp</span>
+            <span class="k">if</span> <span class="s2">&quot;errors/404&quot;</span> <span class="ow">in</span> <span class="n">response_url</span><span class="p">:</span>
+                <span class="c1"># If it&#39;s clearly a 404 landing page, stop and use the last observed good URL</span>
+                <span class="k">break</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">response_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span> <span class="ow">in</span> <span class="n">VANITY_LINK_SHORTENERS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="ow">or</span> <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span> <span class="ow">in</span> <span class="n">GENERAL_LINK_SHORTENERS</span>
+            <span class="p">):</span>
+                <span class="c1"># Don&#39;t consider known shortened URLs</span>
+                <span class="n">is_shortener</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">is_shortener</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_shortener</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
+                            <span class="n">parsed_possible_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                <span class="n">parsed_possible_url</span><span class="o">.</span><span class="n">scheme</span>
+                                <span class="ow">and</span> <span class="n">parsed_possible_url</span><span class="o">.</span><span class="n">netloc</span>
+                            <span class="p">):</span>
+                                <span class="c1"># If the URL contains a GET parameter that is, itself, a URL, it&#39;s likely redirecting to it</span>
+                                <span class="c1"># So we&#39;re going to stop this run and start the process over with the new URL</span>
+                                <span class="k">return</span> <span class="n">canonical_link</span><span class="p">(</span>
+                                    <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+                                    <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+                                    <span class="n">user_agent</span><span class="o">=</span><span class="n">user_agent</span><span class="p">,</span>
+                                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="n">PROXY_REQUIRED</span><span class="p">:</span>
+                    <span class="c1"># These codes tend to indicate the last good URL in the chain</span>
+                    <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">response_url</span>
+                    <span class="k">break</span>
+                <span class="n">good_path</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">has_path</span> <span class="ow">or</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+                <span class="n">good_query</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">has_query</span> <span class="ow">or</span> <span class="n">parsed</span><span class="o">.</span><span class="n">query</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+                <span class="c1"># If the URL has a path or some GET parameters, we&#39;ll inspect further</span>
+                <span class="c1"># Otherwise we just go with the previous URL</span>
+                <span class="c1"># Link shorteners are very rarely used to reference root domains</span>
+                <span class="k">if</span> <span class="n">good_query</span> <span class="ow">or</span> <span class="n">good_path</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;https&quot;</span><span class="p">,</span> <span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="n">response_url</span><span class="p">)</span>
+                        <span class="o">==</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;https&quot;</span><span class="p">,</span> <span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="n">last_good_url</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="n">original_parsed</span><span class="o">.</span><span class="n">path</span>
+                    <span class="p">)</span> <span class="ow">or</span> <span class="n">response_url</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">last_good_url</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                        <span class="c1"># If it&#39;s the same link but only the domain, protocol, or casing changed, it&#39;s fine</span>
+                        <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">response_url</span>
+                    <span class="k">elif</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="n">CHECK_LENGTH</span><span class="p">:</span>
+                        <span class="c1"># For these codes, we&#39;re going to see how much the link changed</span>
+                        <span class="c1"># Redirects and 404s sometimes preserve a decent URL, sometimes they go to a landing page</span>
+                        <span class="c1"># The following cutoffs seem to do a good job most of the time:</span>
+                        <span class="c1"># 1) The new URL has a long domain more than 7 characters, so it&#39;s not likely a shortened URL</span>
+                        <span class="c1"># 2) The prior URL had a long path and this one has fewer than 20 characters and it wasn&#39;t swapped out for GET params</span>
+                        <span class="c1"># 3) Or the prior URL had GET params and this one has far fewer and no replacement path</span>
+                        <span class="c1"># If these conditions are met and the path or query do not identically match the prior link</span>
+                        <span class="c1"># Then it&#39;s usually a generic error page</span>
+                        <span class="n">bad</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">has_path</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+                            <span class="ow">and</span> <span class="n">prev_path</span> <span class="o">!=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span>
+                        <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                            <span class="n">has_query</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span>
+                            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+                            <span class="ow">and</span> <span class="n">prev_query</span> <span class="o">!=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">query</span>
+                        <span class="p">):</span>
+                            <span class="n">bad</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">bad</span> <span class="ow">or</span> <span class="n">prev_was_shortener</span><span class="p">:</span>
+                            <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">response_url</span>
+                            <span class="c1"># print(&quot;GOOD: {}, {}&quot;.format(status_code, response_url))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># These can sometimes resolve further though, so we continue onward</span>
+                            <span class="n">prev_path</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="n">prev_query</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BAD_STATUS_CODES</span><span class="p">:</span>
+                            <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">response_url</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Resolved to a general URL</span>
+                    <span class="k">break</span>
+
+            <span class="n">prev_was_shortener</span> <span class="o">=</span> <span class="n">is_shortener</span>
+            <span class="n">prev_path</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">prev_query</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">query</span>
+
+        <span class="k">if</span> <span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BAD_STATUS_CODES</span><span class="p">:</span>
+            <span class="c1"># If the URL ended on a good status code, we&#39;ll try to trim out any unnecessary GET parameters</span>
+            <span class="n">last_good_url</span> <span class="o">=</span> <span class="n">trim_get_parameters</span><span class="p">(</span>
+                <span class="n">last_good_url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="n">user_agent</span>
+            <span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">last_good_url</span>
+
+    <span class="k">if</span> <span class="n">close_session</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">url</span></div>
+
+
+<div class="viewcode-block" id="trim_get_parameters"><a class="viewcode-back" href="../../index.html#pewtils.http.trim_get_parameters">[docs]</a><span class="k">def</span> <span class="nf">trim_get_parameters</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional</span>
+<span class="sd">    ones that can be removed without generating any redirects.</span>
+
+<span class="sd">    :param url: The URL to trim</span>
+<span class="sd">    :param session: Requests session (optional)</span>
+<span class="sd">    :param timeout: Timeout for requests</span>
+<span class="sd">    :param user_agent: The User-Agent to use for the session (if an existing session is not provided)</span>
+<span class="sd">    :return: The original URL with optional GET parameters removed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">close_session</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">close_session</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="n">user_agent</span><span class="p">})</span>
+
+    <span class="c1"># Often there&#39;s extra information about social sharing and referral sources that can be removed</span>
+    <span class="n">ditch_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># We iterate over all of the GET parameters and try holding each one out</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">skipper</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;article&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;qs&quot;</span><span class="p">]:</span>
+                <span class="c1"># If the parameter is named something that&#39;s probably a unique ID, we&#39;ll keep it</span>
+                <span class="k">if</span> <span class="n">skipper</span> <span class="ow">in</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">check</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">skipper</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;http&quot;</span><span class="p">]:</span>
+                <span class="c1"># Same goes for parameters that contain URL information</span>
+                <span class="k">if</span> <span class="n">skipper</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">check</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+                <span class="n">new_params</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k2</span><span class="p">:</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k2</span> <span class="o">!=</span> <span class="n">k</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="p">}</span>
+                <span class="n">new_params</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">new_params</span><span class="p">)</span>
+                <span class="n">new_parsed</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">new_params</span><span class="p">)</span>
+                <span class="n">new_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">new_parsed</span><span class="p">)</span>
+                <span class="n">resp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">new_url</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+                <span class="n">new_parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_parsed</span><span class="o">.</span><span class="n">query</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">new_parsed</span><span class="o">.</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">]:</span>
+                    <span class="c1"># If removing a parameter didn&#39;t redirect to a root domain...</span>
+                    <span class="n">new_url</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">url</span>
+                    <span class="n">compare_new</span> <span class="o">=</span> <span class="n">new_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;?&quot;</span> <span class="ow">in</span> <span class="n">new_url</span> <span class="k">else</span> <span class="n">new_url</span>
+                    <span class="n">compare_old</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;?&quot;</span> <span class="ow">in</span> <span class="n">url</span> <span class="k">else</span> <span class="n">url</span>
+                    <span class="k">if</span> <span class="n">compare_new</span> <span class="o">==</span> <span class="n">compare_old</span><span class="p">:</span>
+                        <span class="c1"># And the domain is the same as it was before, then the parameter was probably unnecessary</span>
+                        <span class="n">ditch_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ditch_params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Now we remove all of the unnecessary get parameters and finalize the URL</span>
+        <span class="n">new_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ditch_params</span>
+        <span class="p">}</span>
+        <span class="n">new_params</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">new_params</span><span class="p">)</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">new_params</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">close_session</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">url</span></div>
+
+
+<div class="viewcode-block" id="extract_domain_from_url"><a class="viewcode-back" href="../../index.html#pewtils.http.extract_domain_from_url">[docs]</a><span class="k">def</span> <span class="nf">extract_domain_from_url</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resolve_url</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</span>
+
+<span class="sd">    :param url:  The link from which to extract the domain</span>
+<span class="sd">    :param include_subdomain: Whether or not to include the subdomain (e.g. &#39;news.google.com&#39;); default is True</span>
+<span class="sd">    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \</span>
+<span class="sd">    return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they&#39;re permanent)</span>
+<span class="sd">    :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)</span>
+<span class="sd">    :return: The domain for the link</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">resolve_url</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">tldextract</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">include_subdomain</span> <span class="ow">and</span> <span class="n">domain</span><span class="o">.</span><span class="n">subdomain</span> <span class="ow">and</span> <span class="n">domain</span><span class="o">.</span><span class="n">subdomain</span> <span class="o">!=</span> <span class="s2">&quot;www&quot;</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">domain</span><span class="o">.</span><span class="n">subdomain</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">suffix</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">domain</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">suffix</span><span class="p">])</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">VANITY_LINK_SHORTENERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">domain</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">pewtils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_use.html">How To Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, pew research center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
