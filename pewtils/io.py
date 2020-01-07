@@ -31,8 +31,7 @@ class FileHandler(object):
     :param use_s3: Whether the path is an S3 location or local location
     :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID
     :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY
-    :param bucket: The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as \
-    S3_BUCKET
+    :param bucket: The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as S3_BUCKET
     """
 
     def __init__(
