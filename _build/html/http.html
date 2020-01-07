@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>HTTP utilities &#8212; pewtils 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="How to" href="how_to_use.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="http-utilities">
+<h1>HTTP utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-pewtils.http">
+<span id="https-utilities"></span><h2>HTTPs Utilities<a class="headerlink" href="#module-pewtils.http" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pewtils.http.canonical_link">
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to resolve a link to the “most correct” version. Especially useful for expanding short URLs     from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not
+perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases
+while (usually) avoiding redirects to generic error pages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – The URL to test. Should be fully qualified.</p></li>
+<li><p><strong>timeout</strong> – How long to wait for a response before giving up (default is one second)</p></li>
+<li><p><strong>session</strong> – A persistent session that can optionally be passed (useful if you’re processing many links at once)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if the server was not helpful.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.extract_domain_from_url">
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – The link from which to extract the domain</p></li>
+<li><p><strong>include_subdomain</strong> – Whether or not to include the subdomain (e.g. ‘news.google.com’); default is True</p></li>
+<li><p><strong>resolve_url</strong> – Whether to fully resolve the URL.  If False (default), it will follow the URL but will not     return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they’re permanent)</p></li>
+<li><p><strong>timeout</strong> – Maximum number of seconds to wait on a request before timing out (default is 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The domain for the link</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.hash_url">
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">hash_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#hash_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.hash_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears out http/https prefix and returns an MD5 hash of the URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> – string of the url</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>hashed string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.strip_html">
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.
+By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document
+using a process that we have found to work fairly well. Setting <cite>simple=True</cite> will make the function use
+a much simpler regular expression approach to parsing. This function isn’t always 100% effective, but it does a
+decent job of usually removing the vast majority of HTML without stripping out valuable content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>html</strong> – The HTML to process</p></li>
+<li><p><strong>simple</strong> – Whether or not to use a simple regex or more complex parsing rules (default=False)</p></li>
+<li><p><strong>break_tags</strong> – A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The text with HTML components removed (perfection not guaranteed)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.trim_get_parameters">
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">trim_get_parameters</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">session=None</em>, <em class="sig-param">timeout=30</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#trim_get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.trim_get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
+ones that can be removed without generating any redirects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – The URL to trim</p></li>
+<li><p><strong>session</strong> – Requests session (optional)</p></li>
+<li><p><strong>timeout</strong> – Timeout for requests</p></li>
+<li><p><strong>user_agent</strong> – The User-Agent to use for the session (if an existing session is not provided)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The original URL with optional GET parameters removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewtils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To Use</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pewtils.http">HTTPs Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="how_to_use.html" title="previous chapter">How to</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, pew research center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/http.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
