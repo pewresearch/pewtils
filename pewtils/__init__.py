@@ -36,8 +36,7 @@ def decode_text(text, throw_loud_fail=False):
     with a similar ASCII character or other placeholder, potentially resulting in an empty string.
 
     :param text: text to process
-    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and
-    return an empty string (default False)
+    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and return an empty string (default False)
     :return: decoded text, or empty string ''
     """
 
@@ -87,7 +86,6 @@ def decode_text(text, throw_loud_fail=False):
 
 
 def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
-
     """
     Checks whether the value is null, using a variety of potential string values, etc. The following values are always
     considered null: `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
@@ -130,7 +128,6 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 
 
 def is_null(val, empty_lists_are_null=False, custom_nulls=None):
-
     """
     Returns the opposite of the outcome of is_not_null. The following values are always considered null:
     `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
@@ -147,7 +144,6 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
 
 def recursive_update(existing, new):
-
     """
     Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
     new values and updates the object.  Doesn't care if the keys in the dictionary correspond to attribute names or
@@ -515,7 +511,7 @@ class classproperty(object):
     functions on a class that are accessible directly from the class itself (rather than an instance of the class).
     Essentially, this allows you to access `classproperty` attributes directly, like `obj.property`, rather than as
     a function on a class instance (like `obj = Obj(); obj.property()`).  Use like so:
-    ```python
+
         class Foo(object):
             x = 4
             @classproperty
@@ -525,7 +521,6 @@ class classproperty(object):
         4
         >>> Foo.number
         4
-    ```
     """
 
     def __init__(self, fget):
