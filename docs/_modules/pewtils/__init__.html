@@ -69,8 +69,7 @@
 <span class="sd">    with a similar ASCII character or other placeholder, potentially resulting in an empty string.</span>
 
 <span class="sd">    :param text: text to process</span>
-<span class="sd">    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and</span>
-<span class="sd">    return an empty string (default False)</span>
+<span class="sd">    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and return an empty string (default False)</span>
 <span class="sd">    :return: decoded text, or empty string &#39;&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -120,7 +119,6 @@
 
 
 <div class="viewcode-block" id="is_not_null"><a class="viewcode-back" href="../../index.html#pewtils.__init__.is_not_null">[docs]</a><span class="k">def</span> <span class="nf">is_not_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks whether the value is null, using a variety of potential string values, etc. The following values are always</span>
 <span class="sd">    considered null: `None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;</span>
@@ -164,7 +162,6 @@
 
 
 <div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../index.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the opposite of the outcome of is_not_null. The following values are always considered null:</span>
 <span class="sd">    `None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;</span>
@@ -181,7 +178,6 @@
 
 
 <div class="viewcode-block" id="recursive_update"><a class="viewcode-back" href="../../index.html#pewtils.__init__.recursive_update">[docs]</a><span class="k">def</span> <span class="nf">recursive_update</span><span class="p">(</span><span class="n">existing</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes an object and a dictionary representation of attributes and values, and recursively traverses through the</span>
 <span class="sd">    new values and updates the object.  Doesn&#39;t care if the keys in the dictionary correspond to attribute names or</span>
@@ -548,7 +544,7 @@
 <span class="sd">    functions on a class that are accessible directly from the class itself (rather than an instance of the class).</span>
 <span class="sd">    Essentially, this allows you to access `classproperty` attributes directly, like `obj.property`, rather than as</span>
 <span class="sd">    a function on a class instance (like `obj = Obj(); obj.property()`).  Use like so:</span>
-<span class="sd">    ```python</span>
+
 <span class="sd">        class Foo(object):</span>
 <span class="sd">            x = 4</span>
 <span class="sd">            @classproperty</span>
@@ -558,7 +554,6 @@
 <span class="sd">        4</span>
 <span class="sd">        &gt;&gt;&gt; Foo.number</span>
 <span class="sd">        4</span>
-<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="p">):</span>

@@ -99,8 +99,7 @@ Great if you’re doing database lookups, etc.</p>
 <dd><p>Borrowed from a StackOverflow post (<a class="reference external" href="https://stackoverflow.com/a/3203659">https://stackoverflow.com/a/3203659</a>), this decorator allows you to define
 functions on a class that are accessible directly from the class itself (rather than an instance of the class).
 Essentially, this allows you to access <cite>classproperty</cite> attributes directly, like <cite>obj.property</cite>, rather than as
-a function on a class instance (like <cite>obj = Obj(); obj.property()</cite>).  Use like so:
-<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python</p>
+a function on a class instance (like <cite>obj = Obj(); obj.property()</cite>).  Use like so:</p>
 <blockquote>
 <div><dl>
 <dt>class Foo(object):</dt><dd><p>x = 4
@@ -118,7 +117,6 @@ def number(cls):</p>
 </pre></div>
 </div>
 </div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
 </dd></dl>
 
 <dl class="function">
@@ -151,12 +149,13 @@ with a similar ASCII character or other placeholder, potentially resulting in an
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – text to process</p></li>
-<li><p><strong>throw_loud_fail</strong> – bool - if True exceptions will be raised, otherwise the function will fail silently and</p></li>
+<li><p><strong>throw_loud_fail</strong> – bool - if True exceptions will be raised, otherwise the function will fail silently and return an empty string (default False)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decoded text, or empty string ‘’</p>
+</dd>
 </dl>
-<p>return an empty string (default False)
-:return: decoded text, or empty string ‘’</p>
 </dd></dl>
 
 <dl class="function">
@@ -243,7 +242,7 @@ and the more traditional MD5 algorithm.</p>
 <dt id="pewtils.__init__.is_not_null">
 <code class="sig-prename descclassname">pewtils.__init__.</code><code class="sig-name descname">is_not_null</code><span class="sig-paren">(</span><em class="sig-param">val</em>, <em class="sig-param">empty_lists_are_null=False</em>, <em class="sig-param">custom_nulls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_not_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.is_not_null" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the value is null, using a variety of potential string values, etc. The following values are always
-considered null: <a href="#id9"><span class="problematic" id="id10">`</span></a>None, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
+considered null: <a href="#id1"><span class="problematic" id="id2">`</span></a>None, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -262,7 +261,7 @@ considered null: <a href="#id9"><span class="problematic" id="id10">`</span></a>
 <dt id="pewtils.__init__.is_null">
 <code class="sig-prename descclassname">pewtils.__init__.</code><code class="sig-name descname">is_null</code><span class="sig-paren">(</span><em class="sig-param">val</em>, <em class="sig-param">empty_lists_are_null=False</em>, <em class="sig-param">custom_nulls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.is_null" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the opposite of the outcome of is_not_null. The following values are always considered null:
-<a href="#id11"><span class="problematic" id="id12">`</span></a>None, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
+<a href="#id3"><span class="problematic" id="id4">`</span></a>None, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -389,9 +388,9 @@ that specifies the nested key path to each value.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="file-handlers">
-<h2>File Handlers<a class="headerlink" href="#file-handlers" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-pewtils.io"></span><dl class="class">
+<div class="section" id="module-pewtils.io">
+<span id="file-handlers"></span><h2>File Handlers<a class="headerlink" href="#module-pewtils.io" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
 <dt id="pewtils.io.FileHandler">
 <em class="property">class </em><code class="sig-prename descclassname">pewtils.io.</code><code class="sig-name descname">FileHandler</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">use_s3=None</em>, <em class="sig-param">aws_access=None</em>, <em class="sig-param">aws_secret=None</em>, <em class="sig-param">bucket=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3. File
@@ -403,7 +402,7 @@ extensions are standardized to promote consistency; Pickle files must have the e
 <li><p><strong>use_s3</strong> – Whether the path is an S3 location or local location</p></li>
 <li><p><strong>aws_access</strong> – The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</p></li>
 <li><p><strong>aws_secret</strong> – The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</p></li>
-<li><p><strong>bucket</strong> – The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as     S3_BUCKET</p></li>
+<li><p><strong>bucket</strong> – The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as S3_BUCKET</p></li>
 </ul>
 </dd>
 </dl>
@@ -498,7 +497,7 @@ the file you want to save.  The “dta” format uses <cite>pandas.DataFrame.to_
 
 </div>
 <div class="section" id="module-pewtils.http">
-<span id="aws-handler"></span><h2>AWS Handler<a class="headerlink" href="#module-pewtils.http" title="Permalink to this headline">¶</a></h2>
+<span id="http-handler"></span><h2>HTTP Handler<a class="headerlink" href="#module-pewtils.http" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pewtils.http.canonical_link">
 <code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
