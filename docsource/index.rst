@@ -47,10 +47,6 @@ File Handlers
 
 AWS Handler
 -----------
-.. automodule :: pewtils.aws
-    :members:
-
-
 .. automodule :: pewtils.http
     :members:
 
