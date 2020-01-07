@@ -56,6 +56,7 @@
 <span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
 
+
 <div class="viewcode-block" id="decode_text"><a class="viewcode-back" href="../../index.html#pewtils.__init__.decode_text">[docs]</a><span class="k">def</span> <span class="nf">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string&#39;s encoding,</span>
@@ -364,7 +365,10 @@
                                 <span class="k">except</span> <span class="ne">RuntimeWarning</span><span class="p">:</span>
                                     <span class="k">try</span><span class="p">:</span>
                                         <span class="n">module</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span>
-                                            <span class="n">module_name</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">description</span>
+                                            <span class="n">module_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                            <span class="n">file</span><span class="p">,</span>
+                                            <span class="n">pathname</span><span class="p">,</span>
+                                            <span class="n">description</span><span class="p">,</span>
                                         <span class="p">)</span>
                                     <span class="k">except</span> <span class="ne">RuntimeWarning</span><span class="p">:</span>
                                         <span class="n">module</span> <span class="o">=</span> <span class="kc">None</span>
@@ -684,7 +688,7 @@
       &copy;2019, pew research center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

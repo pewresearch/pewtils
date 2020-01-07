@@ -511,6 +511,7 @@ while (usually) avoiding redirects to generic error pages.</p>
 <li><p><strong>url</strong> – The URL to test. Should be fully qualified.</p></li>
 <li><p><strong>timeout</strong> – How long to wait for a response before giving up (default is one second)</p></li>
 <li><p><strong>session</strong> – A persistent session that can optionally be passed (useful if you’re processing many links at once)</p></li>
+<li><p><strong>user_agent</strong> – User agent for the auto-created session to use, if a preconfigured session is not provided</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -521,7 +522,7 @@ while (usually) avoiding redirects to generic error pages.</p>
 
 <dl class="function">
 <dt id="pewtils.http.extract_domain_from_url">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -530,6 +531,8 @@ while (usually) avoiding redirects to generic error pages.</p>
 <li><p><strong>include_subdomain</strong> – Whether or not to include the subdomain (e.g. ‘news.google.com’); default is True</p></li>
 <li><p><strong>resolve_url</strong> – Whether to fully resolve the URL.  If False (default), it will follow the URL but will not     return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they’re permanent)</p></li>
 <li><p><strong>timeout</strong> – Maximum number of seconds to wait on a request before timing out (default is 1)</p></li>
+<li><p><strong>session</strong> – A persistent session that can optionally be passed (useful if you’re processing many links at once)</p></li>
+<li><p><strong>user_agent</strong> – User agent for the auto-created session to use, if a preconfigured session is not provided</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -672,7 +675,7 @@ ones that can be removed without generating any redirects.</p>
       &copy;2019, pew research center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

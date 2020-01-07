@@ -353,6 +353,7 @@
 <span class="sd">    :param url: The URL to test. Should be fully qualified.</span>
 <span class="sd">    :param timeout: How long to wait for a response before giving up (default is one second)</span>
 <span class="sd">    :param session: A persistent session that can optionally be passed (useful if you&#39;re processing many links at once)</span>
+<span class="sd">    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided</span>
 <span class="sd">    :return: The &quot;canonical&quot; URL as supplied by the server, or the original URL if the server was not helpful.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -580,7 +581,12 @@
 
 
 <div class="viewcode-block" id="extract_domain_from_url"><a class="viewcode-back" href="../../index.html#pewtils.http.extract_domain_from_url">[docs]</a><span class="k">def</span> <span class="nf">extract_domain_from_url</span><span class="p">(</span>
-    <span class="n">url</span><span class="p">,</span> <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resolve_url</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span>
+    <span class="n">url</span><span class="p">,</span>
+    <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">resolve_url</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -591,11 +597,15 @@
 <span class="sd">    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \</span>
 <span class="sd">    return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they&#39;re permanent)</span>
 <span class="sd">    :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)</span>
+<span class="sd">    :param session: A persistent session that can optionally be passed (useful if you&#39;re processing many links at once)</span>
+<span class="sd">    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided</span>
 <span class="sd">    :return: The domain for the link</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">resolve_url</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">canonical_link</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="n">user_agent</span>
+        <span class="p">)</span>
     <span class="n">domain</span> <span class="o">=</span> <span class="n">tldextract</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">include_subdomain</span> <span class="ow">and</span> <span class="n">domain</span><span class="o">.</span><span class="n">subdomain</span> <span class="ow">and</span> <span class="n">domain</span><span class="o">.</span><span class="n">subdomain</span> <span class="o">!=</span> <span class="s2">&quot;www&quot;</span><span class="p">:</span>
@@ -663,7 +673,7 @@
       &copy;2019, pew research center.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
