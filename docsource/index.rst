@@ -39,14 +39,14 @@ This contains everything you need to know about every function in the source cod
 
 
 File Handlers
-------------
+-------------
 
 .. automodule :: pewtils.io
     :members:
 
 
-AWS Handler
------------
+HTTP Handler
+------------
 .. automodule :: pewtils.http
     :members:
 
