@@ -33,12 +33,13 @@ Here are the list of information on pewtils core functions.
     :members:
 
 
-pewtils Documentation 
+pewtils Documentation
 ---------------------
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   How To Use <how_to_use>
    HTTP Utilities <http>
    File Handles <file_handler>
 
