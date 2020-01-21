@@ -1,7 +1,7 @@
 autodocsumm
 beautifulsoup4>=4.5.3
-boto>=2.46.1
 boto3>=1.4.4
+boto>=2.46.1
 chardet>=2.3.0
 celery
 cython>=0.25.2
@@ -25,6 +25,6 @@ tldextract>=2.2.1
 tqdm>=4.11.2
 unicode
 unidecode>=0.4.20
-xlsxwriter>=1.1.8
 xlrd>=1.2.0
+xlsxwriter>=1.1.8
 git+ssh://github.com/seanpianka/zipcodes#egg=zipcodes
