@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>File Handlers &#8212; pewtils 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="HTTP Utilities" href="http.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pewtils.io">
+<span id="file-handlers"></span><h1>File Handlers<a class="headerlink" href="#module-pewtils.io" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pewtils.io.FileHandler">
+<em class="property">class </em><code class="sig-prename descclassname">pewtils.io.</code><code class="sig-name descname">FileHandler</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">use_s3=None</em>, <em class="sig-param">aws_access=None</em>, <em class="sig-param">aws_secret=None</em>, <em class="sig-param">bucket=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3. File
+extensions are standardized to promote consistency (e.g., Pickle files must have the extension “.pkl”, etc.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – The path to the folder that you’ll be writing to or reading from</p></li>
+<li><p><strong>use_s3</strong> – Whether the path is an S3 location or local location</p></li>
+<li><p><strong>aws_access</strong> – The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</p></li>
+<li><p><strong>aws_secret</strong> – The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</p></li>
+<li><p><strong>bucket</strong> – The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as S3_BUCKET</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pewtils.io.FileHandler.iterate_path">
+<code class="sig-name descname">iterate_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.iterate_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.iterate_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over the directory and returns a list of filenames or S3 object keys</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Yields a list of filenames or S3 keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewtils.io.FileHandler.clear_folder">
+<code class="sig-name descname">clear_folder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewtils.io.FileHandler.clear_file">
+<code class="sig-name descname">clear_file</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">format='pkl'</em>, <em class="sig-param">hash_key=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a file.
+:param key: The name of the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewtils.io.FileHandler.get_key_hash">
+<code class="sig-name descname">get_key_hash</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.get_key_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.get_key_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a key to a hashed representation; useful for caching</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – A raw string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A SHA224 hash representation of that key</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewtils.io.FileHandler.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">data</em>, <em class="sig-param">format='pkl'</em>, <em class="sig-param">hash_key=False</em>, <em class="sig-param">add_timestamp=False</em>, <em class="sig-param">**io_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes arbitrary data objects to a variety of file formats.</p>
+<div class="line-block">
+<div class="line">If you save something to csv/tab/xlsx/xls/dta, it assumes you’ve passed it a Pandas DataFrame object.         If you’re trying to save an object to JSON, it assumes that you’re passing it valid JSON. By default, though,         the handler attempts to use pickling, allowing you to save (mostly) anything you want.</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The name of the file or key (without a file suffix!)</p></li>
+<li><p><strong>data</strong> – The actual data to write to the file</p></li>
+<li><p><strong>format</strong> – The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl.         This will be used as the file’s suffix.</p></li>
+<li><p><strong>hash_key</strong> – Whether or not to hash the provided key before saving the file. (Default=False)</p></li>
+<li><p><strong>add_timestamp</strong> – Optionally add a timestamp to the filename</p></li>
+<li><p><strong>io_kwargs</strong> – Additional parameters to pass along to the save function, which depends on the format of         the file you want to save.  The “dta” format uses <cite>pandas.DataFrame.to_stata</cite>; csv uses <cite>to_csv</cite>; pkl uses         <cite>pickle.dumps</cite>; json uses <cite>json.dumps</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pewtils.io.FileHandler.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">format='pkl'</em>, <em class="sig-param">hash_key=False</em>, <em class="sig-param">**io_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a file from the directory, returning its contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The name of the file to read (without a suffix!)</p></li>
+<li><p><strong>format</strong> – The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match</p></li>
+<li><p><strong>hash_key</strong> – Whether the key should be hashed prior to looking for and retrieving the file.</p></li>
+<li><p><strong>io_kwargs</strong> – Optional arguments to be passed to the specific load function (dependent on file format)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file contents, in the requested format</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pewtils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">More Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http.html">HTTP Utilities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">File Handles</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="http.html" title="previous chapter">HTTP Utilities</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, pew research center.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/file_handler.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

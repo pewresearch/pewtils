@@ -46,13 +46,16 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 
-<div class="viewcode-block" id="hash_url"><a class="viewcode-back" href="../../index.html#pewtils.http.hash_url">[docs]</a><span class="k">def</span> <span class="nf">hash_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<div class="viewcode-block" id="hash_url"><a class="viewcode-back" href="../../http.html#pewtils.http.hash_url">[docs]</a><span class="k">def</span> <span class="nf">hash_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clears out http/https prefix and returns an MD5 hash of the URL</span>
 
 <span class="sd">    :param url: string of the url</span>
 <span class="sd">    :return: hashed string</span>
+
+<span class="sd">    Usage::</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">http_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^http(s)?\:\/\/&quot;</span><span class="p">)</span>
@@ -64,14 +67,17 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="strip_html"><a class="viewcode-back" href="../../index.html#pewtils.http.strip_html">[docs]</a><span class="k">def</span> <span class="nf">strip_html</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="strip_html"><a class="viewcode-back" href="../../http.html#pewtils.http.strip_html">[docs]</a><span class="k">def</span> <span class="nf">strip_html</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">break_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</span>
-<span class="sd">    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document</span>
-<span class="sd">    using a process that we have found to work fairly well. Setting `simple=True` will make the function use</span>
-<span class="sd">    a much simpler regular expression approach to parsing. This function isn&#39;t always 100% effective, but it does a</span>
-<span class="sd">    decent job of usually removing the vast majority of HTML without stripping out valuable content.</span>
+
+<span class="sd">    | By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \</span>
+<span class="sd">    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \</span>
+<span class="sd">    a much simpler regular expression approach to parsing.</span>
+
+<span class="sd">    .. note:: This function isn&#39;t always 100% effective, but it does a decent job of usually removing the vast \</span>
+<span class="sd">    majority of HTML without stripping out valuable content.</span>
 
 <span class="sd">    :param html: The HTML to process</span>
 <span class="sd">    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)</span>
@@ -342,13 +348,14 @@
 <span class="n">VANITY_LINK_SHORTENERS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">HISTORICAL_VANITY_LINK_SHORTENERS</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="canonical_link"><a class="viewcode-back" href="../../index.html#pewtils.http.canonical_link">[docs]</a><span class="k">def</span> <span class="nf">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="canonical_link"><a class="viewcode-back" href="../../http.html#pewtils.http.canonical_link">[docs]</a><span class="k">def</span> <span class="nf">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tries to resolve a link to the &quot;most correct&quot; version. Especially useful for expanding short URLs \</span>
-<span class="sd">    from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not</span>
-<span class="sd">    perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases</span>
-<span class="sd">    while (usually) avoiding redirects to generic error pages.</span>
+<span class="sd">    Tries to resolve a link to the &quot;most correct&quot; version.</span>
+
+<span class="sd">    .. note:: Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving \</span>
+<span class="sd">    the actual data. This function is not perfect but it has been tested on a wide variety of URLs and resolves \</span>
+<span class="sd">    to the correct final page in most cases while (usually) avoiding redirects to generic error pages.</span>
 
 <span class="sd">    :param url: The URL to test. Should be fully qualified.</span>
 <span class="sd">    :param timeout: How long to wait for a response before giving up (default is one second)</span>
@@ -512,7 +519,7 @@
     <span class="k">return</span> <span class="n">url</span></div>
 
 
-<div class="viewcode-block" id="trim_get_parameters"><a class="viewcode-back" href="../../index.html#pewtils.http.trim_get_parameters">[docs]</a><span class="k">def</span> <span class="nf">trim_get_parameters</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="trim_get_parameters"><a class="viewcode-back" href="../../http.html#pewtils.http.trim_get_parameters">[docs]</a><span class="k">def</span> <span class="nf">trim_get_parameters</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional</span>
@@ -580,7 +587,7 @@
     <span class="k">return</span> <span class="n">url</span></div>
 
 
-<div class="viewcode-block" id="extract_domain_from_url"><a class="viewcode-back" href="../../index.html#pewtils.http.extract_domain_from_url">[docs]</a><span class="k">def</span> <span class="nf">extract_domain_from_url</span><span class="p">(</span>
+<div class="viewcode-block" id="extract_domain_from_url"><a class="viewcode-back" href="../../http.html#pewtils.http.extract_domain_from_url">[docs]</a><span class="k">def</span> <span class="nf">extract_domain_from_url</span><span class="p">(</span>
     <span class="n">url</span><span class="p">,</span>
     <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">resolve_url</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -632,10 +639,11 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">More Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../how_to_use.html">How To Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../file_handler.html">File Handles</a></li>
 </ul>
 
 <div class="relations">
