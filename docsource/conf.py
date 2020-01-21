@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "autodocsumm",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -77,8 +78,6 @@ pygments_style = None
 
 # Prevent autodoc to sort document members alphabetically
 autodoc_member_order = 'bysource'
-
-
 
 # -- Options for HTML output -------------------------------------------------
 

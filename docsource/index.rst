@@ -23,39 +23,29 @@ Or install from source ::
     planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
 
 
-PewTils Core Functions
+pewtils Core Functions
 -----------------------
 
-This contains everything you need to know about every function in the source code.
-
+Here are the list of information on pewtils core functions. 
 
 .. automodule :: pewtils.__init__
+    :autosummary:
     :members:
 
 
-File Handlers
--------------
-
-.. automodule :: pewtils.io
-    :members:
-
-
-HTTP Handler
-------------
-.. automodule :: pewtils.http
-    :members:
-
-
+pewtils
+-------
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    How To Use <how_to_use>
    HTTP Utilities <http>
+   File Handles <file_handler>
 
 
-Indices and tables
-==================
+Indices and Tables
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

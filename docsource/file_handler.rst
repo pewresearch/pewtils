@@ -1,6 +1,6 @@
 **************
-HTTP Utilities
+File Handlers
 **************
 
-.. automodule :: pewtils.http
+.. automodule :: pewtils.io
     :members:

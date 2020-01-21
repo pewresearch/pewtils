@@ -27,10 +27,12 @@ from hashlib import md5
 class classproperty(object):
 
     """
-    Borrowed from a StackOverflow post (https://stackoverflow.com/a/3203659), this decorator allows you to define
-    functions on a class that are accessible directly from the class itself (rather than an instance of the class).
-    Essentially, this allows you to access `classproperty` attributes directly, like `obj.property`, rather than as
-    a function on a class instance (like `obj = Obj(); obj.property()`).
+    This decorator allows you to define functions on a class that are accessible directly from the
+    class itself (rather than an instance of the class). Essentially, this allows you to access `classproperty`
+    attributes directly, like `obj.property`, rather than as a function on a class instance
+    (like `obj = Obj(); obj.property()`).
+
+    | Borrowed from a StackOverflow `post <https://stackoverflow.com/a/3203659>`_.
 
     Use like so::
 
@@ -58,7 +60,7 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
     Checks whether the value is null, using a variety of potential string values, etc. The following values are always
-    considered null: `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
+    considered null: `None`, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
 
     :param val: The value to check
     :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
@@ -108,7 +110,7 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
     Returns the opposite of the outcome of is_not_null. The following values are always considered null:
-    `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
+    `None`, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
 
     :param val: The value to check
     :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
@@ -130,17 +132,22 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 def decode_text(text, throw_loud_fail=False):
 
     """
-    Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string's encoding,
+    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string's encoding,
     decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the "unidecode" package to
     transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII and ignore
     non-ASCII characters.
 
-    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used to transliterate. In general, you shouldn't need to use this function in Python 3, but it can be used to convert unicode strings to bytes if you need to do so.
+    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \
+    to transliterate. In general, you shouldn't need to use this function in Python 3, but it can be used to convert \
+    unicode strings to bytes if you need to do so.
 
-    .. warning:: This function is potentially destructive to source input and should be used with some care. Input text which cannot be decoded may be stripped out, replaced with a similar ASCII character or other placeholder, potentially resulting in an empty string.
+    .. warning:: This function is potentially destructive to source input and should be used with some care. \
+    Input text which cannot be decoded may be stripped out, replaced with a similar ASCII character or other \
+    placeholder, potentially resulting in an empty string.
 
     :param text: text to process
-    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and return an empty string (default False)
+    :param throw_loud_fail: bool - if True exceptions will be raised, otherwise the function will fail silently and \
+    return an empty string (default False)
     :return: decoded text, or empty string
     """
 
@@ -203,6 +210,12 @@ def get_hash(text, hash_function="ssdeep"):
     :param hash_function: The specific algorithm to use (default = 'ssdeep'); \
     options are 'nilsimsa', 'md5', and 'ssdeep'
     :return: A hashed representation of the provided string
+
+    Usage::
+
+        >>> x = 'test_string'
+        >>> get_hash(x)
+        '3:HI2:Hl'
     """
 
     decoded_text = decode_text(text).encode("utf8").strip()
@@ -232,6 +245,13 @@ def zipcode_num_to_string(zip):
     :return: A 5-digit string, or None
 
     Usage::
+
+        >>> x = 6463
+        >>> zipcode_num_to_string(x)
+        '06463'
+        >>> x = 345678
+        >>> zipcode_num_to_string(x)
+        >>>
     """
 
     if is_not_null(zip):
@@ -257,13 +277,17 @@ def zipcode_num_to_string(zip):
 def concat_text(*args):
 
     """
-    A helper function for concatenating text values; useful for mapping onto a variable in Pandas. Text
+    A helper function for concatenating text values. Useful for mapping onto a variable in Pandas. Text
     values are passed through `decode_text` before concatenation.
 
     :param args: A list of text values that will be returned as a single space-separated string
     :return: A single string of the values concatenated by spaces
 
     Usage::
+
+        >>> x = ['Hello', 'World', '!']
+        >>> concat_text(x)
+        'Hello World !'
     """
 
     strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
@@ -279,6 +303,10 @@ def vector_concat_text(*args):
     :return: A single list with all of the text values for each row concatenated
 
     Usage::
+
+        >>> x = ["one", "two", "three"], ["a", "b", "c"]
+        >>> vector_concat_text(x)
+        ['one a', 'two b', 'three c']
     """
 
     return np.vectorize(concat_text)(*args)
@@ -294,9 +322,13 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
     :param old_max: The maximum of the old range
     :param new_min: The minimum of the new range
     :param new_max: The maximum of the new range
-    :return:
+    :return: Value equivalent from the new scale
 
     Usage::
+
+        >>> x = 10
+        >>> scale_range(x, 3, 12, 0, 20)
+        15
     """
 
     return (((old_val - old_min) * (new_max - new_min)) / (old_max - old_min)) + new_min
@@ -305,9 +337,9 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
 def new_random_number(attempt=1, minimum=1.0, maximum=10):
 
     """
-    Returns a random number between `minimum` (default 1) and a computed upper bound that exponentially increases
-    based on the `attempt` parameter. The upper bound is capped using the `maximum` parameter (default 10) but is
-    otherwise determined by the function `minimum * 2 ** attempt`.
+    Returns a random number between the boundary that exponentially increases with the number of `attempt`.
+    The upper bound is capped using the `maximum` parameter (default 10) but is otherwise determined by the
+    function `minimum * 2 ** attempt`.
 
     | In effect, this means that when `attempt` is 1, the number returned will be in the range of the minimum \
     and twice the minimum's value.  As you increase `attempt`, the possible range of returned values expands \
@@ -323,6 +355,11 @@ def new_random_number(attempt=1, minimum=1.0, maximum=10):
     :return: A random number drawn uniformly from across the range determined by the provided arguments.
 
     Usage::
+
+        >>> new_random_number(attempt=1)
+        1.9835581813820642
+        >>> new_random_number(attempt=2)
+        3.1022350739064
     """
 
     return uniform(minimum, min(maximum, minimum * 2 ** attempt))
@@ -338,6 +375,10 @@ def chunk_list(seq, size):
     :return: list - A list of lists
 
     Usage::
+
+        >>> x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> chunk_list(x, 3)
+        [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
     """
 
     return (seq[pos : (pos + size)] for pos in range(0, len(seq), size))
@@ -352,6 +393,10 @@ def flatten_list(l):
     :return: A flattened list of all of the elements contained in the original list of lists
 
     Usage::
+
+        >>> x = [[1, 2, 3], [4, 5, 6]]
+        >>> flatten_list(x)
+        [1, 2, 3, 4, 5, 6]
     """
 
     return [item for sublist in l for item in sublist]
@@ -405,12 +450,11 @@ def recursive_update(existing, new):
     Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
     new values and updates the object.
 
-    | Doesn't care if the keys in the dictionary correspond to attribute names or \
-    dictionary keys; you can use this to iterate through a nested hierarchy of objects and dictionaries and update \
-    whatever you like.
+    | Doesn't care if the keys in the dictionary correspond to attribute names or dictionary keys; you can use this\
+    to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.
 
     :param existing: An object or dictionary
-    :param new: A dictionary where keys correspond to the names of keys in the existing dictionary or attributes on
+    :param new: A dictionary where keys correspond to the names of keys in the existing dictionary or attributes on \
     the existing object
     :return: A copy of the original object or dictionary, with the values updated based on the provided map
     """
@@ -529,12 +573,12 @@ def extract_attributes_from_folder_modules(
 ):
 
     """
-    Similar to `extract_json_from_folder`, this function iterates over a folder and looks for Python files that
-    contain an attribute (like a class, function, or variable) with a given name. It extracts those attributes and
-    returns a dictionary where the keys are the names of the files that contained the attributes, and the values
-    are the attributes themselves.
+    Takes a folder path and traverses it, looking for Python files that contain an attribute (i.e., class, function, etc.)
+    with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the files
+    that contained the attributes, and the values are the attributes themselves.
 
-    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files that you want to scan and import using this function.
+    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \
+    that you want to scan and import using this function.
 
     :param folder_path: The path of a folder/module to scan
     :param attribute_name: The name of the attribute (class, function, variable, etc.) to extract from files
