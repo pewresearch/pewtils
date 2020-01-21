@@ -16,13 +16,10 @@ import warnings
 def hash_url(url):
 
     """
-    Clears out http/https prefix and returns an MD5 hash of the URL
+    Clears out http/https prefix and returns an MD5 hash of the URL.
 
     :param url: string of the url
     :return: hashed string
-
-    Usage::
-
     """
 
     http_regex = re.compile(r"^http(s)?\:\/\/")
@@ -48,7 +45,7 @@ def strip_html(html, simple=False, break_tags=None):
 
     :param html: The HTML to process
     :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
-    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"]
+    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
     :return: The text with HTML components removed (perfection not guaranteed)
     """
 

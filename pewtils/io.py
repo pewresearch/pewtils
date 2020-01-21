@@ -24,8 +24,7 @@ from pewtils import is_not_null
 class FileHandler(object):
 
     """
-    A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3. File
-    extensions are standardized to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.).
+    Read/write data files in a variety of formats, locally and in s3. File extensions are standardized to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.).
 
     :param path: The path to the folder that you'll be writing to or reading from
     :param use_s3: Whether the path is an S3 location or local location
@@ -90,7 +89,6 @@ class FileHandler(object):
         """
         Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)
 
-        :return:
         """
 
         if self.use_s3:
@@ -104,6 +102,7 @@ class FileHandler(object):
 
         """
         Deletes a file.
+
         :param key: The name of the file.
         """
 
