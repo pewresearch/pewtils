@@ -79,6 +79,10 @@ pygments_style = None
 # Prevent autodoc to sort document members alphabetically
 autodoc_member_order = 'bysource'
 
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+add_module_names = False
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

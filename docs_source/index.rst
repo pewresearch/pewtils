@@ -1,7 +1,7 @@
 Getting Started
 ===================================
 
-Welcome to pewtils’s documentation!
+Welcome to pewtils' documentation!
 
 About
 ---------------

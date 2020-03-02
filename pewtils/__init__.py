@@ -34,7 +34,7 @@ class classproperty(object):
 
     | Borrowed from a StackOverflow `post <https://stackoverflow.com/a/3203659>`_.
 
-    Use like so::
+    Usage::
 
         class Foo(object):
             x = 4
@@ -69,8 +69,8 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     Usage::
 
-        >>> x = "Hello"
-        >>> is_not_null(x)
+        >>> text = "Hello"
+        >>> is_not_null(text)
         True
     """
 
@@ -119,8 +119,8 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     Usage::
 
-        >>> x = []
-        >>> is_null(x, empty_lists_are_null=True)
+        >>> empty_list = []
+        >>> is_null(empty_list, empty_lists_are_null=True)
         True
     """
 
@@ -213,8 +213,8 @@ def get_hash(text, hash_function="ssdeep"):
 
     Usage::
 
-        >>> x = 'test_string'
-        >>> get_hash(x)
+        >>> text = 'test_string'
+        >>> get_hash(text)
         '3:HI2:Hl'
     """
 
@@ -246,11 +246,11 @@ def zipcode_num_to_string(zip):
 
     Usage::
 
-        >>> x = 6463
-        >>> zipcode_num_to_string(x)
+        >>> zipcode_number = 6463
+        >>> zipcode_num_to_string(zipcode_number)
         '06463'
-        >>> x = 345678
-        >>> zipcode_num_to_string(x)
+        >>> not_zipcode_number = 345678
+        >>> zipcode_num_to_string(not_zipcode_number)
         >>>
     """
 
@@ -285,8 +285,8 @@ def concat_text(*args):
 
     Usage::
 
-        >>> x = ['Hello', 'World', '!']
-        >>> concat_text(x)
+        >>> text_list = ['Hello', 'World', '!']
+        >>> concat_text(text_list)
         'Hello World !'
     """
 
@@ -304,8 +304,8 @@ def vector_concat_text(*args):
 
     Usage::
 
-        >>> x = ["one", "two", "three"], ["a", "b", "c"]
-        >>> vector_concat_text(x)
+        >>> text_lists = ["one", "two", "three"], ["a", "b", "c"]
+        >>> vector_concat_text(text_lists)
         ['one a', 'two b', 'three c']
     """
 
@@ -326,8 +326,8 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
 
     Usage::
 
-        >>> x = 10
-        >>> scale_range(x, 3, 12, 0, 20)
+        >>> old_value = 10
+        >>> scale_range(old_value, 3, 12, 0, 20)
         15
     """
 
@@ -376,8 +376,8 @@ def chunk_list(seq, size):
 
     Usage::
 
-        >>> x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        >>> chunk_list(x, 3)
+        >>> num_sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> chunk_list(num_sequence, 3)
         [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
     """
 
@@ -394,8 +394,8 @@ def flatten_list(l):
 
     Usage::
 
-        >>> x = [[1, 2, 3], [4, 5, 6]]
-        >>> flatten_list(x)
+        >>> nested_num_lists = [[1, 2, 3], [4, 5, 6]]
+        >>> flatten_list(nested_num_lists)
         [1, 2, 3, 4, 5, 6]
     """
 
