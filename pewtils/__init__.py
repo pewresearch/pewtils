@@ -36,16 +36,18 @@ class classproperty(object):
 
     Usage::
 
-        class Foo(object):
+        from pewtils import classproperty
+        
+        class MyClass(object):
             x = 4
 
             @classproperty
             def number(cls):
                 return cls.x
 
-        >>> Foo().number
+        >>> MyClass().number
         4
-        >>> Foo.number
+        >>> MyClass.number
         4
     """
 
@@ -68,6 +70,8 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
     :return: True if the value is not null
 
     Usage::
+
+        from pewtils import is_not_null
 
         >>> text = "Hello"
         >>> is_not_null(text)
@@ -118,6 +122,8 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
     :return: True if the value is null
 
     Usage::
+
+        from pewtils import is_null
 
         >>> empty_list = []
         >>> is_null(empty_list, empty_lists_are_null=True)
@@ -213,6 +219,8 @@ def get_hash(text, hash_function="ssdeep"):
 
     Usage::
 
+        from pewtils import get_hash
+
         >>> text = 'test_string'
         >>> get_hash(text)
         '3:HI2:Hl'
@@ -245,6 +253,8 @@ def zipcode_num_to_string(zip):
     :return: A 5-digit string, or None
 
     Usage::
+
+        from pewtils import zipcode_num_to_string
 
         >>> zipcode_number = 6463
         >>> zipcode_num_to_string(zipcode_number)
@@ -285,6 +295,8 @@ def concat_text(*args):
 
     Usage::
 
+        from pewtils import concat_text
+
         >>> text_list = ['Hello', 'World', '!']
         >>> concat_text(text_list)
         'Hello World !'
@@ -303,6 +315,8 @@ def vector_concat_text(*args):
     :return: A single list with all of the text values for each row concatenated
 
     Usage::
+
+        from pewtils import vector_concat_text
 
         >>> text_lists = ["one", "two", "three"], ["a", "b", "c"]
         >>> vector_concat_text(text_lists)
@@ -325,6 +339,8 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
     :return: Value equivalent from the new scale
 
     Usage::
+
+        from pewtils import scale_range
 
         >>> old_value = 10
         >>> scale_range(old_value, 3, 12, 0, 20)
@@ -356,6 +372,8 @@ def new_random_number(attempt=1, minimum=1.0, maximum=10):
 
     Usage::
 
+        from pewtils import new_random_number
+
         >>> new_random_number(attempt=1)
         1.9835581813820642
         >>> new_random_number(attempt=2)
@@ -376,8 +394,10 @@ def chunk_list(seq, size):
 
     Usage::
 
-        >>> num_sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        >>> chunk_list(num_sequence, 3)
+        from pewtils import chunk_list
+
+        >>> number_sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> chunk_list(number_sequence, 3)
         [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]
     """
 
@@ -393,6 +413,8 @@ def flatten_list(l):
     :return: A flattened list of all of the elements contained in the original list of lists
 
     Usage::
+
+        from pewtils import flatten_list
 
         >>> nested_num_lists = [[1, 2, 3], [4, 5, 6]]
         >>> flatten_list(nested_num_lists)
