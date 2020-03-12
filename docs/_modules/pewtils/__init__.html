@@ -1,34 +1,152 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pewtils.__init__ &mdash; pewtils 0.0.1 documentation</title>
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>pewtils.__init__ &#8212; pewtils 0.0.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> pewtils
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pewtils_core.html">pewtils Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../file_handler.html">File Handlers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pewtils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pewtils.__init__</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for pewtils.__init__</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
@@ -57,7 +175,7 @@
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
 
 
-<div class="viewcode-block" id="classproperty"><a class="viewcode-back" href="../../index.html#pewtils.__init__.classproperty">[docs]</a><span class="k">class</span> <span class="nc">classproperty</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="classproperty"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.classproperty">[docs]</a><span class="k">class</span> <span class="nc">classproperty</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This decorator allows you to define functions on a class that are accessible directly from the</span>
@@ -67,18 +185,19 @@
 
 <span class="sd">    | Borrowed from a StackOverflow `post &lt;https://stackoverflow.com/a/3203659&gt;`_.</span>
 
-<span class="sd">    Use like so::</span>
+<span class="sd">    Usage::</span>
 
-<span class="sd">        class Foo(object):</span>
+
+<span class="sd">        class MyClass(object):</span>
 <span class="sd">            x = 4</span>
 
 <span class="sd">            @classproperty</span>
 <span class="sd">            def number(cls):</span>
 <span class="sd">                return cls.x</span>
 
-<span class="sd">        &gt;&gt;&gt; Foo().number</span>
+<span class="sd">        &gt;&gt;&gt; MyClass().number</span>
 <span class="sd">        4</span>
-<span class="sd">        &gt;&gt;&gt; Foo.number</span>
+<span class="sd">        &gt;&gt;&gt; MyClass.number</span>
 <span class="sd">        4</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -89,7 +208,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">owner_cls</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_not_null"><a class="viewcode-back" href="../../index.html#pewtils.__init__.is_not_null">[docs]</a><span class="k">def</span> <span class="nf">is_not_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="is_not_null"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.is_not_null">[docs]</a><span class="k">def</span> <span class="nf">is_not_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks whether the value is null, using a variety of potential string values, etc. The following values are always</span>
@@ -102,8 +221,10 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = &quot;Hello&quot;</span>
-<span class="sd">        &gt;&gt;&gt; is_not_null(x)</span>
+<span class="sd">        from pewtils import is_not_null</span>
+
+<span class="sd">        &gt;&gt;&gt; text = &quot;Hello&quot;</span>
+<span class="sd">        &gt;&gt;&gt; is_not_null(text)</span>
 <span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -139,7 +260,7 @@
             <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../index.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the opposite of the outcome of is_not_null. The following values are always considered null:</span>
@@ -152,8 +273,10 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = []</span>
-<span class="sd">        &gt;&gt;&gt; is_null(x, empty_lists_are_null=True)</span>
+<span class="sd">        from pewtils import is_null</span>
+
+<span class="sd">        &gt;&gt;&gt; empty_list = []</span>
+<span class="sd">        &gt;&gt;&gt; is_null(empty_list, empty_lists_are_null=True)</span>
 <span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -162,7 +285,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="decode_text"><a class="viewcode-back" href="../../index.html#pewtils.__init__.decode_text">[docs]</a><span class="k">def</span> <span class="nf">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_text"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.decode_text">[docs]</a><span class="k">def</span> <span class="nf">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string&#39;s encoding,</span>
@@ -229,7 +352,7 @@
     <span class="k">return</span> <span class="n">output_text</span></div>
 
 
-<div class="viewcode-block" id="get_hash"><a class="viewcode-back" href="../../index.html#pewtils.__init__.get_hash">[docs]</a><span class="k">def</span> <span class="nf">get_hash</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">hash_function</span><span class="o">=</span><span class="s2">&quot;ssdeep&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_hash"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.get_hash">[docs]</a><span class="k">def</span> <span class="nf">get_hash</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">hash_function</span><span class="o">=</span><span class="s2">&quot;ssdeep&quot;</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates hashed text.</span>
@@ -246,8 +369,10 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = &#39;test_string&#39;</span>
-<span class="sd">        &gt;&gt;&gt; get_hash(x)</span>
+<span class="sd">        from pewtils import get_hash</span>
+
+<span class="sd">        &gt;&gt;&gt; text = &#39;test_string&#39;</span>
+<span class="sd">        &gt;&gt;&gt; get_hash(text)</span>
 <span class="sd">        &#39;3:HI2:Hl&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -269,7 +394,7 @@
     <span class="k">return</span> <span class="nb">hash</span></div>
 
 
-<div class="viewcode-block" id="zipcode_num_to_string"><a class="viewcode-back" href="../../index.html#pewtils.__init__.zipcode_num_to_string">[docs]</a><span class="k">def</span> <span class="nf">zipcode_num_to_string</span><span class="p">(</span><span class="nb">zip</span><span class="p">):</span>
+<div class="viewcode-block" id="zipcode_num_to_string"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.zipcode_num_to_string">[docs]</a><span class="k">def</span> <span class="nf">zipcode_num_to_string</span><span class="p">(</span><span class="nb">zip</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to standardize a string/integer/float that contains a zipcode.</span>
@@ -279,11 +404,12 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = 6463</span>
-<span class="sd">        &gt;&gt;&gt; zipcode_num_to_string(x)</span>
+<span class="sd">        from pewtils import zipcode_num_to_string</span>
+<span class="sd">        &gt;&gt;&gt; zipcode_number = 6463</span>
+<span class="sd">        &gt;&gt;&gt; zipcode_num_to_string(zipcode_number)</span>
 <span class="sd">        &#39;06463&#39;</span>
-<span class="sd">        &gt;&gt;&gt; x = 345678</span>
-<span class="sd">        &gt;&gt;&gt; zipcode_num_to_string(x)</span>
+<span class="sd">        &gt;&gt;&gt; not_zipcode_number = 345678</span>
+<span class="sd">        &gt;&gt;&gt; zipcode_num_to_string(not_zipcode_number)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -307,7 +433,7 @@
     <span class="k">return</span> <span class="nb">zip</span></div>
 
 
-<div class="viewcode-block" id="concat_text"><a class="viewcode-back" href="../../index.html#pewtils.__init__.concat_text">[docs]</a><span class="k">def</span> <span class="nf">concat_text</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="concat_text"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.concat_text">[docs]</a><span class="k">def</span> <span class="nf">concat_text</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A helper function for concatenating text values. Useful for mapping onto a variable in Pandas. Text</span>
@@ -318,8 +444,9 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = [&#39;Hello&#39;, &#39;World&#39;, &#39;!&#39;]</span>
-<span class="sd">        &gt;&gt;&gt; concat_text(x)</span>
+<span class="sd">        from pewtils import concat_text</span>
+<span class="sd">        &gt;&gt;&gt; text_list = [&#39;Hello&#39;, &#39;World&#39;, &#39;!&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; concat_text(text_list)</span>
 <span class="sd">        &#39;Hello World !&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -327,7 +454,7 @@
     <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strs</span><span class="p">)</span> <span class="k">if</span> <span class="n">strs</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
 
-<div class="viewcode-block" id="vector_concat_text"><a class="viewcode-back" href="../../index.html#pewtils.__init__.vector_concat_text">[docs]</a><span class="k">def</span> <span class="nf">vector_concat_text</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="vector_concat_text"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.vector_concat_text">[docs]</a><span class="k">def</span> <span class="nf">vector_concat_text</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces</span>
@@ -337,15 +464,16 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;], [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
-<span class="sd">        &gt;&gt;&gt; vector_concat_text(x)</span>
+<span class="sd">        from pewtils import vector_concat_text</span>
+<span class="sd">        &gt;&gt;&gt; text_lists = [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;], [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
+<span class="sd">        &gt;&gt;&gt; vector_concat_text(text_lists)</span>
 <span class="sd">        [&#39;one a&#39;, &#39;two b&#39;, &#39;three c&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">concat_text</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="scale_range"><a class="viewcode-back" href="../../index.html#pewtils.__init__.scale_range">[docs]</a><span class="k">def</span> <span class="nf">scale_range</span><span class="p">(</span><span class="n">old_val</span><span class="p">,</span> <span class="n">old_min</span><span class="p">,</span> <span class="n">old_max</span><span class="p">,</span> <span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span><span class="p">):</span>
+<div class="viewcode-block" id="scale_range"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.scale_range">[docs]</a><span class="k">def</span> <span class="nf">scale_range</span><span class="p">(</span><span class="n">old_val</span><span class="p">,</span> <span class="n">old_min</span><span class="p">,</span> <span class="n">old_max</span><span class="p">,</span> <span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Scales a value from one range to another.  Useful for comparing values from different scales, for example.</span>
@@ -359,15 +487,17 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = 10</span>
-<span class="sd">        &gt;&gt;&gt; scale_range(x, 3, 12, 0, 20)</span>
+<span class="sd">        from pewtils import scale_range</span>
+
+<span class="sd">        &gt;&gt;&gt; old_value = 10</span>
+<span class="sd">        &gt;&gt;&gt; scale_range(old_value, 3, 12, 0, 20)</span>
 <span class="sd">        15</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="p">(((</span><span class="n">old_val</span> <span class="o">-</span> <span class="n">old_min</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_max</span> <span class="o">-</span> <span class="n">new_min</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">old_max</span> <span class="o">-</span> <span class="n">old_min</span><span class="p">))</span> <span class="o">+</span> <span class="n">new_min</span></div>
 
 
-<div class="viewcode-block" id="new_random_number"><a class="viewcode-back" href="../../index.html#pewtils.__init__.new_random_number">[docs]</a><span class="k">def</span> <span class="nf">new_random_number</span><span class="p">(</span><span class="n">attempt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="new_random_number"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.new_random_number">[docs]</a><span class="k">def</span> <span class="nf">new_random_number</span><span class="p">(</span><span class="n">attempt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a random number between the boundary that exponentially increases with the number of `attempt`.</span>
@@ -389,6 +519,8 @@
 
 <span class="sd">    Usage::</span>
 
+<span class="sd">        from pewtils import new_random_number</span>
+
 <span class="sd">        &gt;&gt;&gt; new_random_number(attempt=1)</span>
 <span class="sd">        1.9835581813820642</span>
 <span class="sd">        &gt;&gt;&gt; new_random_number(attempt=2)</span>
@@ -398,7 +530,7 @@
     <span class="k">return</span> <span class="n">uniform</span><span class="p">(</span><span class="n">minimum</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">maximum</span><span class="p">,</span> <span class="n">minimum</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="chunk_list"><a class="viewcode-back" href="../../index.html#pewtils.__init__.chunk_list">[docs]</a><span class="k">def</span> <span class="nf">chunk_list</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+<div class="viewcode-block" id="chunk_list"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.chunk_list">[docs]</a><span class="k">def</span> <span class="nf">chunk_list</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a sequence and groups values into smaller lists based on the specified size.</span>
@@ -409,15 +541,17 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
-<span class="sd">        &gt;&gt;&gt; chunk_list(x, 3)</span>
+<span class="sd">        from pewtils import chunk_list</span>
+
+<span class="sd">        &gt;&gt;&gt; number_sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<span class="sd">        &gt;&gt;&gt; chunk_list(number_sequence, 3)</span>
 <span class="sd">        [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="n">size</span><span class="p">)]</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span> <span class="n">size</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="flatten_list"><a class="viewcode-back" href="../../index.html#pewtils.__init__.flatten_list">[docs]</a><span class="k">def</span> <span class="nf">flatten_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+<div class="viewcode-block" id="flatten_list"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.flatten_list">[docs]</a><span class="k">def</span> <span class="nf">flatten_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a list of lists and flattens it into a single list</span>
@@ -427,15 +561,17 @@
 
 <span class="sd">    Usage::</span>
 
-<span class="sd">        &gt;&gt;&gt; x = [[1, 2, 3], [4, 5, 6]]</span>
-<span class="sd">        &gt;&gt;&gt; flatten_list(x)</span>
+<span class="sd">        from pewtils import flatten_list</span>
+
+<span class="sd">        &gt;&gt;&gt; nested_num_lists = [[1, 2, 3], [4, 5, 6]]</span>
+<span class="sd">        &gt;&gt;&gt; flatten_list(nested_num_lists)</span>
 <span class="sd">        [1, 2, 3, 4, 5, 6]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="scan_dictionary"><a class="viewcode-back" href="../../index.html#pewtils.__init__.scan_dictionary">[docs]</a><span class="k">def</span> <span class="nf">scan_dictionary</span><span class="p">(</span><span class="n">search_dict</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<div class="viewcode-block" id="scan_dictionary"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.scan_dictionary">[docs]</a><span class="k">def</span> <span class="nf">scan_dictionary</span><span class="p">(</span><span class="n">search_dict</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a dictionary with nested lists and dictionaries, and searches recursively for a specific key. Since keys can</span>
@@ -477,7 +613,7 @@
     <span class="k">return</span> <span class="n">fields_found</span><span class="p">,</span> <span class="n">key_path</span></div>
 
 
-<div class="viewcode-block" id="recursive_update"><a class="viewcode-back" href="../../index.html#pewtils.__init__.recursive_update">[docs]</a><span class="k">def</span> <span class="nf">recursive_update</span><span class="p">(</span><span class="n">existing</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+<div class="viewcode-block" id="recursive_update"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.recursive_update">[docs]</a><span class="k">def</span> <span class="nf">recursive_update</span><span class="p">(</span><span class="n">existing</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes an object and a dictionary representation of attributes and values, and recursively traverses through the</span>
@@ -528,7 +664,7 @@
         <span class="k">return</span> <span class="n">new</span></div>
 
 
-<div class="viewcode-block" id="cached_series_mapper"><a class="viewcode-back" href="../../index.html#pewtils.__init__.cached_series_mapper">[docs]</a><span class="k">def</span> <span class="nf">cached_series_mapper</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+<div class="viewcode-block" id="cached_series_mapper"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.cached_series_mapper">[docs]</a><span class="k">def</span> <span class="nf">cached_series_mapper</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.</span>
@@ -547,7 +683,7 @@
     <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">val_map</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="extract_json_from_folder"><a class="viewcode-back" href="../../index.html#pewtils.__init__.extract_json_from_folder">[docs]</a><span class="k">def</span> <span class="nf">extract_json_from_folder</span><span class="p">(</span>
+<div class="viewcode-block" id="extract_json_from_folder"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.extract_json_from_folder">[docs]</a><span class="k">def</span> <span class="nf">extract_json_from_folder</span><span class="p">(</span>
     <span class="n">folder_path</span><span class="p">,</span> <span class="n">include_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">concat_subdir_names</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
 
@@ -597,7 +733,7 @@
     <span class="k">return</span> <span class="n">attributes</span></div>
 
 
-<div class="viewcode-block" id="extract_attributes_from_folder_modules"><a class="viewcode-back" href="../../index.html#pewtils.__init__.extract_attributes_from_folder_modules">[docs]</a><span class="k">def</span> <span class="nf">extract_attributes_from_folder_modules</span><span class="p">(</span>
+<div class="viewcode-block" id="extract_attributes_from_folder_modules"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.extract_attributes_from_folder_modules">[docs]</a><span class="k">def</span> <span class="nf">extract_attributes_from_folder_modules</span><span class="p">(</span>
     <span class="n">folder_path</span><span class="p">,</span>
     <span class="n">attribute_name</span><span class="p">,</span>
     <span class="n">include_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -713,71 +849,43 @@
     <span class="k">return</span> <span class="n">attributes</span></div>
 </pre></div>
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">pewtils</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, pew research center
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../how_to_use.html">How To Use</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../file_handler.html">File Handlers</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, pew research center.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

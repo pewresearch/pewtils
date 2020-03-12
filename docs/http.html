@@ -1,42 +1,197 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>HTTP Utilities &#8212; pewtils 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HTTP Utilities &mdash; pewtils 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="File Handlers" href="file_handler.html" />
-    <link rel="prev" title="How to" href="how_to_use.html" />
+    <link rel="prev" title="pewtils Core" href="pewtils_core.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> pewtils
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="module-pewtils.http">
-<span id="http-utilities"></span><h1>HTTP Utilities<a class="headerlink" href="#module-pewtils.http" title="Permalink to this headline">¶</a></h1>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#about">About</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#pewtils">PewTils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#table-of-contents">Table of Contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pewtils_core.html">pewtils Core</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">HTTP Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="file_handler.html">File Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and Tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pewtils_core.html">pewtils Core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_handler.html">File Handlers</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pewtils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>HTTP Utilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/http.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="http-utilities">
+<h1>HTTP Utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h1>
+<p>Below are all pewtils functions that handle URL and HTML processing tasks.</p>
+<span class="target" id="module-pewtils.http"></span><p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-obj docutils literal notranslate"><span class="pre">canonical_link</span></code></a>(url[, timeout, session, …])</p></td>
+<td><p>Tries to resolve a link to the “most correct” version.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.http.extract_domain_from_url" title="pewtils.http.extract_domain_from_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_domain_from_url</span></code></a>(url[, …])</p></td>
+<td><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.hash_url" title="pewtils.http.hash_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hash_url</span></code></a>(url)</p></td>
+<td><p>Clears out http/https prefix and returns an MD5 hash of the URL.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.http.strip_html" title="pewtils.http.strip_html"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip_html</span></code></a>(html[, simple, break_tags])</p></td>
+<td><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.trim_get_parameters" title="pewtils.http.trim_get_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_get_parameters</span></code></a>(url[, session, timeout, …])</p></td>
+<td><p>Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional ones that can be removed without generating any redirects.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="pewtils.http.hash_url">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">hash_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#hash_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.hash_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hash_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#hash_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.hash_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears out http/https prefix and returns an MD5 hash of the URL.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -50,7 +205,7 @@
 
 <dl class="function">
 <dt id="pewtils.http.strip_html">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</p>
 <div class="line-block">
 <div class="line">By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document     using a process that we have found to work fairly well. Setting <cite>simple=True</cite> will make the function use     a much simpler regular expression approach to parsing.</div>
@@ -64,7 +219,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>html</strong> – The HTML to process</p></li>
 <li><p><strong>simple</strong> – Whether or not to use a simple regex or more complex parsing rules (default=False)</p></li>
-<li><p><strong>break_tags</strong> – A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”]</p></li>
+<li><p><strong>break_tags</strong> – A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”])</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -75,7 +230,7 @@
 
 <dl class="function">
 <dt id="pewtils.http.canonical_link">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tries to resolve a link to the “most correct” version.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -98,7 +253,7 @@
 
 <dl class="function">
 <dt id="pewtils.http.trim_get_parameters">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">trim_get_parameters</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">session=None</em>, <em class="sig-param">timeout=30</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#trim_get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.trim_get_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trim_get_parameters</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">session=None</em>, <em class="sig-param">timeout=30</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#trim_get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.trim_get_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
 ones that can be removed without generating any redirects.</p>
 <dl class="field-list simple">
@@ -118,7 +273,7 @@ ones that can be removed without generating any redirects.</p>
 
 <dl class="function">
 <dt id="pewtils.http.extract_domain_from_url">
-<code class="sig-prename descclassname">pewtils.http.</code><code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -140,74 +295,52 @@ ones that can be removed without generating any redirects.</p>
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pewtils</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To Use</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file_handler.html">File Handlers</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="how_to_use.html" title="previous chapter">How to</a></li>
-      <li>Next: <a href="file_handler.html" title="next chapter">File Handlers</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="file_handler.html" class="btn btn-neutral float-right" title="File Handlers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pewtils_core.html" class="btn btn-neutral float-left" title="pewtils Core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, pew research center
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, pew research center.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/http.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

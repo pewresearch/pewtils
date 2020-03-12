@@ -16,6 +16,7 @@ polyglot
 python-dateutil>=2.6.0
 python-levenshtein>=0.12.0
 pytz>=2016.10
+sphinx_rtd_theme
 requests>=2.13.0
 scandir>=1.5
 simplejson>=3.10.0
