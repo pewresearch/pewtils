@@ -23,6 +23,7 @@ class RegexTests(unittest.TestCase):
             "example.com/test",
             "example.com/test?test=test",
             "http://example.com?test=test&test=test",
+            "https://t.co/example",
         ]:
             result = URL_REGEX.findall("test {} test".format(val))
             self.assertEqual(result[0], val)

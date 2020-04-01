@@ -2,7 +2,7 @@ import re
 
 
 URL_REGEX = re.compile(
-    r"((?:https?:\/\/(?:www\.)?)?[-a-zA-Z0-9@:%._\+~#=]{2,4096}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&//=]*))"
+    r"((?:https?:\/\/(?:www\.)?)?[-a-zA-Z0-9@:%._\+~#=]{1,4096}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&//=]*))"
 )
 """
 A compiled regular expression for extracting (probably) valid URLs.
