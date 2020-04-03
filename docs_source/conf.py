@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "pewtils"
-copyright = "2019, pew research center"
-author = "pew research center"
+copyright = "2020, Pew Research Center"
+author = "Pew Research Center"
 
 # The short X.Y version
 version = ""
 # The full version, including alpha/beta/rc tags
-release = "0.0.1"
+release = "1.0.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -77,7 +77,7 @@ exclude_patterns = []
 pygments_style = None
 
 # Prevent autodoc to sort document members alphabetically
-autodoc_member_order = 'bysource'
+autodoc_member_order = "bysource"
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
@@ -94,9 +94,7 @@ html_theme = "sphinx_rtd_theme"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    'navigation_depth': 3,
-}
+html_theme_options = {"navigation_depth": 3}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

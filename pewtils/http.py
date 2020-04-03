@@ -16,10 +16,23 @@ import warnings
 def hash_url(url):
 
     """
-    Clears out http/https prefix and returns an MD5 hash of the URL.
+    Clears out http/https prefix and returns an MD5 hash of the URL. All this does is remove http/s prefixes; it can be
+    far more effective when used in conjunction with :py:func:`pewtils.http.canonical_link`.
 
-    :param url: string of the url
-    :return: hashed string
+    :param url: The URL to hash
+    :type url: str
+    :return: Hashed string representation of the URL using the md5 hashing algorithm.
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import hash_url
+
+        >>> hash_url("http://www.example.com")
+        "7c1767b30512b6003fd3c2e618a86522"
+        >>> hash_url("www.example.com")
+        "7c1767b30512b6003fd3c2e618a86522"
+
     """
 
     http_regex = re.compile(r"^http(s)?\:\/\/")
@@ -44,9 +57,22 @@ def strip_html(html, simple=False, break_tags=None):
     majority of HTML without stripping out valuable content.
 
     :param html: The HTML to process
+    :type html: str
     :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
+    :type simple: bool
     :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
+    :type break_tags: list
     :return: The text with HTML components removed (perfection not guaranteed)
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import strip_html
+
+        >>> my_html = "<html><head>Header text</head><body>Body text</body></html>"
+        >>> strip_html(my_html)
+        'Header text\n\nBody text'
+
     """
 
     html = re.sub(r"\n", " ", html)
@@ -152,6 +178,9 @@ GENERAL_LINK_SHORTENERS = [
     "adf.ly",
     "su.pr",
 ]
+"""
+A list of known generic URL shorteners
+"""
 
 VANITY_LINK_SHORTENERS = {
     "pdora.co": "pandora.com",
@@ -279,6 +308,9 @@ VANITY_LINK_SHORTENERS = {
     "ble.ac": "bleacherreport.com",
     "aje.io": "aljazeera.com",
 }
+"""
+A list of known URL shorteners for specific websites (primarily news websites)
+"""
 
 HISTORICAL_VANITY_LINK_SHORTENERS = {
     "nws.mx": "newsmax.com",
@@ -315,17 +347,35 @@ VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
     """
-    Tries to resolve a link to the "most correct" version.
+    Tries to resolve a link to the "most correct" version. Useful for expanding short URLs from bit.ly / Twitter \
+    and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the \
+    most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove \
+    optional GET parameters. This function may not be particularly effective on dead links, but may still be able \
+    to follow redirects enough to return a URL with the correct domain associated with the original link.
 
-    .. note:: Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving \
-    the actual data. This function is not perfect but it has been tested on a wide variety of URLs and resolves \
+    .. note:: This function is not perfect but it has been tested on a wide variety of URLs and resolves \
     to the correct final page in most cases while (usually) avoiding redirects to generic error pages.
 
     :param url: The URL to test. Should be fully qualified.
+    :type url: str
     :param timeout: How long to wait for a response before giving up (default is one second)
-    :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
-    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided
+    :type timeout: int or float
+    :param session: (Optional) A persistent session that can optionally be passed (useful if you're processing many \
+    links at once)
+    :type session: :py:class:`requests.Session` object
+    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \
+    is not provided
+    :type user_agent: str
     :return: The "canonical" URL as supplied by the server, or the original URL if the server was not helpful.
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import canonical_link
+
+        >>> canonical_link("https://pewrsr.ch/2lxB0EX")
+        "https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/"
+
     """
 
     BAD_STATUS_CODES = [
@@ -490,10 +540,25 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
     ones that can be removed without generating any redirects.
 
     :param url: The URL to trim
-    :param session: Requests session (optional)
+    :type url: str
+    :param session: (Optional) A persistent session that can optionally be passed (useful if you're processing many \
+    links at once)
+    :type session: :py:class:`requests.Session` object
+    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \
+    is not provided
+    :type user_agent: str
     :param timeout: Timeout for requests
-    :param user_agent: The User-Agent to use for the session (if an existing session is not provided)
+    :type timeout: int or float
     :return: The original URL with optional GET parameters removed
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import trim_get_parameters
+
+        >>> trim_get_parameters("https://httpbin.org/status/200?param=1")
+        "https://httpbin.org/status/200"
+
     """
 
     close_session = False
@@ -563,14 +628,42 @@ def extract_domain_from_url(
     """
     Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
 
+    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \
+    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \
+    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
+    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \
+    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \
+    this dictionary of known shorteners may be returned with an incorrect domain.
+
+
     :param url:  The link from which to extract the domain
+    :type url: str
     :param include_subdomain: Whether or not to include the subdomain (e.g. 'news.google.com'); default is True
-    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \
-    return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they're permanent)
-    :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)
-    :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
-    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided
+    :type include_subdomain: bool
+    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \
+    True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \
+    domain.
+    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \
+    timing out (default is 1)
+    :type timeout: int or float
+    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \
+    (useful if you're processing many links at once)
+    :type session: :py:class:`requests.Session` object
+    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \
+    if a preconfigured requests Session is not provided
+    :type user_agent: str
     :return: The domain for the link
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import extract_domain_from_url
+
+        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=False)
+        "bbc.co.uk"
+        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=True)
+        "forums.bbc.co.uk"
+
     """
 
     if resolve_url:

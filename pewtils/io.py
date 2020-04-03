@@ -24,13 +24,44 @@ from pewtils import is_not_null
 class FileHandler(object):
 
     """
-    Read/write data files in a variety of formats, locally and in s3. File extensions are standardized to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.).
+    Read/write data files in a variety of formats, locally and in Amazon S3 buckets. File extensions are standardized \
+    to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.) The class must be initialized \
+    with a valid path within either your local file system or a specific S3 bucket. You can configure your environment \
+    to make it easier to automatically connect to S3 by defining the variables `AWS_ACCESS_KEY_ID`, \
+    `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
+
+    .. note:: Files in the following formats make use of :py:class:`pandas.DataFrame` objects: `csv`, `tab`, `xlsx`,
+        `xls`, `dta`. When you try to write an object in any of these formats, the `FileHandler` expects a dataframe;
+        and when you read a file in any of these formats, it gets loaded in as a dataframe. The exceptions are `pkl`, \
+        which will accept any serializable Python object, and `json`, which expects a correctly-formatted JSON object.
 
     :param path: The path to the folder that you'll be writing to or reading from
+    :type path: str
     :param use_s3: Whether the path is an S3 location or local location
+    :type use_s3: bool
     :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID
+    :type aws_access: str
     :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY
-    :param bucket: The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as S3_BUCKET
+    :type aws_secret: str
+    :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \
+    as S3_BUCKET
+    :type bucket: str
+
+    Usage::
+
+        from pewtils.io import FileHandler
+
+        >>> h = FileHandler("./", use_s3=False)  # current local folder
+        >>> df = h.read("my_csv", format="csv")
+        # do something
+        >>> h.write("my_new_csv", df, format="csv")
+
+        >>> my_data = [{"key": "value"}]
+        >>> h.write("my_data", my_data, format="json")
+
+        >>> my_data = ["a", "python", "list"]
+        >>> h.write("my_data", my_data, format="pkl")
+
     """
 
     def __init__(
@@ -75,6 +106,18 @@ class FileHandler(object):
         Iterates over the directory and returns a list of filenames or S3 object keys
 
         :return: Yields a list of filenames or S3 keys
+        :rtype: iterable
+
+        Usage::
+
+            from pewtils.io import FileHandler
+
+            >>> h = FileHandler("./", use_s3=False)
+            >>> for file in h.iterate_path(): print(file)
+            file1.csv
+            file2.pkl
+            file3.json
+
         """
 
         if self.use_s3:
@@ -89,6 +132,19 @@ class FileHandler(object):
         """
         Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)
 
+        .. warning:: This is a destructive function, use with caution!
+
+        Usage::
+
+            from pewtils.io import FileHandler
+
+            >>> h = FileHandler("./", use_s3=False)
+            >>> len(list(h.iterate_path()))
+            3
+            >>> h.clear_folder()
+            >>> len(list(h.iterate_path()))
+            0
+
         """
 
         if self.use_s3:
@@ -101,9 +157,31 @@ class FileHandler(object):
     def clear_file(self, key, format="pkl", hash_key=False):
 
         """
-        Deletes a file.
+        Deletes a specific file.
 
-        :param key: The name of the file.
+        .. warning:: This is a destructive function, use with caution!
+
+        :param key: The name of the file to delete
+        :type key: str
+        :param format: The file extension
+        :type format: str
+        :param hash_key: If True, will hash the filename before looking it up; default is False.
+        :type hash_key: bool
+
+        Usage::
+
+            from pewtils.io import FileHandler
+
+            >>> h = FileHandler("./", use_s3=False)
+            >>> for file in h.iterate_path(): print(file)
+            file1.csv
+            file2.pkl
+            file3.json
+            >>> h.clear_file("file1", format="csv")
+            >>> for file in h.iterate_path(): print(file)
+            file2.pkl
+            file3.json
+
         """
 
         if hash_key:
@@ -120,10 +198,27 @@ class FileHandler(object):
     def get_key_hash(self, key):
 
         """
-        Converts a key to a hashed representation; useful for caching
+        Converts a key to a hashed representation. Allows you to pass arbitrary objects and convert their string \
+        representation into a shorter hashed key, so it can be useful for caching. You can call this method \
+        directly to see the hash that a key will be converted into, but this method is mainly used in conjunction \
+        with the :py:meth:`pewtils.FileHandler.write` and :py:meth:`pewtils.FileHandler.read` methods by passing in \
+        `hash_key=True`.
 
-        :param key: A raw string
+        :param key: A raw string or Python object that can be meaningfully converted into a string representation
+        :type key: str or object
         :return: A SHA224 hash representation of that key
+        :rtype: str
+
+        Usage::
+
+            from pewtils.io import FileHandler
+
+            >>> h = FileHandler("tests/files", use_s3=False)
+            >>> h.get_key_hash("temp")
+            "c51bf90ccb22befa316b7a561fe9d5fd9650180b14421fc6d71bcd57"
+            >>> h.get_key_hash({"key": "value"})
+            "37e13e1116c86a6e9f3f8926375c7cb977ca74d2d598572ced03cd09"
+
         """
 
         try:
@@ -140,17 +235,30 @@ class FileHandler(object):
 
         | If you save something to csv/tab/xlsx/xls/dta, it assumes you've passed it a Pandas DataFrame object. \
         If you're trying to save an object to JSON, it assumes that you're passing it valid JSON. By default, though, \
-        the handler attempts to use pickling, allowing you to save (mostly) anything you want.
+        the handler attempts to use pickling, allowing you to save anything you want, as long as it's serializable.
+
+        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \
+        Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \
+        to the corresponding Pandas method below:
+
+            - `dta`: :py:meth:`pandas.DataFrame.to_stata`
+            - `csv`: :py:meth:`pandas.DataFrame.to_csv`
+            - `tab`: :py:meth:`pandas.DataFrame.to_csv`
+            - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`
+            - `xls`: :py:meth:`pandas.DataFrame.to_excel`
 
         :param key: The name of the file or key (without a file suffix!)
+        :type key: str
         :param data: The actual data to write to the file
+        :type data: object
         :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl. \
         This will be used as the file's suffix.
+        :type format: str
         :param hash_key: Whether or not to hash the provided key before saving the file. (Default=False)
+        :type hash_key: bool
         :param add_timestamp: Optionally add a timestamp to the filename
-        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of \
-        the file you want to save.  The "dta" format uses `pandas.DataFrame.to_stata`; csv uses `to_csv`; pkl uses \
-        `pickle.dumps`; json uses `json.dumps`
+        :type add_timestamp: bool
+        :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable
         :return: None
         """
 
@@ -180,7 +288,6 @@ class FileHandler(object):
             try:
                 data = _get_output(BytesIO(), data, io_kwargs)
             except Exception as e:
-                print(e)
                 try:
                     data = _get_output(StringIO(), data, io_kwargs)
                 except:
@@ -215,11 +322,23 @@ class FileHandler(object):
     def read(self, key, format="pkl", hash_key=False, **io_kwargs):
 
         """
-        Reads a file from the directory, returning its contents.
+        Reads a file from the directory or S3 path, returning its contents.
+
+        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \
+            the format of the file you're trying to read in
+
+            - `dta`: :py:meth:`pandas.DataFrame.read_stata`
+            - `csv`: :py:meth:`pandas.DataFrame.read_csv`
+            - `tab`: :py:meth:`pandas.DataFrame.read_csv`
+            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`
+            - `xls`: :py:meth:`pandas.DataFrame.read_excel`
 
         :param key: The name of the file to read (without a suffix!)
+        :type key: str
         :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match
+        :type format: str
         :param hash_key: Whether the key should be hashed prior to looking for and retrieving the file.
+        :type hash_key: bool
         :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)
         :return: The file contents, in the requested format
         """
