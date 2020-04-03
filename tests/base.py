@@ -200,7 +200,8 @@ class BaseTests(unittest.TestCase):
     def test_scale_range(self):
         from pewtils import scale_range
 
-        self.assertEqual(int(scale_range(10, 3, 12, 0, 20)), 15)
+        self.assertEqual(scale_range(10, 5, 25, 0, 10), 2.5)
+        self.assertEqual(scale_range(5, 0, 10, 0, 20), 10.0)
 
     def test_scan_dictionary(self):
         from pewtils import scan_dictionary

@@ -347,7 +347,10 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
         15
     """
 
-    return (((old_val - old_min) * (new_max - new_min)) / (old_max - old_min)) + new_min
+    return (
+        ((float(old_val) - float(old_min)) * (float(new_max) - float(new_min)))
+        / (float(old_max) - float(old_min))
+    ) + float(new_min)
 
 
 def new_random_number(attempt=1, minimum=1.0, maximum=10):
