@@ -302,8 +302,8 @@ def concat_text(*args):
         'Hello World !'
     """
 
-    strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
-    return " ".join(strs) if strs else np.nan
+    strs = [decode_text(arg) for arg in args if is_not_null(arg)]
+    return " ".join(strs) if is_not_null(strs, empty_lists_are_null=True) else ""
 
 
 def vector_concat_text(*args):
