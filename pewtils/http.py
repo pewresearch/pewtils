@@ -201,7 +201,6 @@ VANITY_LINK_SHORTENERS = {
     "fb.me": "facebook.com",
     "dbtg.tv": "bundestag.de",
     "m.me": "messenger.com",
-    "trib.in": "chicagotribune.com",
     "wtrne.ws": "timesrecordnews.com",
     "icont.ac": "icontact-archive.com",
     "entm.ag": "entrepreneur.com",
@@ -243,7 +242,6 @@ VANITY_LINK_SHORTENERS = {
     "sen.gov": "senate.gov",
     "es.pn": "espn.com",
     "wrd.cm": "wired.com",
-    "cour.at": "courant.com",
     "read.bi": "businessinsider.com",
     "dailysign.al": "dailysignal.com",
     "buswk.co": "bloomberg.com",
@@ -289,7 +287,6 @@ VANITY_LINK_SHORTENERS = {
     "dailym.ai": "dailymail.co.uk",
     "instagr.am": "instagram.com",
     "chng.it": "change.org",
-    "tws.io": "weeklystandard.com",
     "spoti.fi": "spotify.com",
     "nyp.st": "nypost.com",
     "bv.ms": "bloomberg.com",
@@ -339,6 +336,9 @@ HISTORICAL_VANITY_LINK_SHORTENERS = {
     "wpo.st": "washingtonpost.com",
     "abcn.ws": "abcnews.com",
     "cs.pn": "c-span.org",
+    "tws.io": "weeklystandard.com",
+    "trib.in": "chicagotribune.com",
+    "cour.at": "courant.com",
 }
 
 VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
