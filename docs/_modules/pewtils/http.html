@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pewtils.http &mdash; pewtils 0.0.1 documentation</title>
+  <title>pewtils.http &mdash; pewtils 1.0.0 documentation</title>
   
 
   
@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -80,12 +80,11 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../pewtils_core.html">pewtils Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pewtils_core.html">Core Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../file_handler.html">File Handlers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../io.html">I/O Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regex.html">Regex Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 
             
@@ -149,13 +148,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pewtils.http</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span>
-<span class="kn">from</span> <span class="nn">six.moves.urllib</span> <span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">urlparse</span>
-<span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span>
+<span class="kn">from</span> <span class="nn">six.moves.urllib</span> <span class="k">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">urlparse</span>
+<span class="kn">from</span> <span class="nn">unidecode</span> <span class="k">import</span> <span class="n">unidecode</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">threading</span>
@@ -167,10 +166,23 @@
 <div class="viewcode-block" id="hash_url"><a class="viewcode-back" href="../../http.html#pewtils.http.hash_url">[docs]</a><span class="k">def</span> <span class="nf">hash_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clears out http/https prefix and returns an MD5 hash of the URL.</span>
+<span class="sd">    Clears out http/https prefix and returns an MD5 hash of the URL. All this does is remove http/s prefixes; it can be</span>
+<span class="sd">    far more effective when used in conjunction with :py:func:`pewtils.http.canonical_link`.</span>
 
-<span class="sd">    :param url: string of the url</span>
-<span class="sd">    :return: hashed string</span>
+<span class="sd">    :param url: The URL to hash</span>
+<span class="sd">    :type url: str</span>
+<span class="sd">    :return: Hashed string representation of the URL using the md5 hashing algorithm.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.http import hash_url</span>
+
+<span class="sd">        &gt;&gt;&gt; hash_url(&quot;http://www.example.com&quot;)</span>
+<span class="sd">        &quot;7c1767b30512b6003fd3c2e618a86522&quot;</span>
+<span class="sd">        &gt;&gt;&gt; hash_url(&quot;www.example.com&quot;)</span>
+<span class="sd">        &quot;7c1767b30512b6003fd3c2e618a86522&quot;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">http_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^http(s)?\:\/\/&quot;</span><span class="p">)</span>
@@ -195,9 +207,22 @@
 <span class="sd">    majority of HTML without stripping out valuable content.</span>
 
 <span class="sd">    :param html: The HTML to process</span>
+<span class="sd">    :type html: str</span>
 <span class="sd">    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)</span>
+<span class="sd">    :type simple: bool</span>
 <span class="sd">    :param break_tags: A custom list of tags on which to break (default is [&quot;strong&quot;, &quot;em&quot;, &quot;i&quot;, &quot;b&quot;, &quot;p&quot;])</span>
+<span class="sd">    :type break_tags: list</span>
 <span class="sd">    :return: The text with HTML components removed (perfection not guaranteed)</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.http import strip_html</span>
+
+<span class="sd">        &gt;&gt;&gt; my_html = &quot;&lt;html&gt;&lt;head&gt;Header text&lt;/head&gt;&lt;body&gt;Body text&lt;/body&gt;&lt;/html&gt;&quot;</span>
+<span class="sd">        &gt;&gt;&gt; strip_html(my_html)</span>
+<span class="sd">        &#39;Header text\n\nBody text&#39;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">html</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
@@ -303,6 +328,9 @@
     <span class="s2">&quot;adf.ly&quot;</span><span class="p">,</span>
     <span class="s2">&quot;su.pr&quot;</span><span class="p">,</span>
 <span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A list of known generic URL shorteners</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">VANITY_LINK_SHORTENERS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;pdora.co&quot;</span><span class="p">:</span> <span class="s2">&quot;pandora.com&quot;</span><span class="p">,</span>
@@ -430,6 +458,9 @@
     <span class="s2">&quot;ble.ac&quot;</span><span class="p">:</span> <span class="s2">&quot;bleacherreport.com&quot;</span><span class="p">,</span>
     <span class="s2">&quot;aje.io&quot;</span><span class="p">:</span> <span class="s2">&quot;aljazeera.com&quot;</span><span class="p">,</span>
 <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A list of known URL shorteners for specific websites (primarily news websites)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">HISTORICAL_VANITY_LINK_SHORTENERS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;nws.mx&quot;</span><span class="p">:</span> <span class="s2">&quot;newsmax.com&quot;</span><span class="p">,</span>
@@ -466,17 +497,35 @@
 <div class="viewcode-block" id="canonical_link"><a class="viewcode-back" href="../../http.html#pewtils.http.canonical_link">[docs]</a><span class="k">def</span> <span class="nf">canonical_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tries to resolve a link to the &quot;most correct&quot; version.</span>
+<span class="sd">    Tries to resolve a link to the &quot;most correct&quot; version. Useful for expanding short URLs from bit.ly / Twitter \</span>
+<span class="sd">    and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the \</span>
+<span class="sd">    most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove \</span>
+<span class="sd">    optional GET parameters. This function may not be particularly effective on dead links, but may still be able \</span>
+<span class="sd">    to follow redirects enough to return a URL with the correct domain associated with the original link.</span>
 
-<span class="sd">    .. note:: Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving \</span>
-<span class="sd">    the actual data. This function is not perfect but it has been tested on a wide variety of URLs and resolves \</span>
+<span class="sd">    .. note:: This function is not perfect but it has been tested on a wide variety of URLs and resolves \</span>
 <span class="sd">    to the correct final page in most cases while (usually) avoiding redirects to generic error pages.</span>
 
 <span class="sd">    :param url: The URL to test. Should be fully qualified.</span>
+<span class="sd">    :type url: str</span>
 <span class="sd">    :param timeout: How long to wait for a response before giving up (default is one second)</span>
-<span class="sd">    :param session: A persistent session that can optionally be passed (useful if you&#39;re processing many links at once)</span>
-<span class="sd">    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided</span>
+<span class="sd">    :type timeout: int or float</span>
+<span class="sd">    :param session: (Optional) A persistent session that can optionally be passed (useful if you&#39;re processing many \</span>
+<span class="sd">    links at once)</span>
+<span class="sd">    :type session: :py:class:`requests.Session` object</span>
+<span class="sd">    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \</span>
+<span class="sd">    is not provided</span>
+<span class="sd">    :type user_agent: str</span>
 <span class="sd">    :return: The &quot;canonical&quot; URL as supplied by the server, or the original URL if the server was not helpful.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.http import canonical_link</span>
+
+<span class="sd">        &gt;&gt;&gt; canonical_link(&quot;https://pewrsr.ch/2lxB0EX&quot;)</span>
+<span class="sd">        &quot;https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/&quot;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">BAD_STATUS_CODES</span> <span class="o">=</span> <span class="p">[</span>
@@ -641,10 +690,25 @@
 <span class="sd">    ones that can be removed without generating any redirects.</span>
 
 <span class="sd">    :param url: The URL to trim</span>
-<span class="sd">    :param session: Requests session (optional)</span>
+<span class="sd">    :type url: str</span>
+<span class="sd">    :param session: (Optional) A persistent session that can optionally be passed (useful if you&#39;re processing many \</span>
+<span class="sd">    links at once)</span>
+<span class="sd">    :type session: :py:class:`requests.Session` object</span>
+<span class="sd">    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \</span>
+<span class="sd">    is not provided</span>
+<span class="sd">    :type user_agent: str</span>
 <span class="sd">    :param timeout: Timeout for requests</span>
-<span class="sd">    :param user_agent: The User-Agent to use for the session (if an existing session is not provided)</span>
+<span class="sd">    :type timeout: int or float</span>
 <span class="sd">    :return: The original URL with optional GET parameters removed</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.http import trim_get_parameters</span>
+
+<span class="sd">        &gt;&gt;&gt; trim_get_parameters(&quot;https://httpbin.org/status/200?param=1&quot;)</span>
+<span class="sd">        &quot;https://httpbin.org/status/200&quot;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">close_session</span> <span class="o">=</span> <span class="kc">False</span>
@@ -714,14 +778,42 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</span>
 
+<span class="sd">    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \</span>
+<span class="sd">    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \</span>
+<span class="sd">    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \</span>
+<span class="sd">    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \</span>
+<span class="sd">    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \</span>
+<span class="sd">    this dictionary of known shorteners may be returned with an incorrect domain.</span>
+
+
 <span class="sd">    :param url:  The link from which to extract the domain</span>
+<span class="sd">    :type url: str</span>
 <span class="sd">    :param include_subdomain: Whether or not to include the subdomain (e.g. &#39;news.google.com&#39;); default is True</span>
-<span class="sd">    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will follow the URL but will not \</span>
-<span class="sd">    return the endpoint URL if it encounters a temporary redirect (i.e. redirects are only followed if they&#39;re permanent)</span>
-<span class="sd">    :param timeout: Maximum number of seconds to wait on a request before timing out (default is 1)</span>
-<span class="sd">    :param session: A persistent session that can optionally be passed (useful if you&#39;re processing many links at once)</span>
-<span class="sd">    :param user_agent: User agent for the auto-created session to use, if a preconfigured session is not provided</span>
+<span class="sd">    :type include_subdomain: bool</span>
+<span class="sd">    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \</span>
+<span class="sd">    True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \</span>
+<span class="sd">    domain.</span>
+<span class="sd">    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \</span>
+<span class="sd">    timing out (default is 1)</span>
+<span class="sd">    :type timeout: int or float</span>
+<span class="sd">    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \</span>
+<span class="sd">    (useful if you&#39;re processing many links at once)</span>
+<span class="sd">    :type session: :py:class:`requests.Session` object</span>
+<span class="sd">    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \</span>
+<span class="sd">    if a preconfigured requests Session is not provided</span>
+<span class="sd">    :type user_agent: str</span>
 <span class="sd">    :return: The domain for the link</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.http import extract_domain_from_url</span>
+
+<span class="sd">        &gt;&gt;&gt; extract_domain_from_url(&quot;http://forums.bbc.co.uk&quot;, include_subdomain=False)</span>
+<span class="sd">        &quot;bbc.co.uk&quot;</span>
+<span class="sd">        &gt;&gt;&gt; extract_domain_from_url(&quot;http://forums.bbc.co.uk&quot;, include_subdomain=True)</span>
+<span class="sd">        &quot;forums.bbc.co.uk&quot;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">resolve_url</span><span class="p">:</span>
@@ -748,7 +840,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, pew research center
+        &copy; Copyright 2020, Pew Research Center
 
     </p>
   </div>

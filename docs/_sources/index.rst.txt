@@ -1,73 +1,36 @@
 Getting Started
-===================================
+===================================================================
 
-Welcome to pewtils' documentation!
+Pewtils is a package of useful programming utilities developed at the Pew Research Center \
+over the years. Most of the functions in Pewtils can be found in the root module, while a \
+handful of submodules contain more specialized utilities for working with files, web \
+resources, and regular expressions.
 
-About
----------------
+.. toctree::
+   :maxdepth: 1
+   :caption: Table of Contents:
 
-Pewtils is a package of useful logging and management functions developed \
-at the Pew Research Center over the years.
-
-
+   Core Functions <pewtils_core>
+   HTTP Utilities <http>
+   I/O Tools <io>
+   Regex Patterns <regex>
+   Examples <examples>
 
 Installation
 ---------------
 
-To install ::
+To install, you can use PyPI: ::
 
-    pip install https://github.com/pewresearch/pewtils#egg=pewtils
+    pip install pewtils
 
-Or install from source ::
+Or you can install from source: ::
 
     git clone https://github.com/pewresearch/pewtils.git
     cd pewtils
     python setup.py install
 
-
 .. note::
-    This is a Python3 package. Though it's compatible with Python 2, its dependencies are \
-    planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
+    This is a Python 3 package. Though it is compatible with Python 2, many of its dependencies are \
+    planning to drop support for earlier versions if they haven't already. We highly recommend \
+    you upgrade to Python 3.
 
-
-
-Example
----------------
-
-For most common usage of pewtils, see `Examples <./example.html>`_ section.
-
-
-
-PewTils
------------------------
-
-Core Functions
-++++++++++++++++++++++++
-(what)
-
-See `PewTils Core functions <./pewtils_core.html>`_ section.
-
-Http Utilities
-++++++++++++++++++++++++
-(what)
-
-See `Http Utilities <./http.html>`_ section.
-
-File Handler
-++++++++++++++++++++++++
-(what)
-
-See `File Handler <./file_handler.html>`_ section.
-
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Table of Contents:
-
-   Getting Started <index>
-   Examples <example>
-   pewtils Core <pewtils_core>
-   HTTP Utilities <http>
-   File Handlers <file_handler>
-   Index <genindex>

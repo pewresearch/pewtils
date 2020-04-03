@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pewtils.io &mdash; pewtils 0.0.1 documentation</title>
+  <title>pewtils.io &mdash; pewtils 1.0.0 documentation</title>
   
 
   
@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -80,12 +80,11 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../pewtils_core.html">pewtils Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pewtils_core.html">Core Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../http.html">HTTP Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../file_handler.html">File Handlers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../io.html">I/O Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regex.html">Regex Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pewtils.io</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -157,34 +156,65 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">scandir</span> <span class="kn">import</span> <span class="n">scandir</span>
+<span class="kn">from</span> <span class="nn">scandir</span> <span class="k">import</span> <span class="n">scandir</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">BytesIO</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">BytesIO</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span> <span class="k">as</span> <span class="n">BytesIO</span>
-    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span> <span class="k">as</span> <span class="n">BytesIO</span>
+    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
 
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span>
-<span class="kn">from</span> <span class="nn">boto.s3.key</span> <span class="kn">import</span> <span class="n">Key</span>
-<span class="kn">from</span> <span class="nn">boto.s3.connection</span> <span class="kn">import</span> <span class="n">S3Connection</span><span class="p">,</span> <span class="n">OrdinaryCallingFormat</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">closing</span>
+<span class="kn">from</span> <span class="nn">boto.s3.key</span> <span class="k">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">boto.s3.connection</span> <span class="k">import</span> <span class="n">S3Connection</span><span class="p">,</span> <span class="n">OrdinaryCallingFormat</span>
 
-<span class="kn">from</span> <span class="nn">pewtils</span> <span class="kn">import</span> <span class="n">is_not_null</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">is_not_null</span>
 
 
-<div class="viewcode-block" id="FileHandler"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler">[docs]</a><span class="k">class</span> <span class="nc">FileHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler">[docs]</a><span class="k">class</span> <span class="nc">FileHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read/write data files in a variety of formats, locally and in s3. File extensions are standardized to promote consistency (e.g., Pickle files must have the extension &quot;.pkl&quot;, etc.).</span>
+<span class="sd">    Read/write data files in a variety of formats, locally and in Amazon S3 buckets. File extensions are standardized \</span>
+<span class="sd">    to promote consistency (e.g., Pickle files must have the extension &quot;.pkl&quot;, etc.) The class must be initialized \</span>
+<span class="sd">    with a valid path within either your local file system or a specific S3 bucket. You can configure your environment \</span>
+<span class="sd">    to make it easier to automatically connect to S3 by defining the variables `AWS_ACCESS_KEY_ID`, \</span>
+<span class="sd">    `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.</span>
+
+<span class="sd">    .. note:: Files in the following formats make use of :py:class:`pandas.DataFrame` objects: `csv`, `tab`, `xlsx`,</span>
+<span class="sd">        `xls`, `dta`. When you try to write an object in any of these formats, the `FileHandler` expects a dataframe;</span>
+<span class="sd">        and when you read a file in any of these formats, it gets loaded in as a dataframe. The exceptions are `pkl`, \</span>
+<span class="sd">        which will accept any serializable Python object, and `json`, which expects a correctly-formatted JSON object.</span>
 
 <span class="sd">    :param path: The path to the folder that you&#39;ll be writing to or reading from</span>
+<span class="sd">    :type path: str</span>
 <span class="sd">    :param use_s3: Whether the path is an S3 location or local location</span>
+<span class="sd">    :type use_s3: bool</span>
 <span class="sd">    :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</span>
+<span class="sd">    :type aws_access: str</span>
 <span class="sd">    :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</span>
-<span class="sd">    :param bucket: The name of the S3 bucket; required if use_s3=True; will also try to fetch from the environment as S3_BUCKET</span>
+<span class="sd">    :type aws_secret: str</span>
+<span class="sd">    :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \</span>
+<span class="sd">    as S3_BUCKET</span>
+<span class="sd">    :type bucket: str</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        from pewtils.io import FileHandler</span>
+
+<span class="sd">        &gt;&gt;&gt; h = FileHandler(&quot;./&quot;, use_s3=False)  # current local folder</span>
+<span class="sd">        &gt;&gt;&gt; df = h.read(&quot;my_csv&quot;, format=&quot;csv&quot;)</span>
+<span class="sd">        # do something</span>
+<span class="sd">        &gt;&gt;&gt; h.write(&quot;my_new_csv&quot;, df, format=&quot;csv&quot;)</span>
+
+<span class="sd">        &gt;&gt;&gt; my_data = [{&quot;key&quot;: &quot;value&quot;}]</span>
+<span class="sd">        &gt;&gt;&gt; h.write(&quot;my_data&quot;, my_data, format=&quot;json&quot;)</span>
+
+<span class="sd">        &gt;&gt;&gt; my_data = [&quot;a&quot;, &quot;python&quot;, &quot;list&quot;]</span>
+<span class="sd">        &gt;&gt;&gt; h.write(&quot;my_data&quot;, my_data, format=&quot;pkl&quot;)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">use_s3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aws_access</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aws_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bucket</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
 
@@ -220,12 +250,24 @@
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: couldn&#39;t make directory &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FileHandler.iterate_path"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.iterate_path">[docs]</a>    <span class="k">def</span> <span class="nf">iterate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler.iterate_path"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.iterate_path">[docs]</a>    <span class="k">def</span> <span class="nf">iterate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over the directory and returns a list of filenames or S3 object keys</span>
 
 <span class="sd">        :return: Yields a list of filenames or S3 keys</span>
+<span class="sd">        :rtype: iterable</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewtils.io import FileHandler</span>
+
+<span class="sd">            &gt;&gt;&gt; h = FileHandler(&quot;./&quot;, use_s3=False)</span>
+<span class="sd">            &gt;&gt;&gt; for file in h.iterate_path(): print(file)</span>
+<span class="sd">            file1.csv</span>
+<span class="sd">            file2.pkl</span>
+<span class="sd">            file3.json</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_s3</span><span class="p">:</span>
@@ -235,10 +277,23 @@
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">scandir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span></div>
 
-<div class="viewcode-block" id="FileHandler.clear_folder"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.clear_folder">[docs]</a>    <span class="k">def</span> <span class="nf">clear_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler.clear_folder"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.clear_folder">[docs]</a>    <span class="k">def</span> <span class="nf">clear_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)</span>
+
+<span class="sd">        .. warning:: This is a destructive function, use with caution!</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewtils.io import FileHandler</span>
+
+<span class="sd">            &gt;&gt;&gt; h = FileHandler(&quot;./&quot;, use_s3=False)</span>
+<span class="sd">            &gt;&gt;&gt; len(list(h.iterate_path()))</span>
+<span class="sd">            3</span>
+<span class="sd">            &gt;&gt;&gt; h.clear_folder()</span>
+<span class="sd">            &gt;&gt;&gt; len(list(h.iterate_path()))</span>
+<span class="sd">            0</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -249,12 +304,34 @@
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">scandir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="FileHandler.clear_file"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.clear_file">[docs]</a>    <span class="k">def</span> <span class="nf">clear_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler.clear_file"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.clear_file">[docs]</a>    <span class="k">def</span> <span class="nf">clear_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Deletes a file.</span>
+<span class="sd">        Deletes a specific file.</span>
 
-<span class="sd">        :param key: The name of the file.</span>
+<span class="sd">        .. warning:: This is a destructive function, use with caution!</span>
+
+<span class="sd">        :param key: The name of the file to delete</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param format: The file extension</span>
+<span class="sd">        :type format: str</span>
+<span class="sd">        :param hash_key: If True, will hash the filename before looking it up; default is False.</span>
+<span class="sd">        :type hash_key: bool</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewtils.io import FileHandler</span>
+
+<span class="sd">            &gt;&gt;&gt; h = FileHandler(&quot;./&quot;, use_s3=False)</span>
+<span class="sd">            &gt;&gt;&gt; for file in h.iterate_path(): print(file)</span>
+<span class="sd">            file1.csv</span>
+<span class="sd">            file2.pkl</span>
+<span class="sd">            file3.json</span>
+<span class="sd">            &gt;&gt;&gt; h.clear_file(&quot;file1&quot;, format=&quot;csv&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; for file in h.iterate_path(): print(file)</span>
+<span class="sd">            file2.pkl</span>
+<span class="sd">            file3.json</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">hash_key</span><span class="p">:</span>
@@ -268,18 +345,38 @@
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FileHandler.get_key_hash"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.get_key_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_key_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler.get_key_hash"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.get_key_hash">[docs]</a>    <span class="k">def</span> <span class="nf">get_key_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts a key to a hashed representation; useful for caching</span>
+<span class="sd">        Converts a key to a hashed representation. Allows you to pass arbitrary objects and convert their string \</span>
+<span class="sd">        representation into a shorter hashed key, so it can be useful for caching. You can call this method \</span>
+<span class="sd">        directly to see the hash that a key will be converted into, but this method is mainly used in conjunction \</span>
+<span class="sd">        with the :py:meth:`pewtils.FileHandler.write` and :py:meth:`pewtils.FileHandler.read` methods by passing in \</span>
+<span class="sd">        `hash_key=True`.</span>
 
-<span class="sd">        :param key: A raw string</span>
+<span class="sd">        :param key: A raw string or Python object that can be meaningfully converted into a string representation</span>
+<span class="sd">        :type key: str or object</span>
 <span class="sd">        :return: A SHA224 hash representation of that key</span>
+<span class="sd">        :rtype: str</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            from pewtils.io import FileHandler</span>
+
+<span class="sd">            &gt;&gt;&gt; h = FileHandler(&quot;tests/files&quot;, use_s3=False)</span>
+<span class="sd">            &gt;&gt;&gt; h.get_key_hash(&quot;temp&quot;)</span>
+<span class="sd">            &quot;c51bf90ccb22befa316b7a561fe9d5fd9650180b14421fc6d71bcd57&quot;</span>
+<span class="sd">            &gt;&gt;&gt; h.get_key_hash({&quot;key&quot;: &quot;value&quot;})</span>
+<span class="sd">            &quot;37e13e1116c86a6e9f3f8926375c7cb977ca74d2d598572ced03cd09&quot;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha224</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha224</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha224</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FileHandler.write"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span>
+<div class="viewcode-block" id="FileHandler.write"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_timestamp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span>
     <span class="p">):</span>
 
@@ -288,17 +385,30 @@
 
 <span class="sd">        | If you save something to csv/tab/xlsx/xls/dta, it assumes you&#39;ve passed it a Pandas DataFrame object. \</span>
 <span class="sd">        If you&#39;re trying to save an object to JSON, it assumes that you&#39;re passing it valid JSON. By default, though, \</span>
-<span class="sd">        the handler attempts to use pickling, allowing you to save (mostly) anything you want.</span>
+<span class="sd">        the handler attempts to use pickling, allowing you to save anything you want, as long as it&#39;s serializable.</span>
+
+<span class="sd">        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \</span>
+<span class="sd">        Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \</span>
+<span class="sd">        to the corresponding Pandas method below:</span>
+
+<span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.to_stata`</span>
+<span class="sd">            - `csv`: :py:meth:`pandas.DataFrame.to_csv`</span>
+<span class="sd">            - `tab`: :py:meth:`pandas.DataFrame.to_csv`</span>
+<span class="sd">            - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`</span>
+<span class="sd">            - `xls`: :py:meth:`pandas.DataFrame.to_excel`</span>
 
 <span class="sd">        :param key: The name of the file or key (without a file suffix!)</span>
+<span class="sd">        :type key: str</span>
 <span class="sd">        :param data: The actual data to write to the file</span>
+<span class="sd">        :type data: object</span>
 <span class="sd">        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl. \</span>
 <span class="sd">        This will be used as the file&#39;s suffix.</span>
+<span class="sd">        :type format: str</span>
 <span class="sd">        :param hash_key: Whether or not to hash the provided key before saving the file. (Default=False)</span>
+<span class="sd">        :type hash_key: bool</span>
 <span class="sd">        :param add_timestamp: Optionally add a timestamp to the filename</span>
-<span class="sd">        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of \</span>
-<span class="sd">        the file you want to save.  The &quot;dta&quot; format uses `pandas.DataFrame.to_stata`; csv uses `to_csv`; pkl uses \</span>
-<span class="sd">        `pickle.dumps`; json uses `json.dumps`</span>
+<span class="sd">        :type add_timestamp: bool</span>
+<span class="sd">        :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -328,7 +438,6 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">_get_output</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(),</span> <span class="n">data</span><span class="p">,</span> <span class="n">io_kwargs</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="n">_get_output</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(),</span> <span class="n">data</span><span class="p">,</span> <span class="n">io_kwargs</span><span class="p">)</span>
                 <span class="k">except</span><span class="p">:</span>
@@ -360,14 +469,26 @@
                     <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
                         <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FileHandler.read"><a class="viewcode-back" href="../../file_handler.html#pewtils.io.FileHandler.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FileHandler.read"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">io_kwargs</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reads a file from the directory, returning its contents.</span>
+<span class="sd">        Reads a file from the directory or S3 path, returning its contents.</span>
+
+<span class="sd">        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \</span>
+<span class="sd">            the format of the file you&#39;re trying to read in</span>
+
+<span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.read_stata`</span>
+<span class="sd">            - `csv`: :py:meth:`pandas.DataFrame.read_csv`</span>
+<span class="sd">            - `tab`: :py:meth:`pandas.DataFrame.read_csv`</span>
+<span class="sd">            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`</span>
+<span class="sd">            - `xls`: :py:meth:`pandas.DataFrame.read_excel`</span>
 
 <span class="sd">        :param key: The name of the file to read (without a suffix!)</span>
+<span class="sd">        :type key: str</span>
 <span class="sd">        :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match</span>
+<span class="sd">        :type format: str</span>
 <span class="sd">        :param hash_key: Whether the key should be hashed prior to looking for and retrieving the file.</span>
+<span class="sd">        :type hash_key: bool</span>
 <span class="sd">        :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)</span>
 <span class="sd">        :return: The file contents, in the requested format</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -465,7 +586,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, pew research center
+        &copy; Copyright 2020, Pew Research Center
 
     </p>
   </div>
