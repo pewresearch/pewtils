@@ -126,7 +126,10 @@ class FileHandler(object):
         :return: A SHA224 hash representation of that key
         """
 
-        return hashlib.sha224(key.encode("utf8")).hexdigest()
+        try:
+            return hashlib.sha224(key.encode("utf8")).hexdigest()
+        except AttributeError:
+            return hashlib.sha224(str(key).encode("utf8")).hexdigest()
 
     def write(
         self, key, data, format="pkl", hash_key=False, add_timestamp=False, **io_kwargs

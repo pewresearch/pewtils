@@ -93,6 +93,10 @@ class IOTests(unittest.TestCase):
             h.get_key_hash("temp"),
             "c51bf90ccb22befa316b7a561fe9d5fd9650180b14421fc6d71bcd57",
         )
+        self.assertEqual(
+            h.get_key_hash({"key": "value"}),
+            "37e13e1116c86a6e9f3f8926375c7cb977ca74d2d598572ced03cd09",
+        )
 
     def test_filehandler_read_write_pkl(self):
         from pewtils.io import FileHandler
