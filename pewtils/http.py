@@ -2,7 +2,7 @@ from __future__ import division
 from bs4 import BeautifulSoup
 from builtins import str
 from functools import wraps
-from pewtils import get_hash, decode_text
+from pewtils import get_hash, decode_text, is_not_null
 from six.moves.urllib import parse as urlparse
 from unidecode import unidecode
 import re
@@ -11,6 +11,7 @@ import threading
 import time
 import tldextract
 import warnings
+from requests.exceptions import ReadTimeout
 
 
 def hash_url(url):
@@ -588,16 +589,22 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
                 new_params = urlparse.urlencode(new_params)
                 new_parsed = parsed._replace(query=new_params)
                 new_url = urlparse.urlunparse(new_parsed)
-                resp = session.head(new_url, allow_redirects=True, timeout=timeout)
-                new_parsed = urlparse.urlparse(resp.url)
-                if new_parsed.query != "" or new_parsed.path not in ["", "/"]:
-                    # If removing a parameter didn't redirect to a root domain...
-                    new_url = resp.url
-                    compare_new = new_url.split("?")[0] if "?" in new_url else new_url
-                    compare_old = url.split("?")[0] if "?" in url else url
-                    if compare_new == compare_old:
-                        # And the domain is the same as it was before, then the parameter was probably unnecessary
-                        ditch_params.append(k)
+                try:
+                    resp = session.head(new_url, allow_redirects=True, timeout=timeout)
+                except ReadTimeout:
+                    resp = None
+                if is_not_null(resp):
+                    new_parsed = urlparse.urlparse(resp.url)
+                    if new_parsed.query != "" or new_parsed.path not in ["", "/"]:
+                        # If removing a parameter didn't redirect to a root domain...
+                        new_url = resp.url
+                        compare_new = (
+                            new_url.split("?")[0] if "?" in new_url else new_url
+                        )
+                        compare_old = url.split("?")[0] if "?" in url else url
+                        if compare_new == compare_old:
+                            # And the domain is the same as it was before, then the parameter was probably unnecessary
+                            ditch_params.append(k)
 
     if len(ditch_params) > 0:
         # Now we remove all of the unnecessary get parameters and finalize the URL
