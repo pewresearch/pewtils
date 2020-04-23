@@ -138,6 +138,7 @@ GENERAL_LINK_SHORTENERS = [
     "bit.do",
     "bit.do",
     "bit.ly",
+    "bitly.com",
     "buff.ly",
     "crwd.fr",
     "cutt.ly",
