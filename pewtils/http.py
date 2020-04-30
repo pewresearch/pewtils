@@ -2,7 +2,7 @@ from __future__ import division
 from bs4 import BeautifulSoup
 from builtins import str
 from functools import wraps
-from pewtils import get_hash, decode_text, is_not_null
+from pewtils import get_hash, decode_text, is_not_null, timeout_wrapper
 from six.moves.urllib import parse as urlparse
 from unidecode import unidecode
 import pandas as pd
@@ -228,12 +228,14 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
         url = "http://" + url
     response = None
     try:
-        response = session.head(url, allow_redirects=True, timeout=timeout)
-    except requests.ConnectionError:
-        try:
-            response = session.head(url, allow_redirects=False, timeout=timeout)
-        except:
-            pass
+        with timeout_wrapper(timeout):
+            try:
+                response = session.head(url, allow_redirects=True, timeout=timeout)
+            except requests.ConnectionError:
+                try:
+                    response = session.head(url, allow_redirects=False, timeout=timeout)
+                except:
+                    pass
     except:
         pass
 
