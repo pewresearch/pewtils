@@ -8,6 +8,7 @@ import chardet
 import copy
 import warnings
 import zipcodes
+import signal
 
 try:
     from importlib.machinery import SourceFileLoader
@@ -868,3 +869,27 @@ def extract_attributes_from_folder_modules(
                 pass
 
     return attributes
+
+
+class timeout_wrapper:
+    def __init__(self, seconds=1, error_message="Timeout"):
+        """
+        Context manager that will raise an error if it takes longer than the specified number of seconds to execute.
+        Found via this very helpful Stack Overflow post:
+        https://stackoverflow.com/questions/2281850/timeout-function-if-it-takes-too-long-to-finish
+
+        :param seconds: Number of seconds allowed for the code to execute
+        :param error_message: Optional custom error message to raise
+        """
+        self.seconds = seconds
+        self.error_message = error_message
+
+    def handle_timeout(self, signum, frame):
+        raise Exception(self.error_message)
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)

@@ -257,5 +257,20 @@ class BaseTests(unittest.TestCase):
             self.assertLessEqual(np.max(attempts), maximum)
             self.assertGreaterEqual(round(np.average(attempts)), avg)
 
+    def test_timeout_wrapper(self):
+        from pewtils import timeout_wrapper
+        import time
+
+        def test(sleep):
+            try:
+                with timeout_wrapper(2):
+                    time.sleep(sleep)
+                return True
+            except:
+                return False
+
+        self.assertFalse(test(3))
+        self.assertTrue(test(1))
+
     def tearDown(self):
         pass
