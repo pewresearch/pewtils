@@ -58,10 +58,10 @@ class HTTPTests(unittest.TestCase):
                 "http://ow.ly/M5o4N",
                 "https://snjtoday.com/congressman-fran56754k-lobiondo-visits-vineland-high-school/",
             ),
-            (
-                "https://bit.ly/2CTCEFW",
-                "https://action.tinaforminnesota.com/page/s/tsm_20190130_backpay",
-            ),
+            # (
+            #     "https://bit.ly/2CTCEFW",
+            #     "https://action.tinaforminnesota.com/page/s/tsm_20190130_backpay",
+            # ),
             (
                 "https://nbcnews.to/2Yc5JVz",
                 "https://www.nbcnews.com/politics/congress/senate-vote-9-11-first-responders-bill-tuesday-n1032831?cid=sm_npd_nn_tw_ma",
