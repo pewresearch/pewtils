@@ -28,8 +28,10 @@ The following authors contributed to this repository:
 - Brian Broderick
 - Skye Toor
 - Regina Widjaya
-- Onyi Lam
 - Emma Remy
+- Onyi Lam
+- Galen Stocking
+- Dennis Quinn
 
 Pew Research Center is a subsidiary of The Pew Charitable Trusts, its primary funder. This report is a collaborative effort based on the input and analysis of [a number of individuals and experts at Pew Research Center](link here).
 
