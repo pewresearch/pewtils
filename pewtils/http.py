@@ -47,124 +47,6 @@ def hash_url(url):
         return result
 
 
-def strip_html(html, simple=False, break_tags=None):
-
-    """
-    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.
-
-    | By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
-    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
-    a much simpler regular expression approach to parsing.
-
-    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
-    majority of HTML without stripping out valuable content.
-
-    :param html: The HTML to process
-    :type html: str
-    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
-    :type simple: bool
-    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
-    :type break_tags: list
-    :return: The text with HTML components removed (perfection not guaranteed)
-    :rtype: str
-
-    Usage::
-
-        from pewtils.http import strip_html
-
-        >>> my_html = "<html><head>Header text</head><body>Body text</body></html>"
-        >>> strip_html(my_html)
-        'Header text\n\nBody text'
-
-    """
-
-    html = re.sub(r"\n", " ", html)
-    html = re.sub(r"\s+", " ", html)
-    if not break_tags:
-        break_tags = ["strong", "em", "i", "b", "p"]
-    if not simple:
-        try:
-
-            split_re = re.compile(r"\s{2,}")
-            soup = BeautifulSoup(html, "lxml")
-            for tag in soup():
-                if (
-                    "class" in tag.attrs
-                    and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])
-                ) or ("menu" in str(tag.id) or "header" in str(tag.id)):
-                    tag.extract()
-            for tag in soup(["script", "style"]):
-                tag.extract()
-            for br in soup.find_all("br"):
-                br.replace_with("\n")
-            for t in soup(break_tags):
-                try:
-                    t.replace_with("\n{0}\n".format(t.text))
-                except (UnicodeDecodeError, UnicodeEncodeError):
-                    t.replace_with("\n{0}\n".format(decode_text(t.text)))
-            if hasattr(soup, "body") and soup.body:
-                text = soup.body.get_text()
-            else:
-                text = soup.get_text()
-            lines = [l.strip() for l in text.splitlines()]
-            lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
-            text = "\n".join([l for l in lines if l])
-            text = re.sub(r"(\sA){2,}\s", " ", text)
-            text = re.sub(r"\n+(\s+)?", "\n\n", text)
-            text = re.sub(r" +", " ", text)
-            text = re.sub(r"\t+", " ", text)
-
-            return text
-
-        except Exception as e:
-
-            print("strip_html error")
-            print(e)
-            text = re.sub(r"<[^>]*>", " ", re.sub("\\s+", " ", html)).strip()
-            return text
-
-    else:
-        return "\n".join(
-            [
-                re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section))
-                for section in re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split(
-                    "\n"
-                )
-            ]
-        )
-
-
-_ = pd.read_csv(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./general_link_shorteners.csv"
-    )
-)
-GENERAL_LINK_SHORTENERS = _["shortener"].values
-"""
-A list of known generic URL shorteners
-"""
-
-_ = pd.read_csv(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
-    )
-)
-_ = _[_["historical"] == 0]
-VANITY_LINK_SHORTENERS = dict(zip(_["shortener"], _["expanded"]))
-"""
-A list of known URL shorteners for specific websites (primarily news websites)
-"""
-
-_ = pd.read_csv(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
-    )
-)
-_ = _[_["historical"] == 1]
-HISTORICAL_VANITY_LINK_SHORTENERS = dict(zip(_["shortener"], _["expanded"]))
-
-VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
-
 
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
@@ -508,3 +390,103 @@ def extract_domain_from_url(
             domain = ".".join([domain.domain, domain.suffix])
         domain = VANITY_LINK_SHORTENERS.get(domain, domain)
     return domain
+
+
+
+def strip_html(html, simple=False, break_tags=None):
+
+    """
+    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \
+    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
+    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
+    a much simpler regular expression approach to parsing.
+
+    :param html: The HTML to process
+    :type html: str
+    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
+    :type simple: bool
+    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
+    :type break_tags: list
+    :return: The text with HTML components removed (perfection not guaranteed)
+    :rtype: str
+
+    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
+        majority of HTML without stripping out valuable content.
+
+    Usage::
+
+        from pewtils.http import strip_html
+
+        >>> my_html = "<html><head>Header text</head><body>Body text</body></html>"
+        >>> strip_html(my_html)
+        'Header text Body text'
+
+    A list of known generic URL shorteners:
+
+    .. literalinclude:: ../pewtils/gen_link_shorteners.py
+        :language: python
+        :lines: 1-
+
+
+    A list of known URL shorteners for specific websites (primarily news websites):
+
+    .. literalinclude:: ../pewtils/van_link_shorteners.py
+        :language: python
+        :lines: 1-
+
+    """
+
+    html = re.sub(r"\n", " ", html)
+    html = re.sub(r"\s+", " ", html)
+    if not break_tags:
+        break_tags = ["strong", "em", "i", "b", "p"]
+    if not simple:
+        try:
+
+            split_re = re.compile(r"\s{2,}")
+            soup = BeautifulSoup(html, "lxml")
+            for tag in soup():
+                if (
+                    "class" in tag.attrs
+                    and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])
+                ) or ("menu" in str(tag.id) or "header" in str(tag.id)):
+                    tag.extract()
+            for tag in soup(["script", "style"]):
+                tag.extract()
+            for br in soup.find_all("br"):
+                br.replace_with("\n")
+            for t in soup(break_tags):
+                try:
+                    t.replace_with("\n{0}\n".format(t.text))
+                except (UnicodeDecodeError, UnicodeEncodeError):
+                    t.replace_with("\n{0}\n".format(decode_text(t.text)))
+            if hasattr(soup, "body") and soup.body:
+                text = soup.body.get_text()
+            else:
+                text = soup.get_text()
+            lines = [l.strip() for l in text.splitlines()]
+            lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
+            text = "\n".join([l for l in lines if l])
+            text = re.sub(r"(\sA){2,}\s", " ", text)
+            text = re.sub(r"\n+(\s+)?", "\n\n", text)
+            text = re.sub(r" +", " ", text)
+            text = re.sub(r"\t+", " ", text)
+
+            return text
+
+        except Exception as e:
+
+            print("strip_html error")
+            print(e)
+            text = re.sub(r"<[^>]*>", " ", re.sub("\\s+", " ", html)).strip()
+            return text
+
+    else:
+        return "\n".join(
+            [
+                re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section))
+                for section in re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split(
+                    "\n"
+                )
+            ]
+        )

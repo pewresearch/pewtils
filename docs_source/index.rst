@@ -1,4 +1,4 @@
-Getting Started
+PewTils
 ===================================================================
 
 Pewtils is a package of useful programming utilities developed at the Pew Research Center \
@@ -33,4 +33,3 @@ Or you can install from source: ::
     This is a Python 3 package. Though it is compatible with Python 2, many of its dependencies are \
     planning to drop support for earlier versions if they haven't already. We highly recommend \
     you upgrade to Python 3.
-
