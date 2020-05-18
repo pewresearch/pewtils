@@ -47,6 +47,244 @@ def hash_url(url):
         return result
 
 
+def strip_html(html, simple=False, break_tags=None):
+
+    """
+    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \
+    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
+    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
+    a much simpler regular expression approach to parsing.
+
+    :param html: The HTML to process
+    :type html: str
+    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
+    :type simple: bool
+    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
+    :type break_tags: list
+    :return: The text with HTML components removed (perfection not guaranteed)
+    :rtype: str
+
+    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
+        majority of HTML without stripping out valuable content.
+
+    Usage::
+
+        from pewtils.http import strip_html
+
+        >>> my_html = "<html><head>Header text</head><body>Body text</body></html>"
+        >>> strip_html(my_html)
+        'Header text Body text'
+
+    """
+
+    html = re.sub(r"\n", " ", html)
+    html = re.sub(r"\s+", " ", html)
+    if not break_tags:
+        break_tags = ["strong", "em", "i", "b", "p"]
+    if not simple:
+        try:
+
+            split_re = re.compile(r"\s{2,}")
+            soup = BeautifulSoup(html, "lxml")
+            for tag in soup():
+                if (
+                    "class" in tag.attrs
+                    and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])
+                ) or ("menu" in str(tag.id) or "header" in str(tag.id)):
+                    tag.extract()
+            for tag in soup(["script", "style"]):
+                tag.extract()
+            for br in soup.find_all("br"):
+                br.replace_with("\n")
+            for t in soup(break_tags):
+                try:
+                    t.replace_with("\n{0}\n".format(t.text))
+                except (UnicodeDecodeError, UnicodeEncodeError):
+                    t.replace_with("\n{0}\n".format(decode_text(t.text)))
+            if hasattr(soup, "body") and soup.body:
+                text = soup.body.get_text()
+            else:
+                text = soup.get_text()
+            lines = [l.strip() for l in text.splitlines()]
+            lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
+            text = "\n".join([l for l in lines if l])
+            text = re.sub(r"(\sA){2,}\s", " ", text)
+            text = re.sub(r"\n+(\s+)?", "\n\n", text)
+            text = re.sub(r" +", " ", text)
+            text = re.sub(r"\t+", " ", text)
+
+            return text
+
+        except Exception as e:
+
+            print("strip_html error")
+            print(e)
+            text = re.sub(r"<[^>]*>", " ", re.sub("\\s+", " ", html)).strip()
+            return text
+
+    else:
+        return "\n".join(
+            [
+                re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section))
+                for section in re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split(
+                    "\n"
+                )
+            ]
+        )
+
+
+def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
+
+    """
+    Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
+    ones that can be removed without generating any redirects.
+
+    :param url: The URL to trim
+    :type url: str
+    :param session: (Optional) A persistent session that can optionally be passed (useful if you're processing many \
+    links at once)
+    :type session: :py:class:`requests.Session` object
+    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \
+    is not provided
+    :type user_agent: str
+    :param timeout: Timeout for requests
+    :type timeout: int or float
+    :return: The original URL with optional GET parameters removed
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import trim_get_parameters
+
+        >>> trim_get_parameters("https://httpbin.org/status/200?param=1")
+        "https://httpbin.org/status/200"
+
+    """
+
+    close_session = False
+    if not session:
+        close_session = True
+        session = requests.Session()
+        session.headers.update({"User-Agent": user_agent})
+
+    # Often there's extra information about social sharing and referral sources that can be removed
+    ditch_params = []
+    parsed = urlparse.urlparse(url)
+    if parsed.query:
+        params = urlparse.parse_qs(parsed.query)
+        for k, v in params.items():
+            # We iterate over all of the GET parameters and try holding each one out
+            check = True
+            for skipper in ["document", "article", "id", "qs"]:
+                # If the parameter is named something that's probably a unique ID, we'll keep it
+                if skipper in k.lower():
+                    check = False
+            for skipper in ["html", "http"]:
+                # Same goes for parameters that contain URL information
+                if skipper in v[0].lower():
+                    check = False
+            if check:
+                new_params = {
+                    k2: v2[0] for k2, v2 in params.items() if k2 != k and len(v2) == 1
+                }
+                new_params = urlparse.urlencode(new_params)
+                new_parsed = parsed._replace(query=new_params)
+                new_url = urlparse.urlunparse(new_parsed)
+                try:
+                    resp = session.head(new_url, allow_redirects=True, timeout=timeout)
+                except ReadTimeout:
+                    resp = None
+                if is_not_null(resp):
+                    new_parsed = urlparse.urlparse(resp.url)
+                    if new_parsed.query != "" or new_parsed.path not in ["", "/"]:
+                        # If removing a parameter didn't redirect to a root domain...
+                        new_url = resp.url
+                        compare_new = (
+                            new_url.split("?")[0] if "?" in new_url else new_url
+                        )
+                        compare_old = url.split("?")[0] if "?" in url else url
+                        if compare_new == compare_old:
+                            # And the domain is the same as it was before, then the parameter was probably unnecessary
+                            ditch_params.append(k)
+
+    if len(ditch_params) > 0:
+        # Now we remove all of the unnecessary get parameters and finalize the URL
+        new_params = {
+            k: v[0] for k, v in params.items() if len(v) == 1 and k not in ditch_params
+        }
+        new_params = urlparse.urlencode(new_params)
+        parsed = parsed._replace(query=new_params)
+        url = urlparse.urlunparse(parsed)
+
+    if close_session:
+        session.close()
+
+    return url
+
+
+def extract_domain_from_url(
+    url,
+    include_subdomain=True,
+    resolve_url=False,
+    timeout=1.0,
+    session=None,
+    user_agent=None,
+):
+
+    """
+    Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
+
+    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \
+    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \
+    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
+    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \
+    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \
+    this dictionary of known shorteners may be returned with an incorrect domain.
+
+
+    :param url:  The link from which to extract the domain
+    :type url: str
+    :param include_subdomain: Whether or not to include the subdomain (e.g. 'news.google.com'); default is True
+    :type include_subdomain: bool
+    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \
+    True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \
+    domain.
+    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \
+    timing out (default is 1)
+    :type timeout: int or float
+    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \
+    (useful if you're processing many links at once)
+    :type session: :py:class:`requests.Session` object
+    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \
+    if a preconfigured requests Session is not provided
+    :type user_agent: str
+    :return: The domain for the link
+    :rtype: str
+
+    Usage::
+
+        from pewtils.http import extract_domain_from_url
+
+        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=False)
+        "bbc.co.uk"
+        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=True)
+        "forums.bbc.co.uk"
+
+    """
+
+    if resolve_url:
+        url = canonical_link(
+            url, timeout=timeout, session=session, user_agent=user_agent
+        )
+    domain = tldextract.extract(url)
+    if domain:
+        if include_subdomain and domain.subdomain and domain.subdomain != "www":
+            domain = ".".join([domain.subdomain, domain.domain, domain.suffix])
+        else:
+            domain = ".".join([domain.domain, domain.suffix])
+        domain = VANITY_LINK_SHORTENERS.get(domain, domain)
+    return domain
+
 
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
@@ -79,6 +317,20 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
         >>> canonical_link("https://pewrsr.ch/2lxB0EX")
         "https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/"
+
+
+    A list of known generic URL shorteners:
+
+    .. literalinclude:: ../pewtils/gen_link_shorteners.py
+        :language: python
+        :lines: 1-
+
+
+    A list of known URL shorteners for specific websites (primarily news websites):
+
+    .. literalinclude:: ../pewtils/van_link_shorteners.py
+        :language: python
+        :lines: 1-
 
     """
 
@@ -237,256 +489,3 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
         session.close()
 
     return url
-
-
-def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
-
-    """
-    Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
-    ones that can be removed without generating any redirects.
-
-    :param url: The URL to trim
-    :type url: str
-    :param session: (Optional) A persistent session that can optionally be passed (useful if you're processing many \
-    links at once)
-    :type session: :py:class:`requests.Session` object
-    :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \
-    is not provided
-    :type user_agent: str
-    :param timeout: Timeout for requests
-    :type timeout: int or float
-    :return: The original URL with optional GET parameters removed
-    :rtype: str
-
-    Usage::
-
-        from pewtils.http import trim_get_parameters
-
-        >>> trim_get_parameters("https://httpbin.org/status/200?param=1")
-        "https://httpbin.org/status/200"
-
-    """
-
-    close_session = False
-    if not session:
-        close_session = True
-        session = requests.Session()
-        session.headers.update({"User-Agent": user_agent})
-
-    # Often there's extra information about social sharing and referral sources that can be removed
-    ditch_params = []
-    parsed = urlparse.urlparse(url)
-    if parsed.query:
-        params = urlparse.parse_qs(parsed.query)
-        for k, v in params.items():
-            # We iterate over all of the GET parameters and try holding each one out
-            check = True
-            for skipper in ["document", "article", "id", "qs"]:
-                # If the parameter is named something that's probably a unique ID, we'll keep it
-                if skipper in k.lower():
-                    check = False
-            for skipper in ["html", "http"]:
-                # Same goes for parameters that contain URL information
-                if skipper in v[0].lower():
-                    check = False
-            if check:
-                new_params = {
-                    k2: v2[0] for k2, v2 in params.items() if k2 != k and len(v2) == 1
-                }
-                new_params = urlparse.urlencode(new_params)
-                new_parsed = parsed._replace(query=new_params)
-                new_url = urlparse.urlunparse(new_parsed)
-                try:
-                    resp = session.head(new_url, allow_redirects=True, timeout=timeout)
-                except ReadTimeout:
-                    resp = None
-                if is_not_null(resp):
-                    new_parsed = urlparse.urlparse(resp.url)
-                    if new_parsed.query != "" or new_parsed.path not in ["", "/"]:
-                        # If removing a parameter didn't redirect to a root domain...
-                        new_url = resp.url
-                        compare_new = (
-                            new_url.split("?")[0] if "?" in new_url else new_url
-                        )
-                        compare_old = url.split("?")[0] if "?" in url else url
-                        if compare_new == compare_old:
-                            # And the domain is the same as it was before, then the parameter was probably unnecessary
-                            ditch_params.append(k)
-
-    if len(ditch_params) > 0:
-        # Now we remove all of the unnecessary get parameters and finalize the URL
-        new_params = {
-            k: v[0] for k, v in params.items() if len(v) == 1 and k not in ditch_params
-        }
-        new_params = urlparse.urlencode(new_params)
-        parsed = parsed._replace(query=new_params)
-        url = urlparse.urlunparse(parsed)
-
-    if close_session:
-        session.close()
-
-    return url
-
-
-def extract_domain_from_url(
-    url,
-    include_subdomain=True,
-    resolve_url=False,
-    timeout=1.0,
-    session=None,
-    user_agent=None,
-):
-
-    """
-    Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
-
-    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \
-    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \
-    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
-    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \
-    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \
-    this dictionary of known shorteners may be returned with an incorrect domain.
-
-
-    :param url:  The link from which to extract the domain
-    :type url: str
-    :param include_subdomain: Whether or not to include the subdomain (e.g. 'news.google.com'); default is True
-    :type include_subdomain: bool
-    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \
-    True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \
-    domain.
-    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \
-    timing out (default is 1)
-    :type timeout: int or float
-    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \
-    (useful if you're processing many links at once)
-    :type session: :py:class:`requests.Session` object
-    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \
-    if a preconfigured requests Session is not provided
-    :type user_agent: str
-    :return: The domain for the link
-    :rtype: str
-
-    Usage::
-
-        from pewtils.http import extract_domain_from_url
-
-        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=False)
-        "bbc.co.uk"
-        >>> extract_domain_from_url("http://forums.bbc.co.uk", include_subdomain=True)
-        "forums.bbc.co.uk"
-
-    """
-
-    if resolve_url:
-        url = canonical_link(
-            url, timeout=timeout, session=session, user_agent=user_agent
-        )
-    domain = tldextract.extract(url)
-    if domain:
-        if include_subdomain and domain.subdomain and domain.subdomain != "www":
-            domain = ".".join([domain.subdomain, domain.domain, domain.suffix])
-        else:
-            domain = ".".join([domain.domain, domain.suffix])
-        domain = VANITY_LINK_SHORTENERS.get(domain, domain)
-    return domain
-
-
-
-def strip_html(html, simple=False, break_tags=None):
-
-    """
-    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \
-    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
-    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
-    a much simpler regular expression approach to parsing.
-
-    :param html: The HTML to process
-    :type html: str
-    :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
-    :type simple: bool
-    :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
-    :type break_tags: list
-    :return: The text with HTML components removed (perfection not guaranteed)
-    :rtype: str
-
-    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
-        majority of HTML without stripping out valuable content.
-
-    Usage::
-
-        from pewtils.http import strip_html
-
-        >>> my_html = "<html><head>Header text</head><body>Body text</body></html>"
-        >>> strip_html(my_html)
-        'Header text Body text'
-
-    A list of known generic URL shorteners:
-
-    .. literalinclude:: ../pewtils/gen_link_shorteners.py
-        :language: python
-        :lines: 1-
-
-
-    A list of known URL shorteners for specific websites (primarily news websites):
-
-    .. literalinclude:: ../pewtils/van_link_shorteners.py
-        :language: python
-        :lines: 1-
-
-    """
-
-    html = re.sub(r"\n", " ", html)
-    html = re.sub(r"\s+", " ", html)
-    if not break_tags:
-        break_tags = ["strong", "em", "i", "b", "p"]
-    if not simple:
-        try:
-
-            split_re = re.compile(r"\s{2,}")
-            soup = BeautifulSoup(html, "lxml")
-            for tag in soup():
-                if (
-                    "class" in tag.attrs
-                    and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])
-                ) or ("menu" in str(tag.id) or "header" in str(tag.id)):
-                    tag.extract()
-            for tag in soup(["script", "style"]):
-                tag.extract()
-            for br in soup.find_all("br"):
-                br.replace_with("\n")
-            for t in soup(break_tags):
-                try:
-                    t.replace_with("\n{0}\n".format(t.text))
-                except (UnicodeDecodeError, UnicodeEncodeError):
-                    t.replace_with("\n{0}\n".format(decode_text(t.text)))
-            if hasattr(soup, "body") and soup.body:
-                text = soup.body.get_text()
-            else:
-                text = soup.get_text()
-            lines = [l.strip() for l in text.splitlines()]
-            lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
-            text = "\n".join([l for l in lines if l])
-            text = re.sub(r"(\sA){2,}\s", " ", text)
-            text = re.sub(r"\n+(\s+)?", "\n\n", text)
-            text = re.sub(r" +", " ", text)
-            text = re.sub(r"\t+", " ", text)
-
-            return text
-
-        except Exception as e:
-
-            print("strip_html error")
-            print(e)
-            text = re.sub(r"<[^>]*>", " ", re.sub("\\s+", " ", html)).strip()
-            return text
-
-    else:
-        return "\n".join(
-            [
-                re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section))
-                for section in re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split(
-                    "\n"
-                )
-            ]
-        )
