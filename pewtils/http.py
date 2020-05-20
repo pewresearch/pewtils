@@ -16,6 +16,33 @@ import warnings
 from requests.exceptions import ReadTimeout
 
 
+_ = pd.read_csv(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "./general_link_shorteners.csv"
+    )
+)
+GENERAL_LINK_SHORTENERS = _["shortener"].values
+
+
+_ = pd.read_csv(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
+    )
+)
+_ = _[_["historical"] == 0]
+VANITY_LINK_SHORTENERS = dict(zip(_["shortener"], _["expanded"]))
+
+_ = pd.read_csv(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
+    )
+)
+_ = _[_["historical"] == 1]
+HISTORICAL_VANITY_LINK_SHORTENERS = dict(zip(_["shortener"], _["expanded"]))
+
+VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
+
+
 def hash_url(url):
 
     """
@@ -317,20 +344,6 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
         >>> canonical_link("https://pewrsr.ch/2lxB0EX")
         "https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/"
-
-
-    A list of known generic URL shorteners:
-
-    .. literalinclude:: ../pewtils/gen_link_shorteners.py
-        :language: python
-        :lines: 1-
-
-
-    A list of known URL shorteners for specific websites (primarily news websites):
-
-    .. literalinclude:: ../pewtils/van_link_shorteners.py
-        :language: python
-        :lines: 1-
 
     """
 
