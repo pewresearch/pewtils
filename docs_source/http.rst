@@ -10,3 +10,13 @@ from raw HTML data with minimal fine-tuning.
 .. automodule :: pewtils.http
     :autosummary:
     :members:
+
+.. py:data:: GENERAL_LINK_SHORTENERS
+
+    A list of known generic URL shorteners (:ref:`link_shorteners`)
+
+.. py:data:: VANITY_LINK_SHORTENERS
+
+    A list of known URL shorteners for specific websites (primarily news websites) (:ref:`link_shorteners`)
+
+
