@@ -11,12 +11,18 @@ from raw HTML data with minimal fine-tuning.
     :autosummary:
     :members:
 
-.. py:data:: GENERAL_LINK_SHORTENERS
++++++++++++++++
+Link Shorteners
++++++++++++++++
 
-    A list of known generic URL shorteners (:ref:`link_shorteners`)
+List of link shorteners recognized by methods in this section.
 
-.. py:data:: VANITY_LINK_SHORTENERS
+General Link Shorteners
+^^^^^^^^^^^^^^^^^^^^^^^
 
-    A list of known URL shorteners for specific websites (primarily news websites) (:ref:`link_shorteners`)
+    A list of known :ref:`gen_link_shorteners`.
 
+Vanity Link Shorteners
+^^^^^^^^^^^^^^^^^^^^^^^
 
+    A list of known URL shorteners for websites specific :ref:`vanity_link_shorteners` (primarily news websites).

@@ -83,7 +83,14 @@
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="pewtils_core.html">Core Functions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#link-shorteners">Link Shorteners</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-link-shorteners">General Link Shorteners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vanity-link-shorteners">Vanity Link Shorteners</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">I/O Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="regex.html">Regex Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -274,7 +281,7 @@ ones that can be removed without generating any redirects.</p>
 <dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you set <cite>resolve_url</cite> to True, the link will be standardized prior to extracting the domain (in which     case you can provide optional timeout, session, and user_agent parameters that will be passed to <cite>canonical_link).     By default, however, the link will be operated on as-is. The final extracted domain is then checked against known     URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS</cite>) and if it is recognized, the expanded     domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in     this dictionary of known shorteners may be returned with an incorrect domain.</p>
+<p>If you set <cite>resolve_url</cite> to True, the link will be standardized prior to extracting the domain (in which     case you can provide optional timeout, session, and user_agent parameters that will be passed to <cite>canonical_link</cite>).     By default, however, the link will be operated on as-is. The final extracted domain is then checked against known     URL vanity shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it is recognized, the expanded     domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in     this dictionary of known shorteners may be returned with an incorrect domain.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,18 +345,22 @@ ones that can be removed without generating any redirects.</p>
 </div>
 </dd></dl>
 
-<dl class="data">
-<dt id="pewtils.http.GENERAL_LINK_SHORTENERS">
-<code class="sig-name descname">GENERAL_LINK_SHORTENERS</code><a class="headerlink" href="#pewtils.http.GENERAL_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of known generic URL shorteners (<a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a>)</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="pewtils.http.VANITY_LINK_SHORTENERS">
-<code class="sig-name descname">VANITY_LINK_SHORTENERS</code><a class="headerlink" href="#pewtils.http.VANITY_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of known URL shorteners for specific websites (primarily news websites) (<a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a>)</p>
-</dd></dl>
-
+<div class="section" id="link-shorteners">
+<h2>Link Shorteners<a class="headerlink" href="#link-shorteners" title="Permalink to this headline">¶</a></h2>
+<p>List of link shorteners recognized by methods in this section.</p>
+<div class="section" id="general-link-shorteners">
+<h3>General Link Shorteners<a class="headerlink" href="#general-link-shorteners" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>A list of known <a class="reference internal" href="http_link_shorteners.html#gen-link-shorteners"><span class="std std-ref">Generic Link Shorteners</span></a>.</p>
+</div></blockquote>
+</div>
+<div class="section" id="vanity-link-shorteners">
+<h3>Vanity Link Shorteners<a class="headerlink" href="#vanity-link-shorteners" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>A list of known URL shorteners for websites specific <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a> (primarily news websites).</p>
+</div></blockquote>
+</div>
+</div>
 </div>
 
 

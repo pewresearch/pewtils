@@ -412,9 +412,9 @@
 <span class="sd">    Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</span>
 
 <span class="sd">    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \</span>
-<span class="sd">    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \</span>
+<span class="sd">    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link`). \</span>
 <span class="sd">    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \</span>
-<span class="sd">    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \</span>
+<span class="sd">    URL vanity shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \</span>
 <span class="sd">    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \</span>
 <span class="sd">    this dictionary of known shorteners may be returned with an incorrect domain.</span>
 
