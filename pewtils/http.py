@@ -262,9 +262,9 @@ def extract_domain_from_url(
     Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
 
     .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \
-    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link). \
+    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link`). \
     By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
-    URL vanity shorteners (see :py:data:`pewtils.http.VANITY_LINK_SHORTENERS`) and if it is recognized, the expanded \
+    URL vanity shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \
     domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \
     this dictionary of known shorteners may be returned with an incorrect domain.
 
