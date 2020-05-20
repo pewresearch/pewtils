@@ -29,16 +29,16 @@ class classproperty(object):
 
     """
     This decorator allows you to define functions on a class that are accessible directly from the
-    class itself (rather than an instance of the class). Essentially, this allows you to access `classproperty`
-    attributes directly, like `obj.property`, rather than as a function on a class instance
+    class itself (rather than an instance of the class). It allows you to access `classproperty`
+    attributes directly, such as `obj.property`, rather than as a function on a class instance
     (like `obj = Obj(); obj.property()`).
 
-    | Borrowed from a StackOverflow `post <https://stackoverflow.com/a/3203659>`_.
+    Borrowed from a StackOverflow `post <https://stackoverflow.com/a/3203659>`_.
 
     Usage::
 
         from pewtils import classproperty
-        
+
         class MyClass(object):
             x = 4
 
@@ -150,13 +150,9 @@ def decode_text(text, throw_loud_fail=False):
     transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII and ignore
     non-ASCII characters.
 
-    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \
-    to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt anything \
-    if you do.
-
     .. warning:: This function is potentially destructive to source input and should be used with some care. \
-    Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \
-    placeholder, potentially resulting in an empty string.
+        Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \
+        placeholder, potentially resulting in an empty string.
 
     :param text: The text to process
     :type text: str
@@ -165,6 +161,11 @@ def decode_text(text, throw_loud_fail=False):
     :type throw_loud_fail: bool
     :return: Decoded text, or empty string
     :rtype: str
+
+    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \
+        to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt anything \
+        if you do.
+
     """
 
     output_text = ""
@@ -217,17 +218,17 @@ def get_hash(text, hash_function="ssdeep"):
     """
     Generates hashed text using one of several available hashing functions.
 
-    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \
-    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \
-    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \
-    for computing document similarities at scale.
-
     :param text: The string to hash
     :type text: str
     :param hash_function: The specific algorithm to use; options are `'nilsimsa'`, `'md5'`, and `'ssdeep'` (default)
     :type hash_function: str
     :return: A hashed representation of the provided string
     :rtype: str
+
+    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \
+    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \
+    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \
+    for computing document similarities at scale.
 
     Usage::
 
@@ -407,10 +408,6 @@ def new_random_number(attempt=1, minimum=1.0, maximum=10):
     and twice the minimum's value.  As you increase `attempt`, the possible range of returned values expands \
     exponentially until it hits the `maximum` ceiling.
 
-    .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \
-    reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \
-    simply by increasing the `attempt` variable (hence its name).
-
     :param attempt: Increasing attempt will expand the upper-bound of the range from which the random number is drawn
     :type attempt: int
     :param minimum: The minimum allowed value that can be returned; must be greater than zero.
@@ -419,6 +416,10 @@ def new_random_number(attempt=1, minimum=1.0, maximum=10):
     :type maximum: int or float
     :return: A random number drawn uniformly from across the range determined by the provided arguments.
     :rtype: float
+
+    .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \
+        reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \
+        simply by increasing the `attempt` variable (hence its name).
 
     Usage::
 
@@ -541,7 +542,7 @@ def recursive_update(existing, new):
     Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
     new values and updates the object.
 
-    | Doesn't care if the keys in the dictionary correspond to attribute names or dictionary keys; you can use this\
+    | Regardless whether or not the keys in the dictionary correspond to attribute names or dictionary keys; you can use this\
     to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.
 
     :param existing: An object or dictionary
@@ -667,7 +668,7 @@ def extract_json_from_folder(
 
     """
     Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it to a dictionary,
-    with the key being the name of the file and the value being the JSON itself. This can be useful if you store \
+    with the key being the name of the file and the value being the JSON itself. This is useful if you store \
     configurations or various metadata in a nested folder structure, which we do for things like content analysis \
     codebooks.
 
@@ -763,9 +764,6 @@ def extract_attributes_from_folder_modules(
     that contain a function, class, method, or attribute with the name you provide in `attribute_name` and will load
     that attribute in as the values.
 
-    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \
-    that you want to scan and import using this function.
-
     :param folder_path: The path of a folder/module to scan
     :type folder_path: str
     :param attribute_name: The name of the attribute (class, function, variable, etc.) to extract from files
@@ -777,6 +775,9 @@ def extract_attributes_from_folder_modules(
     :param current_subdirs: Used to track location when recursively iterating a module (do not use)
     :return: A dictionary with all of the extracted attributes as values
     :rtype: dict
+
+    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \
+        that you want to scan and import using this function.
     """
 
     if not folder_path.startswith(os.getcwd()):

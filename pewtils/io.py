@@ -24,18 +24,9 @@ from pewtils import is_not_null
 class FileHandler(object):
 
     """
-    Read/write data files in a variety of formats, locally and in Amazon S3 buckets. File extensions are standardized \
-    to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.) The class must be initialized \
-    with a valid path within either your local file system or a specific S3 bucket. You can configure your environment \
-    to make it easier to automatically connect to S3 by defining the variables `AWS_ACCESS_KEY_ID`, \
-    `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
+    Read/write data files in a variety of formats, locally and in Amazon S3 buckets.
 
-    .. note:: Files in the following formats make use of :py:class:`pandas.DataFrame` objects: `csv`, `tab`, `xlsx`,
-        `xls`, `dta`. When you try to write an object in any of these formats, the `FileHandler` expects a dataframe;
-        and when you read a file in any of these formats, it gets loaded in as a dataframe. The exceptions are `pkl`, \
-        which will accept any serializable Python object, and `json`, which expects a correctly-formatted JSON object.
-
-    :param path: The path to the folder that you'll be writing to or reading from
+    :param path: A valid path to the folder in local or s3 directory where files will be written to or read from
     :type path: str
     :param use_s3: Whether the path is an S3 location or local location
     :type use_s3: bool
@@ -46,6 +37,13 @@ class FileHandler(object):
     :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \
     as S3_BUCKET
     :type bucket: str
+
+    .. note:: Typical rectangular data files (i.e. `csv`, `tab`, `xlsx`, `xls`, `dta` file extension types) will be \
+        read to/written from a :py:class:`pandas.DataFrame` object. The exceptions are `pkl` and `json` objects which \
+        accept any serializable Python object and correctly-formatted JSON object respectively.
+
+    .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the variables \
+        `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
 
     Usage::
 
@@ -233,19 +231,6 @@ class FileHandler(object):
         """
         Writes arbitrary data objects to a variety of file formats.
 
-        | If you save something to csv/tab/xlsx/xls/dta, it assumes you've passed it a Pandas DataFrame object. \
-        If you're trying to save an object to JSON, it assumes that you're passing it valid JSON. By default, though, \
-        the handler attempts to use pickling, allowing you to save anything you want, as long as it's serializable.
-
-        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \
-        Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \
-        to the corresponding Pandas method below:
-
-            - `dta`: :py:meth:`pandas.DataFrame.to_stata`
-            - `csv`: :py:meth:`pandas.DataFrame.to_csv`
-            - `tab`: :py:meth:`pandas.DataFrame.to_csv`
-            - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`
-            - `xls`: :py:meth:`pandas.DataFrame.to_excel`
 
         :param key: The name of the file or key (without a file suffix!)
         :type key: str
@@ -260,6 +245,20 @@ class FileHandler(object):
         :type add_timestamp: bool
         :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable
         :return: None
+
+        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \
+            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \
+            to the corresponding Pandas method below:
+
+                - `dta`: :py:meth:`pandas.DataFrame.to_stata`
+                - `csv`: :py:meth:`pandas.DataFrame.to_csv`
+                - `tab`: :py:meth:`pandas.DataFrame.to_csv`
+                - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`
+                - `xls`: :py:meth:`pandas.DataFrame.to_excel`
+
+            If you're trying to save an object to JSON, it assumes that you're passing it valid JSON. By default, \
+            the handler attempts to use pickling, allowing you to save anything you want, as long as it's serializable.
+
         """
 
         format = format.strip(".")
@@ -324,15 +323,6 @@ class FileHandler(object):
         """
         Reads a file from the directory or S3 path, returning its contents.
 
-        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \
-            the format of the file you're trying to read in
-
-            - `dta`: :py:meth:`pandas.DataFrame.read_stata`
-            - `csv`: :py:meth:`pandas.DataFrame.read_csv`
-            - `tab`: :py:meth:`pandas.DataFrame.read_csv`
-            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`
-            - `xls`: :py:meth:`pandas.DataFrame.read_excel`
-
         :param key: The name of the file to read (without a suffix!)
         :type key: str
         :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match
@@ -341,6 +331,15 @@ class FileHandler(object):
         :type hash_key: bool
         :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)
         :return: The file contents, in the requested format
+
+        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \
+            the format of the file you're trying to read in
+
+            - `dta`: :py:meth:`pandas.DataFrame.read_stata`
+            - `csv`: :py:meth:`pandas.DataFrame.read_csv`
+            - `tab`: :py:meth:`pandas.DataFrame.read_csv`
+            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`
+            - `xls`: :py:meth:`pandas.DataFrame.read_excel`
         """
 
         format = format.strip(".")

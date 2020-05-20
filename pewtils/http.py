@@ -46,8 +46,8 @@ VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
 def hash_url(url):
 
     """
-    Clears out http/https prefix and returns an MD5 hash of the URL. All this does is remove http/s prefixes; it can be
-    far more effective when used in conjunction with :py:func:`pewtils.http.canonical_link`.
+    Clears out http/https prefix and returns an MD5 hash of the URL. More effective \
+    when used in conjunction with :py:func:`pewtils.http.canonical_link`.
 
     :param url: The URL to hash
     :type url: str
@@ -78,9 +78,8 @@ def strip_html(html, simple=False, break_tags=None):
 
     """
     Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \
-    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
-    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
-    a much simpler regular expression approach to parsing.
+    By default, the function will use BeautifulSoup to parse the HTML. Setting `simple=True` will make the \
+    function use a much simpler regular expression approach to parsing.
 
     :param html: The HTML to process
     :type html: str
@@ -88,11 +87,11 @@ def strip_html(html, simple=False, break_tags=None):
     :type simple: bool
     :param break_tags: A custom list of tags on which to break (default is ["strong", "em", "i", "b", "p"])
     :type break_tags: list
-    :return: The text with HTML components removed (perfection not guaranteed)
+    :return: The text with HTML components removed
     :rtype: str
 
-    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
-        majority of HTML without stripping out valuable content.
+    .. note: This function might not be effective for *all* variations of html structures, but it produces fairly \
+        reliable results in removing the vast majority of HTML without stripping out valuable contents.
 
     Usage::
 
@@ -261,14 +260,6 @@ def extract_domain_from_url(
     """
     Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
 
-    .. note:: If you set `resolve_url` to True, the link will be standardized prior to extracting the domain (in which \
-    case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link`). \
-    By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
-    URL vanity shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \
-    domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in \
-    this dictionary of known shorteners may be returned with an incorrect domain.
-
-
     :param url:  The link from which to extract the domain
     :type url: str
     :param include_subdomain: Whether or not to include the subdomain (e.g. 'news.google.com'); default is True
@@ -287,6 +278,13 @@ def extract_domain_from_url(
     :type user_agent: str
     :return: The domain for the link
     :rtype: str
+
+    .. note:: If `resolve_url` is set to True, the link will be standardized prior to domain extraction (in which \
+        case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link`). \
+        By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
+        URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded domain will be returned \
+        instead. Shortened URLs that are not standardized and do not follow patterns included in this dictionary of known \
+        shorteners may be returned with an incorrect domain.
 
     Usage::
 
@@ -316,14 +314,14 @@ def extract_domain_from_url(
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
     """
-    Tries to resolve a link to the "most correct" version. Useful for expanding short URLs from bit.ly / Twitter \
-    and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the \
-    most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove \
-    optional GET parameters. This function may not be particularly effective on dead links, but may still be able \
-    to follow redirects enough to return a URL with the correct domain associated with the original link.
+    Tries to resolve a link to the "most correct" version.
 
-    .. note:: This function is not perfect but it has been tested on a wide variety of URLs and resolves \
-    to the correct final page in most cases while (usually) avoiding redirects to generic error pages.
+    Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving \
+    the actual data. Follows redirects and tries to pick the most informative version of a URL while avoiding \
+    redirects to generic 404 pages. Also tries to iteratively remove optional GET parameters.
+
+    May not be particularly effective on dead links, but may still be able to follow redirects enough \
+    to return a URL with the correct domain associated with the original link.
 
     :param url: The URL to test. Should be fully qualified.
     :type url: str
@@ -335,8 +333,14 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
     :param user_agent: User agent for the auto-created requests Session to use, if a preconfigured requests Session \
     is not provided
     :type user_agent: str
-    :return: The "canonical" URL as supplied by the server, or the original URL if the server was not helpful.
+    :return: The "canonical" URL as supplied by the server, or the original URL if none supplied.
     :rtype: str
+
+    .. note:: See :ref:`link_shorteners` for a complete list of shortened links recognized by this function.
+
+        This function might not resolve *all* existing URL modificiations, but it has been tested on a vast, well maintained \
+        variety of URLs. It typically resolves URL to the correct final page while avoiding redirects to generic error \
+        pages.
 
     Usage::
 
