@@ -21,20 +21,6 @@ Or you can install from source: ::
 
 Please refer to the [official documentation](https://pewresearch.github.io/pewtils) for information on how to use this package.
 
-## Acknowledgements
-
-The following authors contributed to this repository:
-- Patrick van Kessel
-- Brian Broderick
-- Skye Toor
-- Regina Widjaya
-- Emma Remy
-- Onyi Lam
-- Galen Stocking
-- Dennis Quinn
-
-Pew Research Center is a subsidiary of The Pew Charitable Trusts, its primary funder. This report is a collaborative effort based on the input and analysis of [a number of individuals and experts at Pew Research Center](link here).
-
 ## Use Policy 
 
 In addition to the [license](https://github.com/pewresearch/pewtils/blob/master/LICENSE), Users must abide by the following conditions:
@@ -43,7 +29,28 @@ In addition to the [license](https://github.com/pewresearch/pewtils/blob/master/
 - User may not use the Center's name in any advertising, marketing or promotional materials.
 - User may not use the licensed materials in any manner that implies, suggests, or could otherwise be perceived as attributing a particular policy or lobbying objective or opinion to the Center, or as a Center endorsement of a cause, candidate, issue, party, product, business, organization, religion or viewpoint.
 
-# About Pew Research Center
+## Issues and Pull Requests
+
+This code is provided as-is for use in your own projects. You are free to submit issues and pull requests with any questions or suggestions you may have. We will do our best to respond within a 30-day time period.
+
+## Recommended Package Citation
+
+Pew Research Center, 2020, "pewtils" Available at: github.com/pewresearch/pewtils
+
+## Acknowledgements
+
+The following authors contributed to this repository:
+
+- Patrick van Kessel
+- Regina Widjaya
+- Skye Toor
+- Emma Remy
+- Onyi Lam
+- Brian Broderick
+- Galen Stocking
+- Dennis Quinn
+
+## About Pew Research Center
 
 Pew Research Center is a nonpartisan fact tank that informs the public about the issues, attitudes and trends shaping the world. It does not take policy positions. The Center conducts public opinion polling, demographic research, content analysis and other data-driven social science research. It studies U.S. politics and policy; journalism and media; internet, science and technology; religion and public life; Hispanic trends; global attitudes and trends; and U.S. social and demographic trends. All of the Center's reports are available at [www.pewresearch.org](http://www.pewresearch.org). Pew Research Center is a subsidiary of The Pew Charitable Trusts, its primary funder.
 

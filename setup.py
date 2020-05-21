@@ -1,5 +1,7 @@
-import os
-from setuptools import setup, find_packages
+from setuptools import setup
+
+with open("README.md") as README:
+    readme = str(README.read())
 
 with open("requirements.txt") as reqs:
     install_requires = [
@@ -15,28 +17,35 @@ with open("requirements.txt") as reqs:
 
 setup(
     name="pewtils",
-    version="0.0.1",
-    description="miscellaneous utilities",
+    version="1.0.0",
+    description="General programming utilities from Pew Research Center",
+    long_description=readme,
     url="https://github.com/pewresearch/pewtils",
     author="Pew Research Center",
-    author_email="admin@pewresearch.tech",
+    author_email="info@pewresearch.org",
     install_requires=install_requires,
     dependency_links=dependency_links,
     packages=["pewtils"],
-    # find_packages(exclude =
-    #    ['contrib', 'docs', 'tests']),
     include_package_data=True,
+    keywords="utilities, link standardization, input, output, pew pew pew",
+    license="LGPLv2.1+",
     classifiers=[
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        "Development Status :: 4 - Beta",
-        #        'Development Status :: 5 - Production/Stable',
-        #        'Development Status :: 6 - Mature',
-        #        'Development Status :: 7 - Inactive'
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: Education",
         "Intended Audience :: Science/Research",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Utilities",
     ],
-    keywords="pew pew pew",
-    license="MIT",
 )
