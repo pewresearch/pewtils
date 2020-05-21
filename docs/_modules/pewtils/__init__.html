@@ -151,7 +151,6 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">chardet</span>
@@ -179,16 +178,16 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This decorator allows you to define functions on a class that are accessible directly from the</span>
-<span class="sd">    class itself (rather than an instance of the class). Essentially, this allows you to access `classproperty`</span>
-<span class="sd">    attributes directly, like `obj.property`, rather than as a function on a class instance</span>
+<span class="sd">    class itself (rather than an instance of the class). It allows you to access `classproperty`</span>
+<span class="sd">    attributes directly, such as `obj.property`, rather than as a function on a class instance</span>
 <span class="sd">    (like `obj = Obj(); obj.property()`).</span>
 
-<span class="sd">    | Borrowed from a StackOverflow `post &lt;https://stackoverflow.com/a/3203659&gt;`_.</span>
+<span class="sd">    Borrowed from a StackOverflow `post &lt;https://stackoverflow.com/a/3203659&gt;`_.</span>
 
 <span class="sd">    Usage::</span>
 
 <span class="sd">        from pewtils import classproperty</span>
-<span class="sd">        </span>
+
 <span class="sd">        class MyClass(object):</span>
 <span class="sd">            x = 4</span>
 
@@ -261,7 +260,7 @@
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -295,18 +294,14 @@
 <div class="viewcode-block" id="decode_text"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.decode_text">[docs]</a><span class="k">def</span> <span class="nf">decode_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">throw_loud_fail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string&#39;s encoding,</span>
-<span class="sd">    decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the &quot;unidecode&quot; package to</span>
-<span class="sd">    transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly encode the text as ASCII and ignore</span>
-<span class="sd">    non-ASCII characters.</span>
-
-<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \</span>
-<span class="sd">    to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t hurt anything \</span>
-<span class="sd">    if you do.</span>
+<span class="sd">    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string&#39;s \</span>
+<span class="sd">    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the &quot;unidecode&quot; \</span>
+<span class="sd">    package to transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly encode the text as ASCII \</span>
+<span class="sd">    and ignore non-ASCII characters.</span>
 
 <span class="sd">    .. warning:: This function is potentially destructive to source input and should be used with some care. \</span>
-<span class="sd">    Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \</span>
-<span class="sd">    placeholder, potentially resulting in an empty string.</span>
+<span class="sd">        Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \</span>
+<span class="sd">        placeholder, potentially resulting in an empty string.</span>
 
 <span class="sd">    :param text: The text to process</span>
 <span class="sd">    :type text: str</span>
@@ -315,6 +310,11 @@
 <span class="sd">    :type throw_loud_fail: bool</span>
 <span class="sd">    :return: Decoded text, or empty string</span>
 <span class="sd">    :rtype: str</span>
+
+<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \</span>
+<span class="sd">        to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t hurt \</span>
+<span class="sd">        anything if you do.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">output_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -367,17 +367,17 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates hashed text using one of several available hashing functions.</span>
 
-<span class="sd">    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \</span>
-<span class="sd">    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \</span>
-<span class="sd">    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \</span>
-<span class="sd">    for computing document similarities at scale.</span>
-
 <span class="sd">    :param text: The string to hash</span>
 <span class="sd">    :type text: str</span>
 <span class="sd">    :param hash_function: The specific algorithm to use; options are `&#39;nilsimsa&#39;`, `&#39;md5&#39;`, and `&#39;ssdeep&#39;` (default)</span>
 <span class="sd">    :type hash_function: str</span>
 <span class="sd">    :return: A hashed representation of the provided string</span>
 <span class="sd">    :rtype: str</span>
+
+<span class="sd">    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \</span>
+<span class="sd">    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \</span>
+<span class="sd">    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \</span>
+<span class="sd">    for computing document similarities at scale.</span>
 
 <span class="sd">    Usage::</span>
 
@@ -395,18 +395,18 @@
     <span class="k">if</span> <span class="n">hash_function</span> <span class="o">==</span> <span class="s2">&quot;nilsimsa&quot;</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">nilsimsa</span> <span class="k">import</span> <span class="n">Nilsimsa</span>
 
-        <span class="nb">hash</span> <span class="o">=</span> <span class="n">Nilsimsa</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">Nilsimsa</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">hash_function</span> <span class="o">==</span> <span class="s2">&quot;md5&quot;</span><span class="p">:</span>
-        <span class="nb">hash</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">ssdeep</span>
 
-        <span class="nb">hash</span> <span class="o">=</span> <span class="n">ssdeep</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">ssdeep</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="nb">hash</span></div>
+    <span class="k">return</span> <span class="n">hashed</span></div>
 
 
-<div class="viewcode-block" id="zipcode_num_to_string"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.zipcode_num_to_string">[docs]</a><span class="k">def</span> <span class="nf">zipcode_num_to_string</span><span class="p">(</span><span class="nb">zip</span><span class="p">):</span>
+<div class="viewcode-block" id="zipcode_num_to_string"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.zipcode_num_to_string">[docs]</a><span class="k">def</span> <span class="nf">zipcode_num_to_string</span><span class="p">(</span><span class="n">zipcode</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \</span>
@@ -430,24 +430,24 @@
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="nb">zip</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_not_null</span><span class="p">(</span><span class="n">zipcode</span><span class="p">):</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="nb">zip</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">zip</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()[:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">zipcode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()[:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-            <span class="nb">zip</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">zipcode</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="nb">zip</span><span class="p">:</span>
-            <span class="nb">zip</span> <span class="o">=</span> <span class="nb">zip</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">zipcodes</span><span class="o">.</span><span class="n">is_real</span><span class="p">(</span><span class="nb">zip</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">zip</span>
+        <span class="k">if</span> <span class="n">zipcode</span><span class="p">:</span>
+            <span class="n">zipcode</span> <span class="o">=</span> <span class="n">zipcode</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">zipcodes</span><span class="o">.</span><span class="n">is_real</span><span class="p">(</span><span class="n">zipcode</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">zipcode</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
 
-        <span class="nb">zip</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">zipcode</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">return</span> <span class="nb">zip</span></div>
+    <span class="k">return</span> <span class="n">zipcode</span></div>
 
 
 <div class="viewcode-block" id="concat_text"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.concat_text">[docs]</a><span class="k">def</span> <span class="nf">concat_text</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -557,10 +557,6 @@
 <span class="sd">    and twice the minimum&#39;s value.  As you increase `attempt`, the possible range of returned values expands \</span>
 <span class="sd">    exponentially until it hits the `maximum` ceiling.</span>
 
-<span class="sd">    .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \</span>
-<span class="sd">    reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \</span>
-<span class="sd">    simply by increasing the `attempt` variable (hence its name).</span>
-
 <span class="sd">    :param attempt: Increasing attempt will expand the upper-bound of the range from which the random number is drawn</span>
 <span class="sd">    :type attempt: int</span>
 <span class="sd">    :param minimum: The minimum allowed value that can be returned; must be greater than zero.</span>
@@ -569,6 +565,10 @@
 <span class="sd">    :type maximum: int or float</span>
 <span class="sd">    :return: A random number drawn uniformly from across the range determined by the provided arguments.</span>
 <span class="sd">    :rtype: float</span>
+
+<span class="sd">    .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \</span>
+<span class="sd">        reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \</span>
+<span class="sd">        simply by increasing the `attempt` variable (hence its name).</span>
 
 <span class="sd">    Usage::</span>
 
@@ -691,8 +691,8 @@
 <span class="sd">    Takes an object and a dictionary representation of attributes and values, and recursively traverses through the</span>
 <span class="sd">    new values and updates the object.</span>
 
-<span class="sd">    | Doesn&#39;t care if the keys in the dictionary correspond to attribute names or dictionary keys; you can use this\</span>
-<span class="sd">    to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.</span>
+<span class="sd">    | Regardless of whether or not the keys in the dictionary correspond to attribute names or dictionary keys; \</span>
+<span class="sd">    you can use this to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.</span>
 
 <span class="sd">    :param existing: An object or dictionary</span>
 <span class="sd">    :type existing: dict or object</span>
@@ -817,7 +817,7 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it to a dictionary,</span>
-<span class="sd">    with the key being the name of the file and the value being the JSON itself. This can be useful if you store \</span>
+<span class="sd">    with the key being the name of the file and the value being the JSON itself. This is useful if you store \</span>
 <span class="sd">    configurations or various metadata in a nested folder structure, which we do for things like content analysis \</span>
 <span class="sd">    codebooks.</span>
 
@@ -870,9 +870,9 @@
                 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">):</span>
                         <span class="n">key</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-                        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
                             <span class="k">try</span><span class="p">:</span>
-                                <span class="n">attributes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+                                <span class="n">attributes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
                             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON file is invalid: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">subdir</span><span class="p">:</span>
@@ -913,9 +913,6 @@
 <span class="sd">    that contain a function, class, method, or attribute with the name you provide in `attribute_name` and will load</span>
 <span class="sd">    that attribute in as the values.</span>
 
-<span class="sd">    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \</span>
-<span class="sd">    that you want to scan and import using this function.</span>
-
 <span class="sd">    :param folder_path: The path of a folder/module to scan</span>
 <span class="sd">    :type folder_path: str</span>
 <span class="sd">    :param attribute_name: The name of the attribute (class, function, variable, etc.) to extract from files</span>
@@ -927,6 +924,9 @@
 <span class="sd">    :param current_subdirs: Used to track location when recursively iterating a module (do not use)</span>
 <span class="sd">    :return: A dictionary with all of the extracted attributes as values</span>
 <span class="sd">    :rtype: dict</span>
+
+<span class="sd">    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \</span>
+<span class="sd">        that you want to scan and import using this function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
@@ -1041,7 +1041,7 @@
         <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_timeout</span><span class="p">)</span>
         <span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
         <span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 

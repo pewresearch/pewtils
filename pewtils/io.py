@@ -42,8 +42,8 @@ class FileHandler(object):
         read to/written from a :py:class:`pandas.DataFrame` object. The exceptions are `pkl` and `json` objects which \
         accept any serializable Python object and correctly-formatted JSON object respectively.
 
-    .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the variables \
-        `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
+    .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the \
+        variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
 
     Usage::
 
@@ -247,8 +247,8 @@ class FileHandler(object):
         :return: None
 
         .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \
-            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \
-            to the corresponding Pandas method below:
+            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be \
+            forwarded to the corresponding Pandas method below:
 
                 - `dta`: :py:meth:`pandas.DataFrame.to_stata`
                 - `csv`: :py:meth:`pandas.DataFrame.to_csv`
@@ -362,12 +362,12 @@ class FileHandler(object):
 
             if os.path.exists(filepath):
                 try:
-                    with closing(open(filepath, "r")) as input:
-                        data = input.read()
+                    with closing(open(filepath, "r")) as infile:
+                        data = infile.read()
                 except:
                     # TODO: handle this exception more explicitly
-                    with closing(open(filepath, "rb")) as input:
-                        data = input.read()
+                    with closing(open(filepath, "rb")) as infile:
+                        data = infile.read()
 
         if is_not_null(data):
             if format == "pkl":

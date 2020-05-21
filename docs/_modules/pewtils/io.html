@@ -174,18 +174,9 @@
 <div class="viewcode-block" id="FileHandler"><a class="viewcode-back" href="../../io.html#pewtils.io.FileHandler">[docs]</a><span class="k">class</span> <span class="nc">FileHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read/write data files in a variety of formats, locally and in Amazon S3 buckets. File extensions are standardized \</span>
-<span class="sd">    to promote consistency (e.g., Pickle files must have the extension &quot;.pkl&quot;, etc.) The class must be initialized \</span>
-<span class="sd">    with a valid path within either your local file system or a specific S3 bucket. You can configure your environment \</span>
-<span class="sd">    to make it easier to automatically connect to S3 by defining the variables `AWS_ACCESS_KEY_ID`, \</span>
-<span class="sd">    `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.</span>
+<span class="sd">    Read/write data files in a variety of formats, locally and in Amazon S3 buckets.</span>
 
-<span class="sd">    .. note:: Files in the following formats make use of :py:class:`pandas.DataFrame` objects: `csv`, `tab`, `xlsx`,</span>
-<span class="sd">        `xls`, `dta`. When you try to write an object in any of these formats, the `FileHandler` expects a dataframe;</span>
-<span class="sd">        and when you read a file in any of these formats, it gets loaded in as a dataframe. The exceptions are `pkl`, \</span>
-<span class="sd">        which will accept any serializable Python object, and `json`, which expects a correctly-formatted JSON object.</span>
-
-<span class="sd">    :param path: The path to the folder that you&#39;ll be writing to or reading from</span>
+<span class="sd">    :param path: A valid path to the folder in local or s3 directory where files will be written to or read from</span>
 <span class="sd">    :type path: str</span>
 <span class="sd">    :param use_s3: Whether the path is an S3 location or local location</span>
 <span class="sd">    :type use_s3: bool</span>
@@ -196,6 +187,13 @@
 <span class="sd">    :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \</span>
 <span class="sd">    as S3_BUCKET</span>
 <span class="sd">    :type bucket: str</span>
+
+<span class="sd">    .. note:: Typical rectangular data files (i.e. `csv`, `tab`, `xlsx`, `xls`, `dta` file extension types) will be \</span>
+<span class="sd">        read to/written from a :py:class:`pandas.DataFrame` object. The exceptions are `pkl` and `json` objects which \</span>
+<span class="sd">        accept any serializable Python object and correctly-formatted JSON object respectively.</span>
+
+<span class="sd">    .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the \</span>
+<span class="sd">        variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.</span>
 
 <span class="sd">    Usage::</span>
 
@@ -383,19 +381,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes arbitrary data objects to a variety of file formats.</span>
 
-<span class="sd">        | If you save something to csv/tab/xlsx/xls/dta, it assumes you&#39;ve passed it a Pandas DataFrame object. \</span>
-<span class="sd">        If you&#39;re trying to save an object to JSON, it assumes that you&#39;re passing it valid JSON. By default, though, \</span>
-<span class="sd">        the handler attempts to use pickling, allowing you to save anything you want, as long as it&#39;s serializable.</span>
-
-<span class="sd">        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \</span>
-<span class="sd">        Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be forwarded \</span>
-<span class="sd">        to the corresponding Pandas method below:</span>
-
-<span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.to_stata`</span>
-<span class="sd">            - `csv`: :py:meth:`pandas.DataFrame.to_csv`</span>
-<span class="sd">            - `tab`: :py:meth:`pandas.DataFrame.to_csv`</span>
-<span class="sd">            - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`</span>
-<span class="sd">            - `xls`: :py:meth:`pandas.DataFrame.to_excel`</span>
 
 <span class="sd">        :param key: The name of the file or key (without a file suffix!)</span>
 <span class="sd">        :type key: str</span>
@@ -410,6 +395,20 @@
 <span class="sd">        :type add_timestamp: bool</span>
 <span class="sd">        :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable</span>
 <span class="sd">        :return: None</span>
+
+<span class="sd">        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \</span>
+<span class="sd">            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be \</span>
+<span class="sd">            forwarded to the corresponding Pandas method below:</span>
+
+<span class="sd">                - `dta`: :py:meth:`pandas.DataFrame.to_stata`</span>
+<span class="sd">                - `csv`: :py:meth:`pandas.DataFrame.to_csv`</span>
+<span class="sd">                - `tab`: :py:meth:`pandas.DataFrame.to_csv`</span>
+<span class="sd">                - `xlsx`: :py:meth:`pandas.DataFrame.to_excel`</span>
+<span class="sd">                - `xls`: :py:meth:`pandas.DataFrame.to_excel`</span>
+
+<span class="sd">            If you&#39;re trying to save an object to JSON, it assumes that you&#39;re passing it valid JSON. By default, \</span>
+<span class="sd">            the handler attempts to use pickling, allowing you to save anything you want, as long as it&#39;s serializable.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -474,15 +473,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a file from the directory or S3 path, returning its contents.</span>
 
-<span class="sd">        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \</span>
-<span class="sd">            the format of the file you&#39;re trying to read in</span>
-
-<span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.read_stata`</span>
-<span class="sd">            - `csv`: :py:meth:`pandas.DataFrame.read_csv`</span>
-<span class="sd">            - `tab`: :py:meth:`pandas.DataFrame.read_csv`</span>
-<span class="sd">            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`</span>
-<span class="sd">            - `xls`: :py:meth:`pandas.DataFrame.read_excel`</span>
-
 <span class="sd">        :param key: The name of the file to read (without a suffix!)</span>
 <span class="sd">        :type key: str</span>
 <span class="sd">        :param format: The format of the file (pkl/json/csv/dta/xls/xlsx/tab); expects the file extension to match</span>
@@ -491,6 +481,15 @@
 <span class="sd">        :type hash_key: bool</span>
 <span class="sd">        :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)</span>
 <span class="sd">        :return: The file contents, in the requested format</span>
+
+<span class="sd">        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \</span>
+<span class="sd">            the format of the file you&#39;re trying to read in</span>
+
+<span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.read_stata`</span>
+<span class="sd">            - `csv`: :py:meth:`pandas.DataFrame.read_csv`</span>
+<span class="sd">            - `tab`: :py:meth:`pandas.DataFrame.read_csv`</span>
+<span class="sd">            - `xlsx`: :py:meth:`pandas.DataFrame.read_excel`</span>
+<span class="sd">            - `xls`: :py:meth:`pandas.DataFrame.read_excel`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -513,12 +512,12 @@
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
-                        <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="k">except</span><span class="p">:</span>
                     <span class="c1"># TODO: handle this exception more explicitly</span>
-                    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
-                        <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span><span class="p">:</span>
 

@@ -46,22 +46,6 @@ class HTTPTests(unittest.TestCase):
         user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'"
 
         for original_url, canonical_url in [
-            # (
-            #     "t.co/H9tE3IlTAH",
-            #     "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
-            # ),
-            # (
-            #     "https://t.co/H9tE3IlTAH",
-            #     "https://www.cnn.com/2018/04/01/politics/trump-no-more-daca-deal/index.html?sr=twCNN040118trump-no-more-daca-deal1059AMVODtop",
-            # ),
-            (
-                "http://ow.ly/M5o4N",
-                "https://snjtoday.com/congressman-fran56754k-lobiondo-visits-vineland-high-school/",
-            ),
-            # (
-            #     "https://bit.ly/2CTCEFW",
-            #     "https://action.tinaforminnesota.com/page/s/tsm_20190130_backpay",
-            # ),
             (
                 "https://nbcnews.to/2Yc5JVz",
                 "https://www.nbcnews.com/politics/congress/senate-vote-9-11-first-responders-bill-tuesday-n1032831?cid=sm_npd_nn_tw_ma",
@@ -70,15 +54,10 @@ class HTTPTests(unittest.TestCase):
                 "https://www.c-span.org/Live-Video/C-SPAN",
                 "https://www.c-span.org/live/",
             ),
-            # ("http://bit.ly/ascWO6", "http://irtl.org/html/DanCoats.mp3"),
             (
                 "https://www.google.com/maps/d/viewer?mid=zQ8Zk-5ey-Y8.kgD9Rxu8JCNQ&hl=en&usp=sharing",
                 "https://www.google.com/maps/d/viewer?mid=1NQVHeBBcVAnz9JwX1frZxX1ZgjY",
             ),
-            # (
-            #     "https://goo.gl/images/WS5JSd",
-            #     "https://www.healthcare.gov/blog/sign-up-by-december-15/",
-            # ),
             (
                 "https://httpbin.org/redirect/10",
                 "https://httpbin.org/relative-redirect/1",

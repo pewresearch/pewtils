@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="HTTP Utilities" href="http.html" />
-    <link rel="prev" title="PewTils" href="index.html" /> 
+    <link rel="prev" title="Pewtils" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -218,7 +218,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.vector_concat_text" title="pewtils.__init__.vector_concat_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vector_concat_text</span></code></a>(*args)</p></td>
 <td><p>Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.zipcode_num_to_string" title="pewtils.__init__.zipcode_num_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zipcode_num_to_string</span></code></a>(zip)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.zipcode_num_to_string" title="pewtils.__init__.zipcode_num_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zipcode_num_to_string</span></code></a>(zipcode)</p></td>
 <td><p>Attempts to standardize a string/integer/float that contains a U.S.</p></td>
 </tr>
 </tbody>
@@ -227,12 +227,10 @@
 <dt id="pewtils.__init__.classproperty">
 <em class="property">class </em><code class="sig-name descname">classproperty</code><span class="sig-paren">(</span><em class="sig-param">fget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#classproperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.classproperty" title="Permalink to this definition">¶</a></dt>
 <dd><p>This decorator allows you to define functions on a class that are accessible directly from the
-class itself (rather than an instance of the class). Essentially, this allows you to access <cite>classproperty</cite>
-attributes directly, like <cite>obj.property</cite>, rather than as a function on a class instance
+class itself (rather than an instance of the class). It allows you to access <cite>classproperty</cite>
+attributes directly, such as <cite>obj.property</cite>, rather than as a function on a class instance
 (like <cite>obj = Obj(); obj.property()</cite>).</p>
-<div class="line-block">
-<div class="line">Borrowed from a StackOverflow <a class="reference external" href="https://stackoverflow.com/a/3203659">post</a>.</div>
-</div>
+<p>Borrowed from a StackOverflow <a class="reference external" href="https://stackoverflow.com/a/3203659">post</a>.</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">classproperty</span>
 
@@ -314,17 +312,10 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dl class="function">
 <dt id="pewtils.__init__.decode_text">
 <code class="sig-name descname">decode_text</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#decode_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.decode_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string’s encoding,
-decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the “unidecode” package to
-transliterate into ASCII. And finally, if that doesn’t work, it will forcibly encode the text as ASCII and ignore
-non-ASCII characters.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used     to transliterate. In general, you shouldn’t need to use this function in Python 3, but it shouldn’t hurt anything     if you do.</p>
-</div>
+<dd><p>Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string’s     encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the “unidecode”     package to transliterate into ASCII. And finally, if that doesn’t work, it will forcibly encode the text as ASCII     and ignore non-ASCII characters.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This function is potentially destructive to source input and should be used with some care.     Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other     placeholder, potentially resulting in an empty string.</p>
+<p>This function is potentially destructive to source input and should be used with some care.         Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other         placeholder, potentially resulting in an empty string.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -340,16 +331,16 @@ non-ASCII characters.</p>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used         to transliterate. In general, you shouldn’t need to use this function in Python 3, but it shouldn’t hurt         anything if you do.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="pewtils.__init__.get_hash">
 <code class="sig-name descname">get_hash</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">hash_function='ssdeep'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#get_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.get_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates hashed text using one of several available hashing functions.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The string will be passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> and the returned value will be used     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and     3. By default the function uses the <cite>ssdeep</cite> algorithm, which generates context-sensitive hashes that are useful     for computing document similarities at scale.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -364,6 +355,10 @@ non-ASCII characters.</p>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The string will be passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> and the returned value will be used     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and     3. By default the function uses the <cite>ssdeep</cite> algorithm, which generates context-sensitive hashes that are useful     for computing document similarities at scale.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span>
 
@@ -376,7 +371,7 @@ non-ASCII characters.</p>
 
 <dl class="function">
 <dt id="pewtils.__init__.zipcode_num_to_string">
-<code class="sig-name descname">zipcode_num_to_string</code><span class="sig-paren">(</span><em class="sig-param">zip</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#zipcode_num_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.zipcode_num_to_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">zipcode_num_to_string</code><span class="sig-paren">(</span><em class="sig-param">zipcode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#zipcode_num_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.zipcode_num_to_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the     zipcodes library to ensure that the zipcode is real. If the zipcode doesn’t validate successfully, <cite>None</cite> will be     returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -507,10 +502,6 @@ function <cite>minimum * 2 ** attempt</cite>.</p>
 <div class="line-block">
 <div class="line">In effect, this means that when <cite>attempt</cite> is 1, the number returned will be in the range of the minimum     and twice the minimum’s value.  As you increase <cite>attempt</cite>, the possible range of returned values expands     exponentially until it hits the <cite>maximum</cite> ceiling.</div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>One useful application of this function is rate limiting: a script can pause in between requests at a     reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors,     simply by increasing the <cite>attempt</cite> variable (hence its name).</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -526,6 +517,10 @@ function <cite>minimum * 2 ** attempt</cite>.</p>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One useful application of this function is rate limiting: a script can pause in between requests at a         reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors,         simply by increasing the <cite>attempt</cite> variable (hence its name).</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">new_random_number</span>
 
@@ -628,7 +623,7 @@ that specifies the nested key path to each value.</p>
 <dd><p>Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
 new values and updates the object.</p>
 <div class="line-block">
-<div class="line">Doesn’t care if the keys in the dictionary correspond to attribute names or dictionary keys; you can use this    to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.</div>
+<div class="line">Regardless of whether or not the keys in the dictionary correspond to attribute names or dictionary keys;     you can use this to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.</div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -722,7 +717,7 @@ new values and updates the object.</p>
 <dt id="pewtils.__init__.extract_json_from_folder">
 <code class="sig-name descname">extract_json_from_folder</code><span class="sig-paren">(</span><em class="sig-param">folder_path</em>, <em class="sig-param">include_subdirs=False</em>, <em class="sig-param">concat_subdir_names=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#extract_json_from_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.extract_json_from_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it to a dictionary,
-with the key being the name of the file and the value being the JSON itself. This can be useful if you store     configurations or various metadata in a nested folder structure, which we do for things like content analysis     codebooks.</p>
+with the key being the name of the file and the value being the JSON itself. This is useful if you store     configurations or various metadata in a nested folder structure, which we do for things like content analysis     codebooks.</p>
 <div class="line-block">
 <div class="line">Has options for recursively traversing a folder, and for optionally concatenating the subfolder names     into the dictionary keys as prefixes.</div>
 </div>
@@ -781,10 +776,6 @@ files that contained the attributes, and the values are the attributes themselve
 and adding them as values in the dictionary that gets returned, this function will instead look for Python files
 that contain a function, class, method, or attribute with the name you provide in <cite>attribute_name</cite> and will load
 that attribute in as the values.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>if you use Python 2.7 you will need to add <cite>from __future__ import absolute_import</cite> to the top of files     that you want to scan and import using this function.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -802,6 +793,10 @@ that attribute in as the values.</p>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if you use Python 2.7 you will need to add <cite>from __future__ import absolute_import</cite> to the top of files         that you want to scan and import using this function.</p>
+</div>
 </dd></dl>
 
 </div>
@@ -817,7 +812,7 @@ that attribute in as the values.</p>
         <a href="http.html" class="btn btn-neutral float-right" title="HTTP Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="PewTils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Pewtils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

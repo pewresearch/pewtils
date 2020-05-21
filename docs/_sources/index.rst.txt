@@ -1,4 +1,4 @@
-PewTils
+Pewtils
 ===================================================================
 
 Pewtils is a package of useful programming utilities developed at the Pew Research Center \

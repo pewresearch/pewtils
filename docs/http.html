@@ -188,8 +188,7 @@
 <dl class="function">
 <dt id="pewtils.http.hash_url">
 <code class="sig-name descname">hash_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#hash_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.hash_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clears out http/https prefix and returns an MD5 hash of the URL. All this does is remove http/s prefixes; it can be
-far more effective when used in conjunction with <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a>.</p>
+<dd><p>Clears out http/https prefix and returns an MD5 hash of the URL. More effective     when used in conjunction with <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – The URL to hash</p>
@@ -215,7 +214,7 @@ far more effective when used in conjunction with <a class="reference internal" h
 <dl class="function">
 <dt id="pewtils.http.strip_html">
 <code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document     using a process that we have found to work fairly well. Setting <cite>simple=True</cite> will make the function use     a much simpler regular expression approach to parsing.</p>
+<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML. Setting <cite>simple=True</cite> will make the     function use a much simpler regular expression approach to parsing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -225,16 +224,12 @@ far more effective when used in conjunction with <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text with HTML components removed (perfection not guaranteed)</p>
+<dd class="field-even"><p>The text with HTML components removed</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function isn’t always 100% effective, but it does a decent job of usually removing the vast         majority of HTML without stripping out valuable content.</p>
-</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">strip_html</span>
 
@@ -279,10 +274,6 @@ ones that can be removed without generating any redirects.</p>
 <dt id="pewtils.http.extract_domain_from_url">
 <code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you set <cite>resolve_url</cite> to True, the link will be standardized prior to extracting the domain (in which     case you can provide optional timeout, session, and user_agent parameters that will be passed to <cite>canonical_link</cite>).     By default, however, the link will be operated on as-is. The final extracted domain is then checked against known     URL vanity shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it is recognized, the expanded     domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included in     this dictionary of known shorteners may be returned with an incorrect domain.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -301,6 +292,10 @@ ones that can be removed without generating any redirects.</p>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <cite>resolve_url</cite> is set to True, the link will be standardized prior to domain extraction (in which         case you can provide optional timeout, session, and user_agent parameters that will be passed to         <cite>canonical_link</cite>). By default, however, the link will be operated on as-is. The final extracted domain is then         checked against known URL shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it is recognized, the expanded         domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included         in this dictionary of known shorteners may be returned with an incorrect domain.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">extract_domain_from_url</span>
 
@@ -315,11 +310,9 @@ ones that can be removed without generating any redirects.</p>
 <dl class="function">
 <dt id="pewtils.http.canonical_link">
 <code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to resolve a link to the “most correct” version. Useful for expanding short URLs from bit.ly / Twitter     and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the     most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove     optional GET parameters. This function may not be particularly effective on dead links, but may still be able     to follow redirects enough to return a URL with the correct domain associated with the original link.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function is not perfect but it has been tested on a wide variety of URLs and resolves     to the correct final page in most cases while (usually) avoiding redirects to generic error pages.</p>
-</div>
+<dd><p>Tries to resolve a link to the “most correct” version.</p>
+<p>Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving     the actual data. Follows redirects and tries to pick the most informative version of a URL while avoiding     redirects to generic 404 pages. Also tries to iteratively remove optional GET parameters.</p>
+<p>May not be particularly effective on dead links, but may still be able to follow redirects enough     to return a URL with the correct domain associated with the original link.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -330,12 +323,17 @@ ones that can be removed without generating any redirects.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if the server was not helpful.</p>
+<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if none supplied.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a> for a complete list of shortened links recognized by this function.</p>
+<p>This function might not resolve <em>all</em> existing URL modificiations, but it has been tested on a vast, well         maintained variety of URLs. It typically resolves URL to the correct final page while avoiding redirects to         generic error pages.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">canonical_link</span>
 

@@ -169,13 +169,18 @@
 <dl class="class">
 <dt id="pewtils.io.FileHandler">
 <em class="property">class </em><code class="sig-name descname">FileHandler</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">use_s3=None</em>, <em class="sig-param">aws_access=None</em>, <em class="sig-param">aws_secret=None</em>, <em class="sig-param">bucket=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read/write data files in a variety of formats, locally and in Amazon S3 buckets. File extensions are standardized     to promote consistency (e.g., Pickle files must have the extension “.pkl”, etc.) The class must be initialized     with a valid path within either your local file system or a specific S3 bucket. You can configure your environment     to make it easier to automatically connect to S3 by defining the variables <cite>AWS_ACCESS_KEY_ID</cite>,     <cite>AWS_SECRET_ACCESS_KEY</cite>, and <cite>S3_BUCKET</cite>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Files in the following formats make use of <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> objects: <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>,
-<cite>xls</cite>, <cite>dta</cite>. When you try to write an object in any of these formats, the <cite>FileHandler</cite> expects a dataframe;
-and when you read a file in any of these formats, it gets loaded in as a dataframe. The exceptions are <cite>pkl</cite>,         which will accept any serializable Python object, and <cite>json</cite>, which expects a correctly-formatted JSON object.</p>
-</div>
+<dd><p>Read/write data files in a variety of formats, locally and in Amazon S3 buckets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – A valid path to the folder in local or s3 directory where files will be written to or read from</p></li>
+<li><p><strong>use_s3</strong> (<em>bool</em>) – Whether the path is an S3 location or local location</p></li>
+<li><p><strong>aws_access</strong> (<em>str</em>) – The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</p></li>
+<li><p><strong>aws_secret</strong> (<em>str</em>) – The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</p></li>
+<li><p><strong>bucket</strong> (<em>str</em>) – The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment     as S3_BUCKET</p></li>
+</ul>
+</dd>
+</dl>
 <p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -203,17 +208,14 @@ and when you read a file in any of these formats, it gets loaded in as a datafra
 </tr>
 </tbody>
 </table>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – The path to the folder that you’ll be writing to or reading from</p></li>
-<li><p><strong>use_s3</strong> (<em>bool</em>) – Whether the path is an S3 location or local location</p></li>
-<li><p><strong>aws_access</strong> (<em>str</em>) – The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</p></li>
-<li><p><strong>aws_secret</strong> (<em>str</em>) – The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</p></li>
-<li><p><strong>bucket</strong> (<em>str</em>) – The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment     as S3_BUCKET</p></li>
-</ul>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Typical rectangular data files (i.e. <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>, <cite>xls</cite>, <cite>dta</cite> file extension types) will be         read to/written from a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object. The exceptions are <cite>pkl</cite> and <cite>json</cite> objects which         accept any serializable Python object and correctly-formatted JSON object respectively.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can configure your environment to make it easier to automatically connect to S3 by defining the         variables <cite>AWS_ACCESS_KEY_ID</cite>, <cite>AWS_SECRET_ACCESS_KEY</cite>, and <cite>S3_BUCKET</cite>.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.io</span> <span class="k">import</span> <span class="n">FileHandler</span>
 
@@ -338,20 +340,6 @@ and when you read a file in any of these formats, it gets loaded in as a datafra
 <dt id="pewtils.io.FileHandler.write">
 <code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">data</em>, <em class="sig-param">format='pkl'</em>, <em class="sig-param">hash_key=False</em>, <em class="sig-param">add_timestamp=False</em>, <em class="sig-param">**io_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes arbitrary data objects to a variety of file formats.</p>
-<div class="line-block">
-<div class="line">If you save something to csv/tab/xlsx/xls/dta, it assumes you’ve passed it a Pandas DataFrame object.         If you’re trying to save an object to JSON, it assumes that you’re passing it valid JSON. By default, though,         the handler attempts to use pickling, allowing you to save anything you want, as long as it’s serializable.</div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>When saving a <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>, <cite>xls</cite>, or <cite>dta</cite> file, this function expects to receive a         Pandas dataframe. When you use these formats, you can also pass optional <cite>io_kwargs</cite> which will be forwarded         to the corresponding Pandas method below:</p>
-<ul class="simple">
-<li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_stata()</span></code></p></li>
-<li><p><cite>csv</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code></p></li>
-<li><p><cite>tab</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code></p></li>
-<li><p><cite>xlsx</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_excel()</span></code></p></li>
-<li><p><cite>xls</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_excel()</span></code></p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -367,23 +355,26 @@ and when you read a file in any of these formats, it gets loaded in as a datafra
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When saving a <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>, <cite>xls</cite>, or <cite>dta</cite> file, this function expects to receive a             Pandas dataframe. When you use these formats, you can also pass optional <cite>io_kwargs</cite> which will be             forwarded to the corresponding Pandas method below:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_stata()</span></code></p></li>
+<li><p><cite>csv</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code></p></li>
+<li><p><cite>tab</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code></p></li>
+<li><p><cite>xlsx</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_excel()</span></code></p></li>
+<li><p><cite>xls</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_excel()</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>If you’re trying to save an object to JSON, it assumes that you’re passing it valid JSON. By default,             the handler attempts to use pickling, allowing you to save anything you want, as long as it’s serializable.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="pewtils.io.FileHandler.read">
 <code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">format='pkl'</em>, <em class="sig-param">hash_key=False</em>, <em class="sig-param">**io_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a file from the directory or S3 path, returning its contents.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can pass optional <cite>io_kwargs</cite> that will be forwarded to the function below that corresponds to             the format of the file you’re trying to read in</p>
-<ul class="simple">
-<li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_stata()</span></code></p></li>
-<li><p><cite>csv</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_csv()</span></code></p></li>
-<li><p><cite>tab</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_csv()</span></code></p></li>
-<li><p><cite>xlsx</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_excel()</span></code></p></li>
-<li><p><cite>xls</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_excel()</span></code></p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -397,6 +388,17 @@ and when you read a file in any of these formats, it gets loaded in as a datafra
 <dd class="field-even"><p>The file contents, in the requested format</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can pass optional <cite>io_kwargs</cite> that will be forwarded to the function below that corresponds to             the format of the file you’re trying to read in</p>
+<ul class="simple">
+<li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_stata()</span></code></p></li>
+<li><p><cite>csv</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_csv()</span></code></p></li>
+<li><p><cite>tab</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_csv()</span></code></p></li>
+<li><p><cite>xlsx</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_excel()</span></code></p></li>
+<li><p><cite>xls</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_excel()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </dd></dl>

@@ -1,7 +1,6 @@
 from __future__ import division
 from bs4 import BeautifulSoup
 from builtins import str
-from functools import wraps
 from pewtils import get_hash, decode_text, is_not_null, timeout_wrapper
 from six.moves.urllib import parse as urlparse
 from unidecode import unidecode
@@ -9,8 +8,6 @@ import pandas as pd
 import re
 import os
 import requests
-import threading
-import time
 import tldextract
 import warnings
 from requests.exceptions import ReadTimeout
@@ -280,11 +277,11 @@ def extract_domain_from_url(
     :rtype: str
 
     .. note:: If `resolve_url` is set to True, the link will be standardized prior to domain extraction (in which \
-        case you can provide optional timeout, session, and user_agent parameters that will be passed to `canonical_link`). \
-        By default, however, the link will be operated on as-is. The final extracted domain is then checked against known \
-        URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded domain will be returned \
-        instead. Shortened URLs that are not standardized and do not follow patterns included in this dictionary of known \
-        shorteners may be returned with an incorrect domain.
+        case you can provide optional timeout, session, and user_agent parameters that will be passed to \
+        `canonical_link`). By default, however, the link will be operated on as-is. The final extracted domain is then \
+        checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \
+        domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included \
+        in this dictionary of known shorteners may be returned with an incorrect domain.
 
     Usage::
 
@@ -390,7 +387,7 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
     except:
         pass
 
-    if response != None:
+    if response:
 
         history = [(h.status_code, h.url) for h in response.history]
         history.append((response.status_code, response.url))
@@ -402,6 +399,7 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
         prev_was_shortener = False
         prev_path = None
         prev_query = None
+        status_code = None
         for i, resp in enumerate(history):
             status_code, response_url = resp
             if "errors/404" in response_url:
@@ -425,8 +423,8 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                                 parsed_possible_url.scheme
                                 and parsed_possible_url.netloc
                             ):
-                                # If the URL contains a GET parameter that is, itself, a URL, it's likely redirecting to it
-                                # So we're going to stop this run and start the process over with the new URL
+                                # If the URL contains a GET parameter that is, itself, a URL, it's likely redirecting
+                                # to it, so we're going to stop this run and start the process over with the new URL
                                 return canonical_link(
                                     val[0],
                                     timeout=timeout,
@@ -455,7 +453,8 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                         # Redirects and 404s sometimes preserve a decent URL, sometimes they go to a landing page
                         # The following cutoffs seem to do a good job most of the time:
                         # 1) The new URL has a long domain more than 7 characters, so it's not likely a shortened URL
-                        # 2) The prior URL had a long path and this one has fewer than 20 characters and it wasn't swapped out for GET params
+                        # 2) The prior URL had a long path and this one has fewer than 20 characters and it wasn't
+                        # swapped out for GET params
                         # 3) Or the prior URL had GET params and this one has far fewer and no replacement path
                         # If these conditions are met and the path or query do not identically match the prior link
                         # Then it's usually a generic error page

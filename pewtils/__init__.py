@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 import os
 import re
-import itertools
 import json
 import sys
 import chardet
@@ -111,7 +110,7 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
             except ValueError:
                 return val.any()
         except TypeError:
-            return type(val) != type(None)
+            return not isinstance(val, None)
 
 
 def is_null(val, empty_lists_are_null=False, custom_nulls=None):
@@ -145,10 +144,10 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 def decode_text(text, throw_loud_fail=False):
 
     """
-    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string's encoding,
-    decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the "unidecode" package to
-    transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII and ignore
-    non-ASCII characters.
+    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string's \
+    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the "unidecode" \
+    package to transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII \
+    and ignore non-ASCII characters.
 
     .. warning:: This function is potentially destructive to source input and should be used with some care. \
         Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \
@@ -163,8 +162,8 @@ def decode_text(text, throw_loud_fail=False):
     :rtype: str
 
     .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \
-        to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt anything \
-        if you do.
+        to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt \
+        anything if you do.
 
     """
 
@@ -246,18 +245,18 @@ def get_hash(text, hash_function="ssdeep"):
     if hash_function == "nilsimsa":
         from nilsimsa import Nilsimsa
 
-        hash = Nilsimsa(text).hexdigest()
+        hashed = Nilsimsa(text).hexdigest()
     elif hash_function == "md5":
-        hash = md5(text).hexdigest()
+        hashed = md5(text).hexdigest()
     else:
         import ssdeep
 
-        hash = ssdeep.hash(text)
+        hashed = ssdeep.hash(text)
 
-    return hash
+    return hashed
 
 
-def zipcode_num_to_string(zip):
+def zipcode_num_to_string(zipcode):
 
     """
     Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \
@@ -281,24 +280,24 @@ def zipcode_num_to_string(zip):
         >>>
     """
 
-    if is_not_null(zip):
+    if is_not_null(zipcode):
 
         try:
-            zip = str(int(str(zip).strip()[:5].split(".")[0]))
+            zipcode = str(int(str(zipcode).strip()[:5].split(".")[0]))
         except (TypeError, ValueError):
-            zip = None
+            zipcode = None
 
-        if zip:
-            zip = zip.zfill(5)
-            if zipcodes.is_real(zip):
-                return zip
+        if zipcode:
+            zipcode = zipcode.zfill(5)
+            if zipcodes.is_real(zipcode):
+                return zipcode
             else:
                 return None
     else:
 
-        zip = None
+        zipcode = None
 
-    return zip
+    return zipcode
 
 
 def concat_text(*args):
@@ -721,9 +720,9 @@ def extract_json_from_folder(
                 for file in files:
                     if file.endswith(".json"):
                         key = re.sub(".json", "", file)
-                        with closing(open(os.path.join(path, file), "r")) as input:
+                        with closing(open(os.path.join(path, file), "r")) as infile:
                             try:
-                                attributes[key] = json.load(input)
+                                attributes[key] = json.load(infile)
                             except ValueError:
                                 print("JSON file is invalid: {}".format(file))
             if subdir:
@@ -892,5 +891,5 @@ class timeout_wrapper:
         signal.signal(signal.SIGALRM, self.handle_timeout)
         signal.alarm(self.seconds)
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, t, value, traceback):
         signal.alarm(0)
