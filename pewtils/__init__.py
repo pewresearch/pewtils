@@ -542,8 +542,8 @@ def recursive_update(existing, new):
     Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
     new values and updates the object.
 
-    | Regardless whether or not the keys in the dictionary correspond to attribute names or dictionary keys; you can use this\
-    to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.
+    | Regardless of whether or not the keys in the dictionary correspond to attribute names or dictionary keys; \
+    you can use this to iterate through a nested hierarchy of objects and dictionaries and update whatever you like.
 
     :param existing: An object or dictionary
     :type existing: dict or object

@@ -90,8 +90,8 @@ def strip_html(html, simple=False, break_tags=None):
     :return: The text with HTML components removed
     :rtype: str
 
-    .. note: This function might not be effective for *all* variations of html structures, but it produces fairly \
-        reliable results in removing the vast majority of HTML without stripping out valuable contents.
+    .. note: This function might not be effective for *all* variations of HTML structures, but it produces fairly \
+        reliable results in removing the vast majority of HTML without stripping out valuable content.
 
     Usage::
 
@@ -338,9 +338,9 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
     .. note:: See :ref:`link_shorteners` for a complete list of shortened links recognized by this function.
 
-        This function might not resolve *all* existing URL modificiations, but it has been tested on a vast, well maintained \
-        variety of URLs. It typically resolves URL to the correct final page while avoiding redirects to generic error \
-        pages.
+        This function might not resolve *all* existing URL modificiations, but it has been tested on a vast, well \
+        maintained variety of URLs. It typically resolves URL to the correct final page while avoiding redirects to \
+        generic error pages.
 
     Usage::
 
