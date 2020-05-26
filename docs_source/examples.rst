@@ -143,7 +143,7 @@ Read and write data in a variety of formats
 The :py:class:`pewtils.io.FileHandler` class lets you easily read and write files in a variety of \
 formats with minimal code, and it has support for Amazon S3 too:
 
-.. code-block: python
+.. code-block:: python
 
     from pewtils.io import FileHandler
 
