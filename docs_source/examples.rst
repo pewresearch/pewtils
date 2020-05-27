@@ -158,6 +158,10 @@ formats with minimal code, and it has support for Amazon S3 too:
     >>> my_data = ["a", "python", "list"]
     >>> h.write("my_data", my_data, format="pkl")
 
+    # To read/write to an S3 bucket, simply pass your credentials
+    >>> h = FileHandler("/my_folder", use_s3=True, aws_access="12345", aws_secret="67890", bucket="my-bucket")
+    # The FileHandler can also detect your tokens directly from your environment
+    # Just set the environment variables AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET
 
 Quickly extract text from raw HTML
 -----------------------------------------------------

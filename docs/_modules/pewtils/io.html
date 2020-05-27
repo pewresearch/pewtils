@@ -201,14 +201,19 @@
 
 <span class="sd">        &gt;&gt;&gt; h = FileHandler(&quot;./&quot;, use_s3=False)  # current local folder</span>
 <span class="sd">        &gt;&gt;&gt; df = h.read(&quot;my_csv&quot;, format=&quot;csv&quot;)</span>
-<span class="sd">        # do something</span>
-<span class="sd">        &gt;&gt;&gt; h.write(&quot;my_new_csv&quot;, df, format=&quot;csv&quot;)</span>
+<span class="sd">        # Do something and save to Excel</span>
+<span class="sd">        &gt;&gt;&gt; h.write(&quot;my_new_csv&quot;, df, format=&quot;xlsx&quot;)</span>
 
 <span class="sd">        &gt;&gt;&gt; my_data = [{&quot;key&quot;: &quot;value&quot;}]</span>
 <span class="sd">        &gt;&gt;&gt; h.write(&quot;my_data&quot;, my_data, format=&quot;json&quot;)</span>
 
 <span class="sd">        &gt;&gt;&gt; my_data = [&quot;a&quot;, &quot;python&quot;, &quot;list&quot;]</span>
 <span class="sd">        &gt;&gt;&gt; h.write(&quot;my_data&quot;, my_data, format=&quot;pkl&quot;)</span>
+
+<span class="sd">        # To read/write to an S3 bucket, simply pass your credentials</span>
+<span class="sd">        &gt;&gt;&gt; h = FileHandler(&quot;/my_folder&quot;, use_s3=True, aws_access=&quot;12345&quot;, aws_secret=&quot;67890&quot;, bucket=&quot;my-bucket&quot;)</span>
+<span class="sd">        # The FileHandler can also detect your tokens directly from your environment</span>
+<span class="sd">        # Just set the environment variables AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
