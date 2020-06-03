@@ -252,6 +252,7 @@ def extract_domain_from_url(
     timeout=1.0,
     session=None,
     user_agent=None,
+    expand_shorteners=True,
 ):
 
     """
@@ -273,6 +274,9 @@ def extract_domain_from_url(
     :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \
     if a preconfigured requests Session is not provided
     :type user_agent: str
+    :param expand_shorteners: If True, shortened URLs that don't successfully expand will be checked against a list \
+    of known URL shorteners and expanded if recognized. (Default = True)
+    :type expand_shorteners: bool
     :return: The domain for the link
     :rtype: str
 
@@ -304,7 +308,8 @@ def extract_domain_from_url(
             domain = ".".join([domain.subdomain, domain.domain, domain.suffix])
         else:
             domain = ".".join([domain.domain, domain.suffix])
-        domain = VANITY_LINK_SHORTENERS.get(domain, domain)
+        if expand_shorteners:
+            domain = VANITY_LINK_SHORTENERS.get(domain, domain)
     return domain
 
 
