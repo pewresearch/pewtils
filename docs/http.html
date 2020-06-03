@@ -272,7 +272,7 @@ ones that can be removed without generating any redirects.</p>
 
 <dl class="function">
 <dt id="pewtils.http.extract_domain_from_url">
-<code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em>, <em class="sig-param">expand_shorteners=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -283,6 +283,7 @@ ones that can be removed without generating any redirects.</p>
 <li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – (Optional, for use with <cite>resolve_url</cite>) Maximum number of seconds to wait on a request before     timing out (default is 1)</p></li>
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional, for use with <cite>resolve_url</cite>) A persistent session that can optionally be passed     (useful if you’re processing many links at once)</p></li>
 <li><p><strong>user_agent</strong> (<em>str</em>) – (Optional, for use with <cite>resolve_url</cite>) User agent for the auto-created requests Session to use,     if a preconfigured requests Session is not provided</p></li>
+<li><p><strong>expand_shorteners</strong> (<em>bool</em>) – If True, shortened URLs that don’t successfully expand will be checked against a list     of known URL shorteners and expanded if recognized. (Default = True)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
