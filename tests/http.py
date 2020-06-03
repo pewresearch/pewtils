@@ -141,11 +141,18 @@ class HTTPTests(unittest.TestCase):
                     )
                     resp = None
                 if resp:
-                    resolved = re.sub(
-                        "www[0-9]?\.", "", urlparse.urlparse(resp.url).netloc
-                    )
-                    resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
-                    self.assertIn(resolved, ["bitly.com", v])
+                    if k in resp.url:
+                        print(
+                            "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {}".format(
+                                k
+                            )
+                        )
+                    else:
+                        resolved = re.sub(
+                            "www[0-9]?\.", "", urlparse.urlparse(resp.url).netloc
+                        )
+                        resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
+                        self.assertIn(resolved, ["bitly.com", v])
         session.close()
 
     def test_extract_domain_from_url(self):
