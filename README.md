@@ -9,7 +9,7 @@ resources, and regular expressions.
 
 To install, you can use PyPI: ::
 
-    pip install pewtils
+    pip install git+https://github.com/pewresearch/pewtils#egg=pewtils
 
 Or you can install from source: ::
 
