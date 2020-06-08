@@ -7,12 +7,12 @@ with open("requirements.txt") as reqs:
     install_requires = [
         line
         for line in reqs.read().split("\n")
-        if line and not line.startswith(("--", "git+ssh"))
+        if line and not line.startswith(("--", "git+git"))
     ]
     dependency_links = [
         line
         for line in reqs.read().split("\n")
-        if line and line.startswith(("--", "git+ssh"))
+        if line and line.startswith(("--", "git+git"))
     ]
 
 setup(
