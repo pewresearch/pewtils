@@ -4,16 +4,8 @@ with open("README.md") as README:
     readme = str(README.read())
 
 with open("requirements.txt") as reqs:
-    install_requires = [
-        line
-        for line in reqs.read().split("\n")
-        if line and not line.startswith(("--", "git+git"))
-    ]
-    dependency_links = [
-        line
-        for line in reqs.read().split("\n")
-        if line and line.startswith(("--", "git+git"))
-    ]
+    lines = reqs.read().split("\n")
+    install_requires = [line for line in lines if line]
 
 setup(
     name="pewtils",
@@ -24,7 +16,6 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    dependency_links=dependency_links,
     packages=["pewtils"],
     include_package_data=True,
     keywords="utilities, link standardization, input, output, pew pew pew",
