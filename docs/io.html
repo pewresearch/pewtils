@@ -177,7 +177,7 @@
 <li><p><strong>use_s3</strong> (<em>bool</em>) – Whether the path is an S3 location or local location</p></li>
 <li><p><strong>aws_access</strong> (<em>str</em>) – The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID</p></li>
 <li><p><strong>aws_secret</strong> (<em>str</em>) – The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</p></li>
-<li><p><strong>bucket</strong> (<em>str</em>) – The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment     as S3_BUCKET</p></li>
+<li><p><strong>bucket</strong> (<em>str</em>) – The name of the S3 bucket, required if <code class="docutils literal notranslate"><span class="pre">use_s3=True</span></code>; will also try to fetch from the environment     as S3_BUCKET</p></li>
 </ul>
 </dd>
 </dl>
@@ -210,11 +210,11 @@
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Typical rectangular data files (i.e. <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>, <cite>xls</cite>, <cite>dta</cite> file extension types) will be         read to/written from a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object. The exceptions are <cite>pkl</cite> and <cite>json</cite> objects which         accept any serializable Python object and correctly-formatted JSON object respectively.</p>
+<p>Typical rectangular data files (i.e. <code class="docutils literal notranslate"><span class="pre">csv</span></code>, <code class="docutils literal notranslate"><span class="pre">tab</span></code>, <code class="docutils literal notranslate"><span class="pre">xlsx</span></code>, <code class="docutils literal notranslate"><span class="pre">xls</span></code>, <code class="docutils literal notranslate"><span class="pre">dta</span></code> file extension types) will be         read to/written from a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object. The exceptions are <cite>pkl</cite> and <cite>json</cite> objects which         accept any serializable Python object and correctly-formatted JSON object respectively.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>You can configure your environment to make it easier to automatically connect to S3 by defining the         variables <cite>AWS_ACCESS_KEY_ID</cite>, <cite>AWS_SECRET_ACCESS_KEY</cite>, and <cite>S3_BUCKET</cite>.</p>
+<p>You can configure your environment to make it easier to automatically connect to S3 by defining the         variables <code class="docutils literal notranslate"><span class="pre">AWS_ACCESS_KEY_ID</span></code>, <code class="docutils literal notranslate"><span class="pre">AWS_SECRET_ACCESS_KEY</span></code>, and <code class="docutils literal notranslate"><span class="pre">S3_BUCKET</span></code>.</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.io</span> <span class="k">import</span> <span class="n">FileHandler</span>
@@ -317,7 +317,7 @@
 <dl class="method">
 <dt id="pewtils.io.FileHandler.get_key_hash">
 <code class="sig-name descname">get_key_hash</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.get_key_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.io.FileHandler.get_key_hash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a key to a hashed representation. Allows you to pass arbitrary objects and convert their string         representation into a shorter hashed key, so it can be useful for caching. You can call this method         directly to see the hash that a key will be converted into, but this method is mainly used in conjunction         with the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.write()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.read()</span></code> methods by passing in         <cite>hash_key=True</cite>.</p>
+<dd><p>Converts a key to a hashed representation. Allows you to pass arbitrary objects and convert their string         representation into a shorter hashed key, so it can be useful for caching. You can call this method         directly to see the hash that a key will be converted into, but this method is mainly used in conjunction         with the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.write()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.read()</span></code> methods by passing in         <code class="docutils literal notranslate"><span class="pre">hash_key=True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>key</strong> (<em>str</em><em> or </em><em>object</em>) – A raw string or Python object that can be meaningfully converted into a string representation</p>
@@ -362,7 +362,7 @@
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>When saving a <cite>csv</cite>, <cite>tab</cite>, <cite>xlsx</cite>, <cite>xls</cite>, or <cite>dta</cite> file, this function expects to receive a             Pandas dataframe. When you use these formats, you can also pass optional <cite>io_kwargs</cite> which will be             forwarded to the corresponding Pandas method below:</p>
+<p>When saving a <code class="docutils literal notranslate"><span class="pre">csv</span></code>, <code class="docutils literal notranslate"><span class="pre">tab</span></code>, <code class="docutils literal notranslate"><span class="pre">xlsx</span></code>, <code class="docutils literal notranslate"><span class="pre">xls</span></code>, or <code class="docutils literal notranslate"><span class="pre">dta</span></code> file, this function expects to receive a             Pandas <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. When you use these formats, you can also pass optional <code class="docutils literal notranslate"><span class="pre">io_kwargs</span></code>             which will be forwarded to the corresponding <code class="docutils literal notranslate"><span class="pre">Pandas</span></code> method below:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_stata()</span></code></p></li>
@@ -395,7 +395,7 @@
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can pass optional <cite>io_kwargs</cite> that will be forwarded to the function below that corresponds to             the format of the file you’re trying to read in</p>
+<p>You can pass optional <code class="docutils literal notranslate"><span class="pre">io_kwargs</span></code> that will be forwarded to the function below that corresponds to             the format of the file you’re trying to read in</p>
 <ul class="simple">
 <li><p><cite>dta</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_stata()</span></code></p></li>
 <li><p><cite>csv</cite>: <code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.read_csv()</span></code></p></li>

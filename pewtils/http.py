@@ -75,7 +75,7 @@ def strip_html(html, simple=False, break_tags=None):
 
     """
     Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \
-    By default, the function will use BeautifulSoup to parse the HTML. Setting `simple=True` will make the \
+    By default, the function will use BeautifulSoup to parse the HTML. Setting ``simple=True`` will make the \
     function use a much simpler regular expression approach to parsing.
 
     :param html: The HTML to process
@@ -265,13 +265,13 @@ def extract_domain_from_url(
     :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \
     True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \
     domain.
-    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \
+    :param timeout: (Optional, for use with ``resolve_url``) Maximum number of seconds to wait on a request before \
     timing out (default is 1)
     :type timeout: int or float
-    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \
+    :param session: (Optional, for use with ``resolve_url``) A persistent session that can optionally be passed \
     (useful if you're processing many links at once)
     :type session: :py:class:`requests.Session` object
-    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \
+    :param user_agent: (Optional, for use with ``resolve_url``) User agent for the auto-created requests Session to use, \
     if a preconfigured requests Session is not provided
     :type user_agent: str
     :param expand_shorteners: If True, shortened URLs that don't successfully expand will be checked against a list \
@@ -280,9 +280,9 @@ def extract_domain_from_url(
     :return: The domain for the link
     :rtype: str
 
-    .. note:: If `resolve_url` is set to True, the link will be standardized prior to domain extraction (in which \
+    .. note:: If ``resolve_url`` is set to True, the link will be standardized prior to domain extraction (in which \
         case you can provide optional timeout, session, and user_agent parameters that will be passed to \
-        `canonical_link`). By default, however, the link will be operated on as-is. The final extracted domain is then \
+        ``canonical_link``). By default, however, the link will be operated on as-is. The final extracted domain is then \
         checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \
         domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included \
         in this dictionary of known shorteners may be returned with an incorrect domain.

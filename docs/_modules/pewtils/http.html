@@ -225,7 +225,7 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components. \</span>
-<span class="sd">    By default, the function will use BeautifulSoup to parse the HTML. Setting `simple=True` will make the \</span>
+<span class="sd">    By default, the function will use BeautifulSoup to parse the HTML. Setting ``simple=True`` will make the \</span>
 <span class="sd">    function use a much simpler regular expression approach to parsing.</span>
 
 <span class="sd">    :param html: The HTML to process</span>
@@ -415,13 +415,13 @@
 <span class="sd">    :param resolve_url: Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if \</span>
 <span class="sd">    True, the URL will be passed to :py:func:`pewtils.http.canonical_link` to be standardized prior to extracting the \</span>
 <span class="sd">    domain.</span>
-<span class="sd">    :param timeout: (Optional, for use with `resolve_url`) Maximum number of seconds to wait on a request before \</span>
+<span class="sd">    :param timeout: (Optional, for use with ``resolve_url``) Maximum number of seconds to wait on a request before \</span>
 <span class="sd">    timing out (default is 1)</span>
 <span class="sd">    :type timeout: int or float</span>
-<span class="sd">    :param session: (Optional, for use with `resolve_url`) A persistent session that can optionally be passed \</span>
+<span class="sd">    :param session: (Optional, for use with ``resolve_url``) A persistent session that can optionally be passed \</span>
 <span class="sd">    (useful if you&#39;re processing many links at once)</span>
 <span class="sd">    :type session: :py:class:`requests.Session` object</span>
-<span class="sd">    :param user_agent: (Optional, for use with `resolve_url`) User agent for the auto-created requests Session to use, \</span>
+<span class="sd">    :param user_agent: (Optional, for use with ``resolve_url``) User agent for the auto-created requests Session to use, \</span>
 <span class="sd">    if a preconfigured requests Session is not provided</span>
 <span class="sd">    :type user_agent: str</span>
 <span class="sd">    :param expand_shorteners: If True, shortened URLs that don&#39;t successfully expand will be checked against a list \</span>
@@ -430,9 +430,9 @@
 <span class="sd">    :return: The domain for the link</span>
 <span class="sd">    :rtype: str</span>
 
-<span class="sd">    .. note:: If `resolve_url` is set to True, the link will be standardized prior to domain extraction (in which \</span>
+<span class="sd">    .. note:: If ``resolve_url`` is set to True, the link will be standardized prior to domain extraction (in which \</span>
 <span class="sd">        case you can provide optional timeout, session, and user_agent parameters that will be passed to \</span>
-<span class="sd">        `canonical_link`). By default, however, the link will be operated on as-is. The final extracted domain is then \</span>
+<span class="sd">        ``canonical_link``). By default, however, the link will be operated on as-is. The final extracted domain is then \</span>
 <span class="sd">        checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \</span>
 <span class="sd">        domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included \</span>
 <span class="sd">        in this dictionary of known shorteners may be returned with an incorrect domain.</span>

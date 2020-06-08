@@ -178,9 +178,9 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This decorator allows you to define functions on a class that are accessible directly from the</span>
-<span class="sd">    class itself (rather than an instance of the class). It allows you to access `classproperty`</span>
-<span class="sd">    attributes directly, such as `obj.property`, rather than as a function on a class instance</span>
-<span class="sd">    (like `obj = Obj(); obj.property()`).</span>
+<span class="sd">    class itself (rather than an instance of the class). It allows you to access ``classproperty``</span>
+<span class="sd">    attributes directly, such as ``obj.property``, rather than as a function on a class instance</span>
+<span class="sd">    (like ``obj = Obj(); obj.property()``).</span>
 
 <span class="sd">    Borrowed from a StackOverflow `post &lt;https://stackoverflow.com/a/3203659&gt;`_.</span>
 
@@ -212,10 +212,11 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks whether the value is null, using a variety of potential string values, etc. The following values are always</span>
-<span class="sd">    considered null: `None`, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;</span>
+<span class="sd">    considered null: ``numpy.nan, None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;``</span>
 
 <span class="sd">    :param val: The value to check</span>
-<span class="sd">    :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)</span>
+<span class="sd">    :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \</span>
+<span class="sd">    null (default=False)</span>
 <span class="sd">    :type empty_lists_are_null: bool</span>
 <span class="sd">    :param custom_nulls: an optional list of additional values to consider as null</span>
 <span class="sd">    :type custom_nulls: list</span>
@@ -266,11 +267,12 @@
 <div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the opposite of the outcome of is_not_null. The following values are always considered null:</span>
-<span class="sd">    `None`, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;</span>
+<span class="sd">    Returns the opposite of the outcome of ``is_not_null``. The following values are always considered null:</span>
+<span class="sd">    ``numpy.nan, None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;``</span>
 
 <span class="sd">    :param val: The value to check</span>
-<span class="sd">    :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)</span>
+<span class="sd">    :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \</span>
+<span class="sd">    null (default=False)</span>
 <span class="sd">    :type empty_lists_are_null: bool</span>
 <span class="sd">    :param custom_nulls: an optional list of additional values to consider as null</span>
 <span class="sd">    :type custom_nulls: list</span>
@@ -295,9 +297,9 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string&#39;s \</span>
-<span class="sd">    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the &quot;unidecode&quot; \</span>
-<span class="sd">    package to transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly encode the text as ASCII \</span>
-<span class="sd">    and ignore non-ASCII characters.</span>
+<span class="sd">    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the \</span>
+<span class="sd">    ``unidecode`` package to transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly encode the \</span>
+<span class="sd">    text as ASCII and ignore non-ASCII characters.</span>
 
 <span class="sd">    .. warning:: This function is potentially destructive to source input and should be used with some care. \</span>
 <span class="sd">        Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \</span>
@@ -311,8 +313,8 @@
 <span class="sd">    :return: Decoded text, or empty string</span>
 <span class="sd">    :rtype: str</span>
 
-<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \</span>
-<span class="sd">        to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t hurt \</span>
+<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the ``unidecode`` package will be \</span>
+<span class="sd">        used to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t hurt \</span>
 <span class="sd">        anything if you do.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -369,14 +371,15 @@
 
 <span class="sd">    :param text: The string to hash</span>
 <span class="sd">    :type text: str</span>
-<span class="sd">    :param hash_function: The specific algorithm to use; options are `&#39;nilsimsa&#39;`, `&#39;md5&#39;`, and `&#39;ssdeep&#39;` (default)</span>
+<span class="sd">    :param hash_function: The specific algorithm to use; options are ``&#39;nilsimsa&#39;``, ``&#39;md5&#39;``, and ``&#39;ssdeep&#39;`` \</span>
+<span class="sd">    (default)</span>
 <span class="sd">    :type hash_function: str</span>
 <span class="sd">    :return: A hashed representation of the provided string</span>
 <span class="sd">    :rtype: str</span>
 
 <span class="sd">    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \</span>
 <span class="sd">    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \</span>
-<span class="sd">    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \</span>
+<span class="sd">    3. By default the function uses the ``ssdeep`` algorithm, which generates context-sensitive hashes that are useful \</span>
 <span class="sd">    for computing document similarities at scale.</span>
 
 <span class="sd">    Usage::</span>
@@ -410,7 +413,7 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \</span>
-<span class="sd">    zipcodes library to ensure that the zipcode is real. If the zipcode doesn&#39;t validate successfully, `None` will be \</span>
+<span class="sd">    zipcodes library to ensure that the zipcode is real. If the zipcode doesn&#39;t validate successfully, ``None`` will be \</span>
 <span class="sd">    returned.</span>
 
 <span class="sd">    :param zip: Object that contains a sequence of digits (string, integer, float)</span>
@@ -480,8 +483,8 @@
 <span class="sd">    Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces. Useful for \</span>
 <span class="sd">    merging multiple columns of text in Pandas.</span>
 
-<span class="sd">    :param args: A list of lists or Pandas Series that contain text values</span>
-<span class="sd">    :return: A single list or Series with all of the text values for each row concatenated</span>
+<span class="sd">    :param args: A list of lists or :py:class:`pandas.Series` s that contain text values</span>
+<span class="sd">    :return: A single list or :py:class:`pandas.Series` with all of the text values for each row concatenated</span>
 
 <span class="sd">    Usage with lists::</span>
 
@@ -549,26 +552,26 @@
 <div class="viewcode-block" id="new_random_number"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.new_random_number">[docs]</a><span class="k">def</span> <span class="nf">new_random_number</span><span class="p">(</span><span class="n">attempt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a random number between the boundary that exponentially increases with the number of `attempt`.</span>
-<span class="sd">    The upper bound is capped using the `maximum` parameter (default 10) but is otherwise determined by the</span>
-<span class="sd">    function `minimum * 2 ** attempt`.</span>
+<span class="sd">    Returns a random number between the boundary that exponentially increases with the number of ``attempt``.</span>
+<span class="sd">    The upper bound is capped using the ``maximum`` parameter (default 10) but is otherwise determined by the</span>
+<span class="sd">    function ``minimum * 2 ** attempt``.</span>
 
-<span class="sd">    | In effect, this means that when `attempt` is 1, the number returned will be in the range of the minimum \</span>
-<span class="sd">    and twice the minimum&#39;s value.  As you increase `attempt`, the possible range of returned values expands \</span>
-<span class="sd">    exponentially until it hits the `maximum` ceiling.</span>
+<span class="sd">    | In effect, this means that when ``attempt`` is 1, the number returned will be in the range of the minimum \</span>
+<span class="sd">    and twice the minimum&#39;s value.  As you increase ``attempt``, the possible range of returned values expands \</span>
+<span class="sd">    exponentially until it hits the ``maximum`` ceiling.</span>
 
 <span class="sd">    :param attempt: Increasing attempt will expand the upper-bound of the range from which the random number is drawn</span>
 <span class="sd">    :type attempt: int</span>
 <span class="sd">    :param minimum: The minimum allowed value that can be returned; must be greater than zero.</span>
 <span class="sd">    :type minimum: int or float</span>
-<span class="sd">    :param maximum: The maximum allowed value that can be returned; must be greater than `minimum`.</span>
+<span class="sd">    :param maximum: The maximum allowed value that can be returned; must be greater than ``minimum``.</span>
 <span class="sd">    :type maximum: int or float</span>
 <span class="sd">    :return: A random number drawn uniformly from across the range determined by the provided arguments.</span>
 <span class="sd">    :rtype: float</span>
 
 <span class="sd">    .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \</span>
 <span class="sd">        reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \</span>
-<span class="sd">        simply by increasing the `attempt` variable (hence its name).</span>
+<span class="sd">        simply by increasing the ``attempt`` variable (hence its name).</span>
 
 <span class="sd">    Usage::</span>
 
@@ -767,15 +770,16 @@
 <div class="viewcode-block" id="cached_series_mapper"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.cached_series_mapper">[docs]</a><span class="k">def</span> <span class="nf">cached_series_mapper</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.</span>
+<span class="sd">    Applies a function to all of the unique values in a :py:class:`pandas.Series` to avoid repeating the operation \</span>
+<span class="sd">    on duplicate values.</span>
 
 <span class="sd">    | Great if you&#39;re doing database lookups or something computationally intensive on a column that may contain \</span>
 <span class="sd">    repeating values, etc.</span>
 
-<span class="sd">    :param series: A Pandas Series</span>
+<span class="sd">    :param series: A :py:class:`pandas.Series`</span>
 <span class="sd">    :type series: :py:class:`pandas.Series`</span>
-<span class="sd">    :param function: A function to apply to values in the series</span>
-<span class="sd">    :return: The resulting series</span>
+<span class="sd">    :param function: A function to apply to values in the :py:class:`pandas.Series`</span>
+<span class="sd">    :return: The resulting :py:class:`pandas.Series`</span>
 <span class="sd">    :rtype: :py:class:`pandas.Series`</span>
 
 <span class="sd">    Usage::</span>
@@ -908,9 +912,9 @@
 <span class="sd">    etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the</span>
 <span class="sd">    files that contained the attributes, and the values are the attributes themselves.</span>
 
-<span class="sd">    This operates exactly the same as :py:func:`pewtils.extract_json_from_folder` except instead of reading JSON files</span>
+<span class="sd">    This operates exactly the same as :py:func:``pewtils.extract_json_from_folder`` except instead of reading JSON files</span>
 <span class="sd">    and adding them as values in the dictionary that gets returned, this function will instead look for Python files</span>
-<span class="sd">    that contain a function, class, method, or attribute with the name you provide in `attribute_name` and will load</span>
+<span class="sd">    that contain a function, class, method, or attribute with the name you provide in ``attribute_name`` and will load</span>
 <span class="sd">    that attribute in as the values.</span>
 
 <span class="sd">    :param folder_path: The path of a folder/module to scan</span>
@@ -925,7 +929,7 @@
 <span class="sd">    :return: A dictionary with all of the extracted attributes as values</span>
 <span class="sd">    :rtype: dict</span>
 
-<span class="sd">    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \</span>
+<span class="sd">    .. note:: if you use Python 2.7 you will need to add ``from __future__ import absolute_import`` to the top of files \</span>
 <span class="sd">        that you want to scan and import using this function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

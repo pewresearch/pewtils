@@ -4,7 +4,7 @@
 Link Shorteners
 ***************
 
-Lists of known link shorteners recognized by `pewtils.http` utility methods such \
+Lists of known link shorteners recognized by ``pewtils.http`` utility methods such \
 as :py:func:`pewtils.http.canonical_link` and :py:func:`pewtils.http.extract_domain_from_url`. These lists were \
 compiled from several collections of shortened links found in social media posts and news articles, so most of the \
 shorteners belong to news outlets and large popular websites, especially those with political content. Since domains \

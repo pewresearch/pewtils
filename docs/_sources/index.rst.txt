@@ -19,9 +19,9 @@ resources, and regular expressions.
 Installation
 ---------------
 
-To install, you can use PyPI: ::
+To install, you can use ``pip``: ::
 
-    pip install pewtils
+    pip install git+https://github.com/pewresearch/pewtils#egg=pewtils
 
 Or you can install from source: ::
 

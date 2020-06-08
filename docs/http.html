@@ -160,7 +160,7 @@
             
   <div class="section" id="http-utilities">
 <h1>HTTP Utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h1>
-<p>In this module, you’ll find a variety of useful functions for working with web data. The <cite>canonical_link</cite> function is our best attempt at standardizing and cleaning a URL without losing any information, and the <cite>strip_html</cite> function is useful for attempting to extract text from raw HTML data with minimal fine-tuning.</p>
+<p>In this module, you’ll find a variety of useful functions for working with web data. The <code class="docutils literal notranslate"><span class="pre">canonical_link</span></code> function is our best attempt at standardizing and cleaning a URL without losing any information, and the <code class="docutils literal notranslate"><span class="pre">strip_html</span></code> function is useful for attempting to extract text from raw HTML data with minimal fine-tuning.</p>
 <span class="target" id="module-pewtils.http"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -214,7 +214,7 @@
 <dl class="function">
 <dt id="pewtils.http.strip_html">
 <code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML. Setting <cite>simple=True</cite> will make the     function use a much simpler regular expression approach to parsing.</p>
+<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML. Setting <code class="docutils literal notranslate"><span class="pre">simple=True</span></code> will make the     function use a much simpler regular expression approach to parsing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -280,9 +280,9 @@ ones that can be removed without generating any redirects.</p>
 <li><p><strong>url</strong> (<em>str</em>) – The link from which to extract the domain</p></li>
 <li><p><strong>include_subdomain</strong> (<em>bool</em>) – Whether or not to include the subdomain (e.g. ‘news.google.com’); default is True</p></li>
 <li><p><strong>resolve_url</strong> – Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if     True, the URL will be passed to <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a> to be standardized prior to extracting the     domain.</p></li>
-<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – (Optional, for use with <cite>resolve_url</cite>) Maximum number of seconds to wait on a request before     timing out (default is 1)</p></li>
-<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional, for use with <cite>resolve_url</cite>) A persistent session that can optionally be passed     (useful if you’re processing many links at once)</p></li>
-<li><p><strong>user_agent</strong> (<em>str</em>) – (Optional, for use with <cite>resolve_url</cite>) User agent for the auto-created requests Session to use,     if a preconfigured requests Session is not provided</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) Maximum number of seconds to wait on a request before     timing out (default is 1)</p></li>
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) A persistent session that can optionally be passed     (useful if you’re processing many links at once)</p></li>
+<li><p><strong>user_agent</strong> (<em>str</em>) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) User agent for the auto-created requests Session to use,     if a preconfigured requests Session is not provided</p></li>
 <li><p><strong>expand_shorteners</strong> (<em>bool</em>) – If True, shortened URLs that don’t successfully expand will be checked against a list     of known URL shorteners and expanded if recognized. (Default = True)</p></li>
 </ul>
 </dd>
@@ -295,7 +295,7 @@ ones that can be removed without generating any redirects.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <cite>resolve_url</cite> is set to True, the link will be standardized prior to domain extraction (in which         case you can provide optional timeout, session, and user_agent parameters that will be passed to         <cite>canonical_link</cite>). By default, however, the link will be operated on as-is. The final extracted domain is then         checked against known URL shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it is recognized, the expanded         domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included         in this dictionary of known shorteners may be returned with an incorrect domain.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code> is set to True, the link will be standardized prior to domain extraction (in which         case you can provide optional timeout, session, and user_agent parameters that will be passed to         <code class="docutils literal notranslate"><span class="pre">canonical_link</span></code>). By default, however, the link will be operated on as-is. The final extracted domain is then         checked against known URL shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it is recognized, the expanded         domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included         in this dictionary of known shorteners may be returned with an incorrect domain.</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">extract_domain_from_url</span>

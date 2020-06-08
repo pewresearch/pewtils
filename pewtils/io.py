@@ -34,16 +34,16 @@ class FileHandler(object):
     :type aws_access: str
     :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY
     :type aws_secret: str
-    :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \
+    :param bucket: The name of the S3 bucket, required if ``use_s3=True``; will also try to fetch from the environment \
     as S3_BUCKET
     :type bucket: str
 
-    .. note:: Typical rectangular data files (i.e. `csv`, `tab`, `xlsx`, `xls`, `dta` file extension types) will be \
+    .. note:: Typical rectangular data files (i.e. ``csv``, ``tab``, ``xlsx``, ``xls``, ``dta`` file extension types) will be \
         read to/written from a :py:class:`pandas.DataFrame` object. The exceptions are `pkl` and `json` objects which \
         accept any serializable Python object and correctly-formatted JSON object respectively.
 
     .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the \
-        variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.
+        variables ``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``, and ``S3_BUCKET``.
 
     Usage::
 
@@ -205,7 +205,7 @@ class FileHandler(object):
         representation into a shorter hashed key, so it can be useful for caching. You can call this method \
         directly to see the hash that a key will be converted into, but this method is mainly used in conjunction \
         with the :py:meth:`pewtils.FileHandler.write` and :py:meth:`pewtils.FileHandler.read` methods by passing in \
-        `hash_key=True`.
+        ``hash_key=True``.
 
         :param key: A raw string or Python object that can be meaningfully converted into a string representation
         :type key: str or object
@@ -251,9 +251,9 @@ class FileHandler(object):
         :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable
         :return: None
 
-        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \
-            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be \
-            forwarded to the corresponding Pandas method below:
+        .. note:: When saving a ``csv``, ``tab``, ``xlsx``, ``xls``, or ``dta`` file, this function expects to receive a \
+            Pandas :py:class:`pandas.DataFrame`. When you use these formats, you can also pass optional ``io_kwargs`` \
+            which will be forwarded to the corresponding ``Pandas`` method below:
 
                 - `dta`: :py:meth:`pandas.DataFrame.to_stata`
                 - `csv`: :py:meth:`pandas.DataFrame.to_csv`
@@ -337,7 +337,7 @@ class FileHandler(object):
         :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)
         :return: The file contents, in the requested format
 
-        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \
+        .. note:: You can pass optional ``io_kwargs`` that will be forwarded to the function below that corresponds to \
             the format of the file you're trying to read in
 
             - `dta`: :py:meth:`pandas.DataFrame.read_stata`

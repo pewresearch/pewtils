@@ -153,7 +153,7 @@
             
   <div class="section" id="core-functions">
 <h1>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this headline">¶</a></h1>
-<p>The main Pewtils module contains a variety of generally useful functions that make our researchers lives easier. For those still working in Python 2.x, the <cite>decode_text</cite> function can help alleviate headaches related to text encodings. The <cite>is_null</cite> and <cite>is_not_null</cite> functions provide an easy way to deal with the wide variety of possible null values that exist in the Python (and broader research universe) by using a best-guess approach. When working with dictionaries or JSON records that need to be updated, <cite>recursive_update</cite> makes it easy to map one version of an object onto another. While we strive to write efficient code that can cover every possible use-case, there are certainly some edge cases that we haven’t encountered, and other existing Python libraries may very well provide many of these same features. This collection simply consists of functions we find ourselves using again and again, and we hope that Pewtils may help expand your daily toolkit in some way as well.</p>
+<p>The main Pewtils module contains a variety of generally useful functions that make our researchers lives easier. For those still working in Python 2.x, the <code class="docutils literal notranslate"><span class="pre">decode_text</span></code> function can help alleviate headaches related to text encodings. The <code class="docutils literal notranslate"><span class="pre">is_null</span></code> and <code class="docutils literal notranslate"><span class="pre">is_not_null</span></code> functions provide an easy way to deal with the wide variety of possible null values that exist in the Python (and broader research universe) by using a best-guess approach. When working with dictionaries or JSON records that need to be updated, <code class="docutils literal notranslate"><span class="pre">recursive_update</span></code> makes it easy to map one version of an object onto another. While we strive to write efficient code that can cover every possible use-case, there are certainly some edge cases that we haven’t encountered, and other existing Python libraries may very well provide many of these same features. This collection simply consists of functions we find ourselves using again and again, and we hope that Pewtils may help expand your daily toolkit in some way as well.</p>
 <span class="target" id="module-pewtils.__init__"></span><p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -174,7 +174,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.cached_series_mapper" title="pewtils.__init__.cached_series_mapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cached_series_mapper</span></code></a>(series, function)</p></td>
-<td><p>Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.</p></td>
+<td><p>Applies a function to all of the unique values in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> to avoid repeating the operation     on duplicate values.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.chunk_list" title="pewtils.__init__.chunk_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunk_list</span></code></a>(seq, size)</p></td>
 <td><p>Takes a sequence and groups values into smaller lists based on the specified size.</p></td>
@@ -201,10 +201,10 @@
 <td><p>Checks whether the value is null, using a variety of potential string values, etc.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.is_null" title="pewtils.__init__.is_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_null</span></code></a>(val[, empty_lists_are_null, …])</p></td>
-<td><p>Returns the opposite of the outcome of is_not_null.</p></td>
+<td><p>Returns the opposite of the outcome of <code class="docutils literal notranslate"><span class="pre">is_not_null</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.new_random_number" title="pewtils.__init__.new_random_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_random_number</span></code></a>([attempt, minimum, maximum])</p></td>
-<td><p>Returns a random number between the boundary that exponentially increases with the number of <cite>attempt</cite>.</p></td>
+<td><p>Returns a random number between the boundary that exponentially increases with the number of <code class="docutils literal notranslate"><span class="pre">attempt</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.recursive_update" title="pewtils.__init__.recursive_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recursive_update</span></code></a>(existing, new)</p></td>
 <td><p>Takes an object and a dictionary representation of attributes and values, and recursively traverses through the new values and updates the object.</p></td>
@@ -227,9 +227,9 @@
 <dt id="pewtils.__init__.classproperty">
 <em class="property">class </em><code class="sig-name descname">classproperty</code><span class="sig-paren">(</span><em class="sig-param">fget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#classproperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.classproperty" title="Permalink to this definition">¶</a></dt>
 <dd><p>This decorator allows you to define functions on a class that are accessible directly from the
-class itself (rather than an instance of the class). It allows you to access <cite>classproperty</cite>
-attributes directly, such as <cite>obj.property</cite>, rather than as a function on a class instance
-(like <cite>obj = Obj(); obj.property()</cite>).</p>
+class itself (rather than an instance of the class). It allows you to access <code class="docutils literal notranslate"><span class="pre">classproperty</span></code>
+attributes directly, such as <code class="docutils literal notranslate"><span class="pre">obj.property</span></code>, rather than as a function on a class instance
+(like <code class="docutils literal notranslate"><span class="pre">obj</span> <span class="pre">=</span> <span class="pre">Obj();</span> <span class="pre">obj.property()</span></code>).</p>
 <p>Borrowed from a StackOverflow <a class="reference external" href="https://stackoverflow.com/a/3203659">post</a>.</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">classproperty</span>
@@ -253,12 +253,12 @@ attributes directly, such as <cite>obj.property</cite>, rather than as a functio
 <dt id="pewtils.__init__.is_not_null">
 <code class="sig-name descname">is_not_null</code><span class="sig-paren">(</span><em class="sig-param">val</em>, <em class="sig-param">empty_lists_are_null=False</em>, <em class="sig-param">custom_nulls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_not_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.is_not_null" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the value is null, using a variety of potential string values, etc. The following values are always
-considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
+considered null: <code class="docutils literal notranslate"><span class="pre">numpy.nan,</span> <span class="pre">None,</span> <span class="pre">&quot;None&quot;,</span> <span class="pre">&quot;nan&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;NaN&quot;,</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;n/a&quot;,</span> <span class="pre">&quot;NONE&quot;,</span> <span class="pre">&quot;N/A&quot;</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>val</strong> – The value to check</p></li>
-<li><p><strong>empty_lists_are_null</strong> (<em>bool</em>) – Whether or not an empty list or dataframe should be considered null (default=False)</p></li>
+<li><p><strong>empty_lists_are_null</strong> (<em>bool</em>) – Whether or not an empty list or <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> should be considered     null (default=False)</p></li>
 <li><p><strong>custom_nulls</strong> (<em>list</em>) – an optional list of additional values to consider as null</p></li>
 </ul>
 </dd>
@@ -282,13 +282,13 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dl class="function">
 <dt id="pewtils.__init__.is_null">
 <code class="sig-name descname">is_null</code><span class="sig-paren">(</span><em class="sig-param">val</em>, <em class="sig-param">empty_lists_are_null=False</em>, <em class="sig-param">custom_nulls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.is_null" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the opposite of the outcome of is_not_null. The following values are always considered null:
-<cite>None</cite>, “None”, “nan”, “”, ” “, “NaN”, “none”, “n/a”, “NONE”, “N/A”</p>
+<dd><p>Returns the opposite of the outcome of <code class="docutils literal notranslate"><span class="pre">is_not_null</span></code>. The following values are always considered null:
+<code class="docutils literal notranslate"><span class="pre">numpy.nan,</span> <span class="pre">None,</span> <span class="pre">&quot;None&quot;,</span> <span class="pre">&quot;nan&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;NaN&quot;,</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;n/a&quot;,</span> <span class="pre">&quot;NONE&quot;,</span> <span class="pre">&quot;N/A&quot;</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>val</strong> – The value to check</p></li>
-<li><p><strong>empty_lists_are_null</strong> (<em>bool</em>) – Whether or not an empty list or dataframe should be considered null (default=False)</p></li>
+<li><p><strong>empty_lists_are_null</strong> (<em>bool</em>) – Whether or not an empty list or <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> should be considered     null (default=False)</p></li>
 <li><p><strong>custom_nulls</strong> (<em>list</em>) – an optional list of additional values to consider as null</p></li>
 </ul>
 </dd>
@@ -312,7 +312,7 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dl class="function">
 <dt id="pewtils.__init__.decode_text">
 <code class="sig-name descname">decode_text</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">throw_loud_fail=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#decode_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.decode_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string’s     encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the “unidecode”     package to transliterate into ASCII. And finally, if that doesn’t work, it will forcibly encode the text as ASCII     and ignore non-ASCII characters.</p>
+<dd><p>Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string’s     encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the     <code class="docutils literal notranslate"><span class="pre">unidecode</span></code> package to transliterate into ASCII. And finally, if that doesn’t work, it will forcibly encode the     text as ASCII and ignore non-ASCII characters.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This function is potentially destructive to source input and should be used with some care.         Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other         placeholder, potentially resulting in an empty string.</p>
@@ -333,7 +333,7 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used         to transliterate. In general, you shouldn’t need to use this function in Python 3, but it shouldn’t hurt         anything if you do.</p>
+<p>In Python 3, the decode/encode attempts will fail by default, and the <code class="docutils literal notranslate"><span class="pre">unidecode</span></code> package will be         used to transliterate. In general, you shouldn’t need to use this function in Python 3, but it shouldn’t hurt         anything if you do.</p>
 </div>
 </dd></dl>
 
@@ -345,7 +345,7 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – The string to hash</p></li>
-<li><p><strong>hash_function</strong> (<em>str</em>) – The specific algorithm to use; options are <cite>‘nilsimsa’</cite>, <cite>‘md5’</cite>, and <cite>‘ssdeep’</cite> (default)</p></li>
+<li><p><strong>hash_function</strong> (<em>str</em>) – The specific algorithm to use; options are <code class="docutils literal notranslate"><span class="pre">'nilsimsa'</span></code>, <code class="docutils literal notranslate"><span class="pre">'md5'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'ssdeep'</span></code>     (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -357,7 +357,7 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The string will be passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> and the returned value will be used     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and     3. By default the function uses the <cite>ssdeep</cite> algorithm, which generates context-sensitive hashes that are useful     for computing document similarities at scale.</p>
+<p>The string will be passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> and the returned value will be used     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and     3. By default the function uses the <code class="docutils literal notranslate"><span class="pre">ssdeep</span></code> algorithm, which generates context-sensitive hashes that are useful     for computing document similarities at scale.</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span>
@@ -372,7 +372,7 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dl class="function">
 <dt id="pewtils.__init__.zipcode_num_to_string">
 <code class="sig-name descname">zipcode_num_to_string</code><span class="sig-paren">(</span><em class="sig-param">zipcode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#zipcode_num_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.zipcode_num_to_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the     zipcodes library to ensure that the zipcode is real. If the zipcode doesn’t validate successfully, <cite>None</cite> will be     returned.</p>
+<dd><p>Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the     zipcodes library to ensure that the zipcode is real. If the zipcode doesn’t validate successfully, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be     returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>zip</strong> (<em>str</em><em> or </em><em>float</em><em> or </em><em>int</em>) – Object that contains a sequence of digits (string, integer, float)</p>
@@ -428,10 +428,10 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dd><p>Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces. Useful for     merging multiple columns of text in Pandas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>args</strong> – A list of lists or Pandas Series that contain text values</p>
+<dd class="field-odd"><p><strong>args</strong> – A list of lists or <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> s that contain text values</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A single list or Series with all of the text values for each row concatenated</p>
+<dd class="field-even"><p>A single list or <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> with all of the text values for each row concatenated</p>
 </dd>
 </dl>
 <p>Usage with lists:</p>
@@ -496,18 +496,18 @@ considered null: <cite>None</cite>, “None”, “nan”, “”, ” “, “N
 <dl class="function">
 <dt id="pewtils.__init__.new_random_number">
 <code class="sig-name descname">new_random_number</code><span class="sig-paren">(</span><em class="sig-param">attempt=1</em>, <em class="sig-param">minimum=1.0</em>, <em class="sig-param">maximum=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#new_random_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.new_random_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a random number between the boundary that exponentially increases with the number of <cite>attempt</cite>.
-The upper bound is capped using the <cite>maximum</cite> parameter (default 10) but is otherwise determined by the
-function <cite>minimum * 2 ** attempt</cite>.</p>
+<dd><p>Returns a random number between the boundary that exponentially increases with the number of <code class="docutils literal notranslate"><span class="pre">attempt</span></code>.
+The upper bound is capped using the <code class="docutils literal notranslate"><span class="pre">maximum</span></code> parameter (default 10) but is otherwise determined by the
+function <code class="docutils literal notranslate"><span class="pre">minimum</span> <span class="pre">*</span> <span class="pre">2</span> <span class="pre">**</span> <span class="pre">attempt</span></code>.</p>
 <div class="line-block">
-<div class="line">In effect, this means that when <cite>attempt</cite> is 1, the number returned will be in the range of the minimum     and twice the minimum’s value.  As you increase <cite>attempt</cite>, the possible range of returned values expands     exponentially until it hits the <cite>maximum</cite> ceiling.</div>
+<div class="line">In effect, this means that when <code class="docutils literal notranslate"><span class="pre">attempt</span></code> is 1, the number returned will be in the range of the minimum     and twice the minimum’s value.  As you increase <code class="docutils literal notranslate"><span class="pre">attempt</span></code>, the possible range of returned values expands     exponentially until it hits the <code class="docutils literal notranslate"><span class="pre">maximum</span></code> ceiling.</div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>attempt</strong> (<em>int</em>) – Increasing attempt will expand the upper-bound of the range from which the random number is drawn</p></li>
 <li><p><strong>minimum</strong> (<em>int</em><em> or </em><em>float</em>) – The minimum allowed value that can be returned; must be greater than zero.</p></li>
-<li><p><strong>maximum</strong> (<em>int</em><em> or </em><em>float</em>) – The maximum allowed value that can be returned; must be greater than <cite>minimum</cite>.</p></li>
+<li><p><strong>maximum</strong> (<em>int</em><em> or </em><em>float</em>) – The maximum allowed value that can be returned; must be greater than <code class="docutils literal notranslate"><span class="pre">minimum</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -519,7 +519,7 @@ function <cite>minimum * 2 ** attempt</cite>.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>One useful application of this function is rate limiting: a script can pause in between requests at a         reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors,         simply by increasing the <cite>attempt</cite> variable (hence its name).</p>
+<p>One useful application of this function is rate limiting: a script can pause in between requests at a         reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors,         simply by increasing the <code class="docutils literal notranslate"><span class="pre">attempt</span></code> variable (hence its name).</p>
 </div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">new_random_number</span>
@@ -668,19 +668,19 @@ new values and updates the object.</p>
 <dl class="function">
 <dt id="pewtils.__init__.cached_series_mapper">
 <code class="sig-name descname">cached_series_mapper</code><span class="sig-paren">(</span><em class="sig-param">series</em>, <em class="sig-param">function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#cached_series_mapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.cached_series_mapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.</p>
+<dd><p>Applies a function to all of the unique values in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> to avoid repeating the operation     on duplicate values.</p>
 <div class="line-block">
 <div class="line">Great if you’re doing database lookups or something computationally intensive on a column that may contain     repeating values, etc.</div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>series</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code>) – A Pandas Series</p></li>
-<li><p><strong>function</strong> – A function to apply to values in the series</p></li>
+<li><p><strong>series</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code>) – A <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></p></li>
+<li><p><strong>function</strong> – A function to apply to values in the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The resulting series</p>
+<dd class="field-even"><p>The resulting <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></p>
@@ -772,9 +772,9 @@ with the key being the name of the file and the value being the JSON itself. Thi
 <dd><p>Takes a folder path and traverses it, looking for Python files that contain an attribute (i.e., class, function,
 etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the
 files that contained the attributes, and the values are the attributes themselves.</p>
-<p>This operates exactly the same as <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.extract_json_from_folder()</span></code> except instead of reading JSON files
+<p>This operates exactly the same as :py:func:<code class="docutils literal notranslate"><span class="pre">pewtils.extract_json_from_folder</span></code> except instead of reading JSON files
 and adding them as values in the dictionary that gets returned, this function will instead look for Python files
-that contain a function, class, method, or attribute with the name you provide in <cite>attribute_name</cite> and will load
+that contain a function, class, method, or attribute with the name you provide in <code class="docutils literal notranslate"><span class="pre">attribute_name</span></code> and will load
 that attribute in as the values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -795,7 +795,7 @@ that attribute in as the values.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>if you use Python 2.7 you will need to add <cite>from __future__ import absolute_import</cite> to the top of files         that you want to scan and import using this function.</p>
+<p>if you use Python 2.7 you will need to add <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">absolute_import</span></code> to the top of files         that you want to scan and import using this function.</p>
 </div>
 </dd></dl>
 

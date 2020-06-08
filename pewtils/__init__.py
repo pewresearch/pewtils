@@ -28,9 +28,9 @@ class classproperty(object):
 
     """
     This decorator allows you to define functions on a class that are accessible directly from the
-    class itself (rather than an instance of the class). It allows you to access `classproperty`
-    attributes directly, such as `obj.property`, rather than as a function on a class instance
-    (like `obj = Obj(); obj.property()`).
+    class itself (rather than an instance of the class). It allows you to access ``classproperty``
+    attributes directly, such as ``obj.property``, rather than as a function on a class instance
+    (like ``obj = Obj(); obj.property()``).
 
     Borrowed from a StackOverflow `post <https://stackoverflow.com/a/3203659>`_.
 
@@ -62,10 +62,11 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
     Checks whether the value is null, using a variety of potential string values, etc. The following values are always
-    considered null: `None`, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
+    considered null: ``numpy.nan, None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"``
 
     :param val: The value to check
-    :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
+    :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \
+    null (default=False)
     :type empty_lists_are_null: bool
     :param custom_nulls: an optional list of additional values to consider as null
     :type custom_nulls: list
@@ -116,11 +117,12 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
-    Returns the opposite of the outcome of is_not_null. The following values are always considered null:
-    `None`, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
+    Returns the opposite of the outcome of ``is_not_null``. The following values are always considered null:
+    ``numpy.nan, None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"``
 
     :param val: The value to check
-    :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
+    :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \
+    null (default=False)
     :type empty_lists_are_null: bool
     :param custom_nulls: an optional list of additional values to consider as null
     :type custom_nulls: list
@@ -145,9 +147,9 @@ def decode_text(text, throw_loud_fail=False):
 
     """
     Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string's \
-    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the "unidecode" \
-    package to transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the text as ASCII \
-    and ignore non-ASCII characters.
+    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the \
+    ``unidecode`` package to transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the \
+    text as ASCII and ignore non-ASCII characters.
 
     .. warning:: This function is potentially destructive to source input and should be used with some care. \
         Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \
@@ -161,8 +163,8 @@ def decode_text(text, throw_loud_fail=False):
     :return: Decoded text, or empty string
     :rtype: str
 
-    .. note:: In Python 3, the decode/encode attempts will fail by default, and the unidecode package will be used \
-        to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt \
+    .. note:: In Python 3, the decode/encode attempts will fail by default, and the ``unidecode`` package will be \
+        used to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt \
         anything if you do.
 
     """
@@ -219,14 +221,15 @@ def get_hash(text, hash_function="ssdeep"):
 
     :param text: The string to hash
     :type text: str
-    :param hash_function: The specific algorithm to use; options are `'nilsimsa'`, `'md5'`, and `'ssdeep'` (default)
+    :param hash_function: The specific algorithm to use; options are ``'nilsimsa'``, ``'md5'``, and ``'ssdeep'`` \
+    (default)
     :type hash_function: str
     :return: A hashed representation of the provided string
     :rtype: str
 
     .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \
     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \
-    3. By default the function uses the `ssdeep` algorithm, which generates context-sensitive hashes that are useful \
+    3. By default the function uses the ``ssdeep`` algorithm, which generates context-sensitive hashes that are useful \
     for computing document similarities at scale.
 
     Usage::
@@ -260,7 +263,7 @@ def zipcode_num_to_string(zipcode):
 
     """
     Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \
-    zipcodes library to ensure that the zipcode is real. If the zipcode doesn't validate successfully, `None` will be \
+    zipcodes library to ensure that the zipcode is real. If the zipcode doesn't validate successfully, ``None`` will be \
     returned.
 
     :param zip: Object that contains a sequence of digits (string, integer, float)
@@ -330,8 +333,8 @@ def vector_concat_text(*args):
     Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces. Useful for \
     merging multiple columns of text in Pandas.
 
-    :param args: A list of lists or Pandas Series that contain text values
-    :return: A single list or Series with all of the text values for each row concatenated
+    :param args: A list of lists or :py:class:`pandas.Series` s that contain text values
+    :return: A single list or :py:class:`pandas.Series` with all of the text values for each row concatenated
 
     Usage with lists::
 
@@ -399,26 +402,26 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
 def new_random_number(attempt=1, minimum=1.0, maximum=10):
 
     """
-    Returns a random number between the boundary that exponentially increases with the number of `attempt`.
-    The upper bound is capped using the `maximum` parameter (default 10) but is otherwise determined by the
-    function `minimum * 2 ** attempt`.
+    Returns a random number between the boundary that exponentially increases with the number of ``attempt``.
+    The upper bound is capped using the ``maximum`` parameter (default 10) but is otherwise determined by the
+    function ``minimum * 2 ** attempt``.
 
-    | In effect, this means that when `attempt` is 1, the number returned will be in the range of the minimum \
-    and twice the minimum's value.  As you increase `attempt`, the possible range of returned values expands \
-    exponentially until it hits the `maximum` ceiling.
+    | In effect, this means that when ``attempt`` is 1, the number returned will be in the range of the minimum \
+    and twice the minimum's value.  As you increase ``attempt``, the possible range of returned values expands \
+    exponentially until it hits the ``maximum`` ceiling.
 
     :param attempt: Increasing attempt will expand the upper-bound of the range from which the random number is drawn
     :type attempt: int
     :param minimum: The minimum allowed value that can be returned; must be greater than zero.
     :type minimum: int or float
-    :param maximum: The maximum allowed value that can be returned; must be greater than `minimum`.
+    :param maximum: The maximum allowed value that can be returned; must be greater than ``minimum``.
     :type maximum: int or float
     :return: A random number drawn uniformly from across the range determined by the provided arguments.
     :rtype: float
 
     .. note:: One useful application of this function is rate limiting: a script can pause in between requests at a \
         reasonably fast pace, but then moderate itself and pause for longer periods if it begins encountering errors, \
-        simply by increasing the `attempt` variable (hence its name).
+        simply by increasing the ``attempt`` variable (hence its name).
 
     Usage::
 
@@ -617,15 +620,16 @@ def recursive_update(existing, new):
 def cached_series_mapper(series, function):
 
     """
-    Applies a function to all of the unique values in a series to avoid repeating the operation on duplicate values.
+    Applies a function to all of the unique values in a :py:class:`pandas.Series` to avoid repeating the operation \
+    on duplicate values.
 
     | Great if you're doing database lookups or something computationally intensive on a column that may contain \
     repeating values, etc.
 
-    :param series: A Pandas Series
+    :param series: A :py:class:`pandas.Series`
     :type series: :py:class:`pandas.Series`
-    :param function: A function to apply to values in the series
-    :return: The resulting series
+    :param function: A function to apply to values in the :py:class:`pandas.Series`
+    :return: The resulting :py:class:`pandas.Series`
     :rtype: :py:class:`pandas.Series`
 
     Usage::
@@ -758,9 +762,9 @@ def extract_attributes_from_folder_modules(
     etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the
     files that contained the attributes, and the values are the attributes themselves.
 
-    This operates exactly the same as :py:func:`pewtils.extract_json_from_folder` except instead of reading JSON files
+    This operates exactly the same as :py:func:``pewtils.extract_json_from_folder`` except instead of reading JSON files
     and adding them as values in the dictionary that gets returned, this function will instead look for Python files
-    that contain a function, class, method, or attribute with the name you provide in `attribute_name` and will load
+    that contain a function, class, method, or attribute with the name you provide in ``attribute_name`` and will load
     that attribute in as the values.
 
     :param folder_path: The path of a folder/module to scan
@@ -775,7 +779,7 @@ def extract_attributes_from_folder_modules(
     :return: A dictionary with all of the extracted attributes as values
     :rtype: dict
 
-    .. note:: if you use Python 2.7 you will need to add `from __future__ import absolute_import` to the top of files \
+    .. note:: if you use Python 2.7 you will need to add ``from __future__ import absolute_import`` to the top of files \
         that you want to scan and import using this function.
     """
 

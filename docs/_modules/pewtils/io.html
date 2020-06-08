@@ -184,16 +184,16 @@
 <span class="sd">    :type aws_access: str</span>
 <span class="sd">    :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY</span>
 <span class="sd">    :type aws_secret: str</span>
-<span class="sd">    :param bucket: The name of the S3 bucket, required if use_s3=True; will also try to fetch from the environment \</span>
+<span class="sd">    :param bucket: The name of the S3 bucket, required if ``use_s3=True``; will also try to fetch from the environment \</span>
 <span class="sd">    as S3_BUCKET</span>
 <span class="sd">    :type bucket: str</span>
 
-<span class="sd">    .. note:: Typical rectangular data files (i.e. `csv`, `tab`, `xlsx`, `xls`, `dta` file extension types) will be \</span>
+<span class="sd">    .. note:: Typical rectangular data files (i.e. ``csv``, ``tab``, ``xlsx``, ``xls``, ``dta`` file extension types) will be \</span>
 <span class="sd">        read to/written from a :py:class:`pandas.DataFrame` object. The exceptions are `pkl` and `json` objects which \</span>
 <span class="sd">        accept any serializable Python object and correctly-formatted JSON object respectively.</span>
 
 <span class="sd">    .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the \</span>
-<span class="sd">        variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_BUCKET`.</span>
+<span class="sd">        variables ``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``, and ``S3_BUCKET``.</span>
 
 <span class="sd">    Usage::</span>
 
@@ -355,7 +355,7 @@
 <span class="sd">        representation into a shorter hashed key, so it can be useful for caching. You can call this method \</span>
 <span class="sd">        directly to see the hash that a key will be converted into, but this method is mainly used in conjunction \</span>
 <span class="sd">        with the :py:meth:`pewtils.FileHandler.write` and :py:meth:`pewtils.FileHandler.read` methods by passing in \</span>
-<span class="sd">        `hash_key=True`.</span>
+<span class="sd">        ``hash_key=True``.</span>
 
 <span class="sd">        :param key: A raw string or Python object that can be meaningfully converted into a string representation</span>
 <span class="sd">        :type key: str or object</span>
@@ -401,9 +401,9 @@
 <span class="sd">        :param io_kwargs: Additional parameters to pass along to the Pandas save function, if applicable</span>
 <span class="sd">        :return: None</span>
 
-<span class="sd">        .. note:: When saving a `csv`, `tab`, `xlsx`, `xls`, or `dta` file, this function expects to receive a \</span>
-<span class="sd">            Pandas dataframe. When you use these formats, you can also pass optional `io_kwargs` which will be \</span>
-<span class="sd">            forwarded to the corresponding Pandas method below:</span>
+<span class="sd">        .. note:: When saving a ``csv``, ``tab``, ``xlsx``, ``xls``, or ``dta`` file, this function expects to receive a \</span>
+<span class="sd">            Pandas :py:class:`pandas.DataFrame`. When you use these formats, you can also pass optional ``io_kwargs`` \</span>
+<span class="sd">            which will be forwarded to the corresponding ``Pandas`` method below:</span>
 
 <span class="sd">                - `dta`: :py:meth:`pandas.DataFrame.to_stata`</span>
 <span class="sd">                - `csv`: :py:meth:`pandas.DataFrame.to_csv`</span>
@@ -487,7 +487,7 @@
 <span class="sd">        :param io_kwargs: Optional arguments to be passed to the specific load function (dependent on file format)</span>
 <span class="sd">        :return: The file contents, in the requested format</span>
 
-<span class="sd">        .. note:: You can pass optional `io_kwargs` that will be forwarded to the function below that corresponds to \</span>
+<span class="sd">        .. note:: You can pass optional ``io_kwargs`` that will be forwarded to the function below that corresponds to \</span>
 <span class="sd">            the format of the file you&#39;re trying to read in</span>
 
 <span class="sd">            - `dta`: :py:meth:`pandas.DataFrame.read_stata`</span>
