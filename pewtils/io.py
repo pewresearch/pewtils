@@ -253,7 +253,7 @@ class FileHandler(object):
 
         .. note:: When saving a ``csv``, ``tab``, ``xlsx``, ``xls``, or ``dta`` file, this function expects to receive a \
             Pandas :py:class:`pandas.DataFrame`. When you use these formats, you can also pass optional ``io_kwargs`` \
-            which will be forwarded to the corresponding ``Pandas`` method below:
+            which will be forwarded to the corresponding :py:mod:`pandas` method below:
 
                 - `dta`: :py:meth:`pandas.DataFrame.to_stata`
                 - `csv`: :py:meth:`pandas.DataFrame.to_csv`

@@ -267,8 +267,8 @@
 <div class="viewcode-block" id="is_null"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.is_null">[docs]</a><span class="k">def</span> <span class="nf">is_null</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">empty_lists_are_null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">custom_nulls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the opposite of the outcome of ``is_not_null``. The following values are always considered null:</span>
-<span class="sd">    ``numpy.nan, None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;``</span>
+<span class="sd">    Returns the opposite of the outcome of :py:func:`pewtils.is_not_null`. The following values are always \</span>
+<span class="sd">    considered null: ``numpy.nan, None, &quot;None&quot;, &quot;nan&quot;, &quot;&quot;, &quot; &quot;, &quot;NaN&quot;, &quot;none&quot;, &quot;n/a&quot;, &quot;NONE&quot;, &quot;N/A&quot;``</span>
 
 <span class="sd">    :param val: The value to check</span>
 <span class="sd">    :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \</span>
@@ -298,8 +298,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string&#39;s \</span>
 <span class="sd">    encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the \</span>
-<span class="sd">    ``unidecode`` package to transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly encode the \</span>
-<span class="sd">    text as ASCII and ignore non-ASCII characters.</span>
+<span class="sd">    :py:mod:`unidecode` package to transliterate into ASCII. And finally, if that doesn&#39;t work, it will forcibly \</span>
+<span class="sd">    encode the text as ASCII and ignore non-ASCII characters.</span>
 
 <span class="sd">    .. warning:: This function is potentially destructive to source input and should be used with some care. \</span>
 <span class="sd">        Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \</span>
@@ -313,9 +313,9 @@
 <span class="sd">    :return: Decoded text, or empty string</span>
 <span class="sd">    :rtype: str</span>
 
-<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the ``unidecode`` package will be \</span>
-<span class="sd">        used to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t hurt \</span>
-<span class="sd">        anything if you do.</span>
+<span class="sd">    .. note:: In Python 3, the decode/encode attempts will fail by default, and the :py:mod:`unidecode` package will \</span>
+<span class="sd">        be used to transliterate. In general, you shouldn&#39;t need to use this function in Python 3, but it shouldn&#39;t \</span>
+<span class="sd">        hurt anything if you do.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -379,8 +379,8 @@
 
 <span class="sd">    .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \</span>
 <span class="sd">    instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \</span>
-<span class="sd">    3. By default the function uses the ``ssdeep`` algorithm, which generates context-sensitive hashes that are useful \</span>
-<span class="sd">    for computing document similarities at scale.</span>
+<span class="sd">    3. By default the function uses the :py:mod:`ssdeep` algorithm, which generates context-sensitive hashes that are \</span>
+<span class="sd">    useful for computing document similarities at scale.</span>
 
 <span class="sd">    Usage::</span>
 
@@ -413,8 +413,8 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \</span>
-<span class="sd">    zipcodes library to ensure that the zipcode is real. If the zipcode doesn&#39;t validate successfully, ``None`` will be \</span>
-<span class="sd">    returned.</span>
+<span class="sd">    :py:mod:`zipcodes` library to ensure that the zipcode is real. If the zipcode doesn&#39;t validate successfully, \</span>
+<span class="sd">    ``None`` will be returned.</span>
 
 <span class="sd">    :param zip: Object that contains a sequence of digits (string, integer, float)</span>
 <span class="sd">    :type zip: str or float or int</span>
@@ -912,7 +912,7 @@
 <span class="sd">    etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the</span>
 <span class="sd">    files that contained the attributes, and the values are the attributes themselves.</span>
 
-<span class="sd">    This operates exactly the same as :py:func:``pewtils.extract_json_from_folder`` except instead of reading JSON files</span>
+<span class="sd">    This operates exactly the same as :py:func:`pewtils.extract_json_from_folder` except instead of reading JSON files</span>
 <span class="sd">    and adding them as values in the dictionary that gets returned, this function will instead look for Python files</span>
 <span class="sd">    that contain a function, class, method, or attribute with the name you provide in ``attribute_name`` and will load</span>
 <span class="sd">    that attribute in as the values.</span>

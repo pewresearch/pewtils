@@ -282,10 +282,10 @@ def extract_domain_from_url(
 
     .. note:: If ``resolve_url`` is set to True, the link will be standardized prior to domain extraction (in which \
         case you can provide optional timeout, session, and user_agent parameters that will be passed to \
-        ``canonical_link``). By default, however, the link will be operated on as-is. The final extracted domain is then \
-        checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \
-        domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included \
-        in this dictionary of known shorteners may be returned with an incorrect domain.
+        :py:func:`pewtils.http.canonical_link`). By default, however, the link will be operated on as-is. The final \
+        extracted domain is then checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it \
+        is recognized, the expanded domain will be returned instead. Shortened URLs that are not standardized and \
+        do not follow patterns included in this dictionary of known shorteners may be returned with an incorrect domain.
 
     Usage::
 

@@ -117,8 +117,8 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
-    Returns the opposite of the outcome of ``is_not_null``. The following values are always considered null:
-    ``numpy.nan, None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"``
+    Returns the opposite of the outcome of :py:func:`pewtils.is_not_null`. The following values are always \
+    considered null: ``numpy.nan, None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"``
 
     :param val: The value to check
     :param empty_lists_are_null: Whether or not an empty list or :py:class:`pandas.DataFrame` should be considered \
@@ -148,8 +148,8 @@ def decode_text(text, throw_loud_fail=False):
     """
     Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string's \
     encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the \
-    ``unidecode`` package to transliterate into ASCII. And finally, if that doesn't work, it will forcibly encode the \
-    text as ASCII and ignore non-ASCII characters.
+    :py:mod:`unidecode` package to transliterate into ASCII. And finally, if that doesn't work, it will forcibly \
+    encode the text as ASCII and ignore non-ASCII characters.
 
     .. warning:: This function is potentially destructive to source input and should be used with some care. \
         Input text that cannot be decoded may be stripped out, or replaced with a similar ASCII character or other \
@@ -163,9 +163,9 @@ def decode_text(text, throw_loud_fail=False):
     :return: Decoded text, or empty string
     :rtype: str
 
-    .. note:: In Python 3, the decode/encode attempts will fail by default, and the ``unidecode`` package will be \
-        used to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't hurt \
-        anything if you do.
+    .. note:: In Python 3, the decode/encode attempts will fail by default, and the :py:mod:`unidecode` package will \
+        be used to transliterate. In general, you shouldn't need to use this function in Python 3, but it shouldn't \
+        hurt anything if you do.
 
     """
 
@@ -229,8 +229,8 @@ def get_hash(text, hash_function="ssdeep"):
 
     .. note:: The string will be passed through :py:func:`pewtils.decode_text` and the returned value will be used \
     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and \
-    3. By default the function uses the ``ssdeep`` algorithm, which generates context-sensitive hashes that are useful \
-    for computing document similarities at scale.
+    3. By default the function uses the :py:mod:`ssdeep` algorithm, which generates context-sensitive hashes that are \
+    useful for computing document similarities at scale.
 
     Usage::
 
@@ -263,8 +263,8 @@ def zipcode_num_to_string(zipcode):
 
     """
     Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the \
-    zipcodes library to ensure that the zipcode is real. If the zipcode doesn't validate successfully, ``None`` will be \
-    returned.
+    :py:mod:`zipcodes` library to ensure that the zipcode is real. If the zipcode doesn't validate successfully, \
+    ``None`` will be returned.
 
     :param zip: Object that contains a sequence of digits (string, integer, float)
     :type zip: str or float or int
@@ -762,7 +762,7 @@ def extract_attributes_from_folder_modules(
     etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the
     files that contained the attributes, and the values are the attributes themselves.
 
-    This operates exactly the same as :py:func:``pewtils.extract_json_from_folder`` except instead of reading JSON files
+    This operates exactly the same as :py:func:`pewtils.extract_json_from_folder` except instead of reading JSON files
     and adding them as values in the dictionary that gets returned, this function will instead look for Python files
     that contain a function, class, method, or attribute with the name you provide in ``attribute_name`` and will load
     that attribute in as the values.

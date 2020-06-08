@@ -432,10 +432,10 @@
 
 <span class="sd">    .. note:: If ``resolve_url`` is set to True, the link will be standardized prior to domain extraction (in which \</span>
 <span class="sd">        case you can provide optional timeout, session, and user_agent parameters that will be passed to \</span>
-<span class="sd">        ``canonical_link``). By default, however, the link will be operated on as-is. The final extracted domain is then \</span>
-<span class="sd">        checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it is recognized, the expanded \</span>
-<span class="sd">        domain will be returned instead. Shortened URLs that are not standardized and do not follow patterns included \</span>
-<span class="sd">        in this dictionary of known shorteners may be returned with an incorrect domain.</span>
+<span class="sd">        :py:func:`pewtils.http.canonical_link`). By default, however, the link will be operated on as-is. The final \</span>
+<span class="sd">        extracted domain is then checked against known URL shorteners (see :ref:`vanity_link_shorteners`) and if it \</span>
+<span class="sd">        is recognized, the expanded domain will be returned instead. Shortened URLs that are not standardized and \</span>
+<span class="sd">        do not follow patterns included in this dictionary of known shorteners may be returned with an incorrect domain.</span>
 
 <span class="sd">    Usage::</span>
 
