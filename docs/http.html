@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HTTP Utilities &mdash; pewtils 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="I/O Tools" href="io.html" />
+    <link rel="prev" title="Core Functions" href="pewtils_core.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pewtils
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pewtils_core.html">Core Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTTP Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#link-shorteners">Link Shorteners</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-link-shorteners">General Link Shorteners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vanity-link-shorteners">Vanity Link Shorteners</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">I/O Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regex.html">Regex Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pewtils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>HTTP Utilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/http.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="http-utilities">
+<h1>HTTP Utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h1>
+<p>In this module, you’ll find a variety of useful functions for working with web data. The <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a> function is our best attempt at standardizing and cleaning a URL without losing any information, and the <a class="reference internal" href="#pewtils.http.strip_html" title="pewtils.http.strip_html"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.strip_html()</span></code></a> function is useful for attempting to extract text from raw HTML data with minimal fine-tuning.</p>
+<span class="target" id="module-pewtils.http"></span><p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-obj docutils literal notranslate"><span class="pre">canonical_link</span></code></a>(url[, timeout, session, …])</p></td>
+<td><p>Tries to resolve a link to the “most correct” version.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.http.extract_domain_from_url" title="pewtils.http.extract_domain_from_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_domain_from_url</span></code></a>(url[, …])</p></td>
+<td><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.hash_url" title="pewtils.http.hash_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hash_url</span></code></a>(url)</p></td>
+<td><p>Clears out http/https prefix and returns an MD5 hash of the URL.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.http.strip_html" title="pewtils.http.strip_html"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip_html</span></code></a>(html[, simple, break_tags])</p></td>
+<td><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.trim_get_parameters" title="pewtils.http.trim_get_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_get_parameters</span></code></a>(url[, session, timeout, …])</p></td>
+<td><p>Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional ones that can be removed without generating any redirects.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="pewtils.http.hash_url">
+<code class="sig-name descname">hash_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#hash_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.hash_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears out http/https prefix and returns an MD5 hash of the URL. More effective     when used in conjunction with <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – The URL to hash</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Hashed string representation of the URL using the md5 hashing algorithm.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">hash_url</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">hash_url</span><span class="p">(</span><span class="s2">&quot;http://www.example.com&quot;</span><span class="p">)</span>
+<span class="s2">&quot;7c1767b30512b6003fd3c2e618a86522&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">hash_url</span><span class="p">(</span><span class="s2">&quot;www.example.com&quot;</span><span class="p">)</span>
+<span class="s2">&quot;7c1767b30512b6003fd3c2e618a86522&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.strip_html">
+<code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML. Setting <code class="docutils literal notranslate"><span class="pre">simple=True</span></code> will make the     function use a much simpler regular expression approach to parsing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>html</strong> (<em>str</em>) – The HTML to process</p></li>
+<li><p><strong>simple</strong> (<em>bool</em>) – Whether or not to use a simple regex or more complex parsing rules (default=False)</p></li>
+<li><p><strong>break_tags</strong> (<em>list</em>) – A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The text with HTML components removed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">strip_html</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_html</span> <span class="o">=</span> <span class="s2">&quot;&lt;html&gt;&lt;head&gt;Header text&lt;/head&gt;&lt;body&gt;Body text&lt;/body&gt;&lt;/html&gt;&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">strip_html</span><span class="p">(</span><span class="n">my_html</span><span class="p">)</span>
+<span class="s1">&#39;Header text Body text&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.trim_get_parameters">
+<code class="sig-name descname">trim_get_parameters</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">session=None</em>, <em class="sig-param">timeout=30</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#trim_get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.trim_get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a URL (presumed to be the final end point) and iterates over GET parameters, attempting to find optional
+ones that can be removed without generating any redirects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The URL to trim</p></li>
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional) A persistent session that can optionally be passed (useful if you’re processing many     links at once)</p></li>
+<li><p><strong>user_agent</strong> (<em>str</em>) – User agent for the auto-created requests Session to use, if a preconfigured requests Session     is not provided</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – Timeout for requests</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The original URL with optional GET parameters removed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">trim_get_parameters</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">trim_get_parameters</span><span class="p">(</span><span class="s2">&quot;https://httpbin.org/status/200?param=1&quot;</span><span class="p">)</span>
+<span class="s2">&quot;https://httpbin.org/status/200&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.extract_domain_from_url">
+<code class="sig-name descname">extract_domain_from_url</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">include_subdomain=True</em>, <em class="sig-param">resolve_url=False</em>, <em class="sig-param">timeout=1.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em>, <em class="sig-param">expand_shorteners=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#extract_domain_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.extract_domain_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to extract a standardized domain from a url by following the link and extracting the TLD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The link from which to extract the domain</p></li>
+<li><p><strong>include_subdomain</strong> (<em>bool</em>) – Whether or not to include the subdomain (e.g. ‘news.google.com’); default is True</p></li>
+<li><p><strong>resolve_url</strong> – Whether to fully resolve the URL.  If False (default), it will operate on the URL as-is; if     True, the URL will be passed to <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a> to be standardized prior to extracting the     domain.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) Maximum number of seconds to wait on a request before     timing out (default is 1)</p></li>
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) A persistent session that can optionally be passed     (useful if you’re processing many links at once)</p></li>
+<li><p><strong>user_agent</strong> (<em>str</em>) – (Optional, for use with <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code>) User agent for the auto-created requests Session to use,     if a preconfigured requests Session is not provided</p></li>
+<li><p><strong>expand_shorteners</strong> (<em>bool</em>) – If True, shortened URLs that don’t successfully expand will be checked against a list     of known URL shorteners and expanded if recognized. (Default = True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The domain for the link</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">resolve_url</span></code> is set to True, the link will be standardized prior to domain extraction (in which         case you can provide optional timeout, session, and user_agent parameters that will be passed to         <a class="reference internal" href="#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a>). By default, however, the link will be operated on as-is. The final         extracted domain is then checked against known URL shorteners (see <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a>) and if it         is recognized, the expanded domain will be returned instead. Shortened URLs that are not standardized and         do not follow patterns included in this dictionary of known shorteners may be returned with an incorrect domain.</p>
+</div>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">extract_domain_from_url</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extract_domain_from_url</span><span class="p">(</span><span class="s2">&quot;http://forums.bbc.co.uk&quot;</span><span class="p">,</span> <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="s2">&quot;bbc.co.uk&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extract_domain_from_url</span><span class="p">(</span><span class="s2">&quot;http://forums.bbc.co.uk&quot;</span><span class="p">,</span> <span class="n">include_subdomain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="s2">&quot;forums.bbc.co.uk&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.canonical_link">
+<code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to resolve a link to the “most correct” version.</p>
+<p>Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving     the actual data. Follows redirects and tries to pick the most informative version of a URL while avoiding     redirects to generic 404 pages. Also tries to iteratively remove optional GET parameters.</p>
+<p>May not be particularly effective on dead links, but may still be able to follow redirects enough     to return a URL with the correct domain associated with the original link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The URL to test. Should be fully qualified.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – How long to wait for a response before giving up (default is one second)</p></li>
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional) A persistent session that can optionally be passed (useful if you’re processing many     links at once)</p></li>
+<li><p><strong>user_agent</strong> (<em>str</em>) – User agent for the auto-created requests Session to use, if a preconfigured requests Session     is not provided</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if none supplied.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a> for a complete list of shortened links recognized by this function.</p>
+<p>This function might not resolve <em>all</em> existing URL modificiations, but it has been tested on a vast, well         maintained variety of URLs. It typically resolves URL to the correct final page while avoiding redirects to         generic error pages.</p>
+</div>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">canonical_link</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canonical_link</span><span class="p">(</span><span class="s2">&quot;https://pewrsr.ch/2lxB0EX&quot;</span><span class="p">)</span>
+<span class="s2">&quot;https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="link-shorteners">
+<h2>Link Shorteners<a class="headerlink" href="#link-shorteners" title="Permalink to this headline">¶</a></h2>
+<p>List of link shorteners recognized by methods in this section.</p>
+<div class="section" id="general-link-shorteners">
+<h3>General Link Shorteners<a class="headerlink" href="#general-link-shorteners" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>A list of known <a class="reference internal" href="http_link_shorteners.html#gen-link-shorteners"><span class="std std-ref">Generic Link Shorteners</span></a>.</p>
+</div></blockquote>
+</div>
+<div class="section" id="vanity-link-shorteners">
+<h3>Vanity Link Shorteners<a class="headerlink" href="#vanity-link-shorteners" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>A list of known URL shorteners for websites specific <a class="reference internal" href="http_link_shorteners.html#vanity-link-shorteners"><span class="std std-ref">Vanity Link Shorteners</span></a> (primarily news websites).</p>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="io.html" class="btn btn-neutral float-right" title="I/O Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pewtils_core.html" class="btn btn-neutral float-left" title="Core Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pew Research Center
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

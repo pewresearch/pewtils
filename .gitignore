@@ -1,0 +1,6 @@
+.env/
+.ipynb_checkpoints
+*.pyc
+.python-version
+.idea/
+_build/
