@@ -383,6 +383,10 @@
 <span class="sd">    3. By default the function uses the :py:mod:`ssdeep` algorithm, which generates context-sensitive hashes that are \</span>
 <span class="sd">    useful for computing document similarities at scale.</span>
 
+<span class="sd">    .. note:: Using `hash_function=&#39;ssdeep&#39;` requires the :py:mod:`ssdeep` library, which is not installed by default \</span>
+<span class="sd">    because it requires the installation of additional system libraries on certain operating systems. For help \</span>
+<span class="sd">    installing ssdeep, refer to the pewtils documentation installation section, which provides OS-specific instructions.</span>
+
 <span class="sd">    Usage::</span>
 
 <span class="sd">        from pewtils import get_hash</span>
@@ -403,8 +407,16 @@
     <span class="k">elif</span> <span class="n">hash_function</span> <span class="o">==</span> <span class="s2">&quot;md5&quot;</span><span class="p">:</span>
         <span class="n">hashed</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">ssdeep</span>
-
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">ssdeep</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                To use get_hash with hash_function=&#39;ssdeep&#39; you need to install the ssdeep package. Try running: </span>
+<span class="sd">                    &gt;&gt; BUILD_LIB=1 pip install ssdeep</span>
+<span class="sd">                If you encounter installation problems, refer to the pewtils documentation for troubleshooting help.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="p">)</span>
         <span class="n">hashed</span> <span class="o">=</span> <span class="n">ssdeep</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">hashed</span></div>
