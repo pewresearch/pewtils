@@ -17,7 +17,7 @@ Or you can install from source:
     cd pewtils
     python setup.py install
     
-#### Installation Troubleshooting
+### Installation Troubleshooting
  
 #### Using 64-bit Python
 
