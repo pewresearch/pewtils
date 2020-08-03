@@ -7,11 +7,11 @@ resources, and regular expressions.
 
 ## Installation
 
-To install, you can use `pip`: ::
+To install, you can use `pip`: 
 
     pip install git+https://github.com/pewresearch/pewtils#egg=pewtils
 
-Or you can install from source: ::
+Or you can install from source: 
 
     git clone https://github.com/pewresearch/pewtils.git
     cd pewtils
