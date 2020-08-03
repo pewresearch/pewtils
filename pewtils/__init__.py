@@ -232,6 +232,10 @@ def get_hash(text, hash_function="ssdeep"):
     3. By default the function uses the :py:mod:`ssdeep` algorithm, which generates context-sensitive hashes that are \
     useful for computing document similarities at scale.
 
+    .. note:: Using `hash_function='ssdeep'` requires the :py:mod:`ssdeep` library, which is not installed by default \
+    because it requires the installation of additional system libraries on certain operating systems. For help \
+    installing ssdeep, refer to the pewtils documentation installation section, which provides OS-specific instructions.
+
     Usage::
 
         from pewtils import get_hash
@@ -252,8 +256,16 @@ def get_hash(text, hash_function="ssdeep"):
     elif hash_function == "md5":
         hashed = md5(text).hexdigest()
     else:
-        import ssdeep
-
+        try:
+            import ssdeep
+        except ImportError:
+            raise Exception(
+                """
+                To use get_hash with hash_function='ssdeep' you need to install the ssdeep package. Try running: 
+                    >> BUILD_LIB=1 pip install ssdeep
+                If you encounter installation problems, refer to the pewtils documentation for troubleshooting help.
+            """
+            )
         hashed = ssdeep.hash(text)
 
     return hashed
