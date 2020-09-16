@@ -359,6 +359,10 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 <p class="admonition-title">Note</p>
 <p>The string will be passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> and the returned value will be used     instead of the original value if it runs successfully, in order to ensure consistent hashing in both Python 2 and     3. By default the function uses the <code class="xref py py-mod docutils literal notranslate"><span class="pre">ssdeep</span></code> algorithm, which generates context-sensitive hashes that are     useful for computing document similarities at scale.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using <cite>hash_function=’ssdeep’</cite> requires the <code class="xref py py-mod docutils literal notranslate"><span class="pre">ssdeep</span></code> library, which is not installed by default     because it requires the installation of additional system libraries on certain operating systems. For help     installing ssdeep, refer to the pewtils documentation installation section, which provides OS-specific instructions.</p>
+</div>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span>
 
