@@ -15,7 +15,7 @@ from requests.exceptions import ReadTimeout
 
 _ = pd.read_csv(
     os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./general_link_shorteners.csv"
+        os.path.dirname(os.path.abspath(__file__)), "general_link_shorteners.csv"
     )
 )
 GENERAL_LINK_SHORTENERS = _["shortener"].values
@@ -23,7 +23,7 @@ GENERAL_LINK_SHORTENERS = _["shortener"].values
 
 _ = pd.read_csv(
     os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
+        os.path.dirname(os.path.abspath(__file__)), "vanity_link_shorteners.csv"
     )
 )
 _ = _[_["historical"] == 0]
@@ -31,7 +31,7 @@ VANITY_LINK_SHORTENERS = dict(zip(_["shortener"], _["expanded"]))
 
 _ = pd.read_csv(
     os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "./vanity_link_shorteners.csv"
+        os.path.dirname(os.path.abspath(__file__)), "vanity_link_shorteners.csv"
     )
 )
 _ = _[_["historical"] == 1]
