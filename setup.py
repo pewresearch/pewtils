@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("README.md") as README:
     readme = str(README.read())
@@ -16,7 +16,7 @@ setup(
     author="Pew Research Center",
     author_email="info@pewresearch.org",
     install_requires=install_requires,
-    packages=["pewtils"],
+    packages=[p for p in find_packages() if p != "tests"],
     include_package_data=True,
     keywords="utilities, link standardization, input, output, pew pew pew",
     license="GPLv2+",
