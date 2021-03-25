@@ -1,3 +1,5 @@
 include README.md
 include requirements.txt
 include pewtils/VERSION
+include pewtils/general_link_shorteners.csv
+include pewtils/vanity_link_shorteners.csv
