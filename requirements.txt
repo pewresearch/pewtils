@@ -26,4 +26,4 @@ unicode>=2.7
 unidecode>=0.4.20
 xlrd>=1.2.0
 xlsxwriter>=1.1.8
-zipcodes @ git+ssh://git@github.com/seanpianka/zipcodes.git#egg=zipcodes
+zipcodes>=1.1.2
