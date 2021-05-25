@@ -204,22 +204,25 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.is_null" title="pewtils.__init__.is_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_null</span></code></a>(val[, empty_lists_are_null, …])</p></td>
 <td><p>Returns the opposite of the outcome of <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.is_not_null()</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.new_random_number" title="pewtils.__init__.new_random_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_random_number</span></code></a>([attempt, minimum, maximum])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.multiprocess_group_apply" title="pewtils.__init__.multiprocess_group_apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocess_group_apply</span></code></a>(grp, func, *args, …)</p></td>
+<td><p>Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently     map or aggregate data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.new_random_number" title="pewtils.__init__.new_random_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_random_number</span></code></a>([attempt, minimum, maximum])</p></td>
 <td><p>Returns a random number between the boundary that exponentially increases with the number of <code class="docutils literal notranslate"><span class="pre">attempt</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.recursive_update" title="pewtils.__init__.recursive_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recursive_update</span></code></a>(existing, new)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.recursive_update" title="pewtils.__init__.recursive_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recursive_update</span></code></a>(existing, new)</p></td>
 <td><p>Takes an object and a dictionary representation of attributes and values, and recursively traverses through the new values and updates the object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.scale_range" title="pewtils.__init__.scale_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_range</span></code></a>(old_val, old_min, old_max, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.scale_range" title="pewtils.__init__.scale_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_range</span></code></a>(old_val, old_min, old_max, …)</p></td>
 <td><p>Scales a value from one range to another.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.scan_dictionary" title="pewtils.__init__.scan_dictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan_dictionary</span></code></a>(search_dict, field)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.scan_dictionary" title="pewtils.__init__.scan_dictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan_dictionary</span></code></a>(search_dict, field)</p></td>
 <td><p>Takes a dictionary with nested lists and dictionaries, and searches recursively for a specific key.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.vector_concat_text" title="pewtils.__init__.vector_concat_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vector_concat_text</span></code></a>(*args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.vector_concat_text" title="pewtils.__init__.vector_concat_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vector_concat_text</span></code></a>(*args)</p></td>
 <td><p>Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.zipcode_num_to_string" title="pewtils.__init__.zipcode_num_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zipcode_num_to_string</span></code></a>(zipcode)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.zipcode_num_to_string" title="pewtils.__init__.zipcode_num_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zipcode_num_to_string</span></code></a>(zipcode)</p></td>
 <td><p>Attempts to standardize a string/integer/float that contains a U.S.</p></td>
 </tr>
 </tbody>
@@ -713,6 +716,75 @@ new values and updates the object.</p>
 <span class="n">value</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">mapped</span> <span class="o">=</span> <span class="n">cached_series_mapper</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">],</span> <span class="n">my_function</span><span class="p">)</span>
 <span class="n">value</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.__init__.multiprocess_group_apply">
+<code class="sig-name descname">multiprocess_group_apply</code><span class="sig-paren">(</span><em class="sig-param">grp</em>, <em class="sig-param">func</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#multiprocess_group_apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.multiprocess_group_apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently     map or aggregate data. Each group gets processed in parallel, and the results are concatenated together after     all processing has finished. If you pass a function that aggregates each group into a single value, you’ll get     back a DataFrame with one row for each group, as though you had performed a <cite>.agg</cite> function.     If you pass a function that returns a value for each _row_ in the group, then you’ll get back a DataFrame     in your original shape. In this case, you would simply be using grouping to efficiently apply a row-level operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grp</strong> (<em>pandas.core.groupby.generic.DataFrameGroupBy</em>) – A Pandas DataFrameGroupBy object</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – A function that accepts a Pandas DataFrame representing a group from the original DataFrame</p></li>
+<li><p><strong>args</strong> – Arguments to be passed to the function</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments to be passed to the function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The resulting DataFrame</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;one two three&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;one two three four&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;one two&quot;</span><span class="p">}</span>
+<span class="p">])</span>
+
+<span class="c1">### For efficient aggregation</span>
+
+<span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="n">grp</span><span class="p">):</span>
+    <span class="c1"># Simple function that returns the number of rows in each group</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group_col&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="mi">1</span>    <span class="mi">2</span>
+<span class="mi">2</span>    <span class="mi">1</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">multiprocess_group_apply</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group_col&quot;</span><span class="p">),</span> <span class="n">get_length</span><span class="p">)</span>
+<span class="mi">1</span>    <span class="mi">2</span>
+<span class="mi">2</span>    <span class="mi">1</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+
+<span class="c1">### For efficient mapping</span>
+
+<span class="k">def</span> <span class="nf">get_value_length</span><span class="p">(</span><span class="n">grp</span><span class="p">):</span>
+    <span class="c1"># Simple function that returns the word count of each row in the group</span>
+    <span class="k">return</span> <span class="n">grp</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+<span class="mi">0</span>    <span class="mi">3</span>
+<span class="mi">1</span>    <span class="mi">4</span>
+<span class="mi">2</span>    <span class="mi">2</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">multiprocess_group_apply</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group_col&quot;</span><span class="p">),</span> <span class="n">get_value_length</span><span class="p">)</span>
+<span class="mi">0</span>    <span class="mi">3</span>
+<span class="mi">1</span>    <span class="mi">4</span>
+<span class="mi">2</span>    <span class="mi">2</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+
+<span class="c1"># If you just want to efficiently map a function to your DataFrame and you want to evenly split your</span>
+<span class="c1"># DataFrame into groups, you could do the following:</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;group_col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">/</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;mapped_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">multiprocess_group_apply</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group_col&quot;</span><span class="p">),</span> <span class="n">get_value_length</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group_col&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>

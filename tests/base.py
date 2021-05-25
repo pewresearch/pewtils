@@ -197,6 +197,33 @@ class BaseTests(unittest.TestCase):
         df["mapped"] = cached_series_mapper(df["test"], lambda x: str(float(x)))
         self.assertEqual(list(df["mapped"].values), ["1.0", "2.0", "3.0", "3.0"])
 
+    def test_multiprocess_group_apply(self):
+
+        import pandas as pd
+        from pewtils import multiprocess_group_apply
+
+        df = pd.DataFrame([{"test": 1}, {"test": 2}, {"test": 3}, {"test": 3}])
+        df["group"] = [1, 1, 2, 2]
+
+        for add, multiply, expected in [(1, 2, 6), (1, 3, 9), (2, 2, 8)]:
+            result = multiprocess_group_apply(
+                df.groupby("group"), _test_function_agg, add, multiply=multiply
+            )
+            self.assertEqual(len(result), 2)
+            self.assertEqual((result == expected).astype(int).sum(), 2)
+
+        for add, multiply, expected in [
+            (1, 2, [4, 6, 8, 8]),
+            (1, 3, [6, 9, 12, 12]),
+            (2, 2, [6, 8, 10, 10]),
+        ]:
+
+            result = multiprocess_group_apply(
+                df.groupby("group"), _test_function_map, add, multiply=multiply
+            )
+            self.assertEqual(len(result), 4)
+            self.assertEqual(list(result.values), expected)
+
     def test_scale_range(self):
         from pewtils import scale_range
 
@@ -274,3 +301,11 @@ class BaseTests(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+def _test_function_agg(grp, add, multiply=1):
+    return (len(grp) + add) * multiply
+
+
+def _test_function_map(grp, add, multiply=1):
+    return grp["test"].map(lambda x: (x + add) * multiply)

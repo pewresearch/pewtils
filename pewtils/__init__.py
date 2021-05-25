@@ -5,6 +5,7 @@ import json
 import sys
 import chardet
 import copy
+import multiprocessing
 import warnings
 import zipcodes
 import signal
@@ -675,6 +676,90 @@ def cached_series_mapper(series, function):
         val_map[val] = function(val)
 
     return series.map(val_map)
+
+
+def multiprocess_group_apply(grp, func, *args, **kwargs):
+    """
+
+    Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently \
+    map or aggregate data. Each group gets processed in parallel, and the results are concatenated together after \
+    all processing has finished. If you pass a function that aggregates each group into a single value, you'll get \
+    back a DataFrame with one row for each group, as though you had performed a `.agg` function. \
+    If you pass a function that returns a value for each _row_ in the group, then you'll get back a DataFrame \
+    in your original shape. In this case, you would simply be using grouping to efficiently apply a row-level operation.
+
+    :param grp: A Pandas DataFrameGroupBy object
+    :type grp: pandas.core.groupby.generic.DataFrameGroupBy
+    :param func: A function that accepts a Pandas DataFrame representing a group from the original DataFrame
+    :type func: function
+    :param args: Arguments to be passed to the function
+    :param kwargs: Keyword arguments to be passed to the function
+    :return: The resulting DataFrame
+    :rtype: pandas.DataFrame
+
+    Usage::
+
+        df = pd.DataFrame([
+            {"group": 1, "value": "one two three"},
+            {"group": 1, "value": "one two three four"},
+            {"group": 2, "value": "one two"}
+        ])
+
+        ### For efficient aggregation
+
+        def get_length(grp):
+            # Simple function that returns the number of rows in each group
+            return len(grp)
+
+        >>> df.groupby("group_col").apply(lambda x: len(x))
+        1    2
+        2    1
+        dtype: int64
+        >>> multiprocess_group_apply(df.groupby("group_col"), get_length)
+        1    2
+        2    1
+        dtype: int64
+
+        ### For efficient mapping
+
+        def get_value_length(grp):
+            # Simple function that returns the word count of each row in the group
+            return grp['value'].map(lambda x: len(x.split()))
+
+        >>> df['value'].map(lambda x: len(x.split()))
+        0    3
+        1    4
+        2    2
+        Name: value, dtype: int64
+        >>> multiprocess_group_apply(df.groupby("group_col"), get_value_length)
+        0    3
+        1    4
+        2    2
+        Name: value, dtype: int64
+
+        # If you just want to efficiently map a function to your DataFrame and you want to evenly split your
+        # DataFrame into groups, you could do the following:
+
+        df["group_col"] = (df.reset_index().index.values / (len(df) / multiprocessing.cpu_count())).astype(int)
+        df["mapped_value"] = multiprocess_group_apply(df.groupby("group_col"), get_value_length)
+        del df["group_col"]
+
+    """
+
+    results = []
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    for name, group in grp:
+        results.append(pool.apply_async(func, (group,) + args, kwargs))
+    pool.close()
+    pool.join()
+    results = [r.get() for r in results]
+
+    if not hasattr(results[0], "__len__") or isinstance(results[0], str):
+        # Assume it's an aggregation function
+        return pd.Series(results, index=[g for g, _ in grp])
+    else:
+        # Assume you're just mapping the function normally and using the groups to split the data
+        return pd.concat(results)
 
 
 def extract_json_from_folder(

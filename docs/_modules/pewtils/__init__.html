@@ -156,6 +156,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">chardet</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">zipcodes</span>
 <span class="kn">import</span> <span class="nn">signal</span>
@@ -828,6 +829,90 @@
     <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">val_map</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="multiprocess_group_apply"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.multiprocess_group_apply">[docs]</a><span class="k">def</span> <span class="nf">multiprocess_group_apply</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently \</span>
+<span class="sd">    map or aggregate data. Each group gets processed in parallel, and the results are concatenated together after \</span>
+<span class="sd">    all processing has finished. If you pass a function that aggregates each group into a single value, you&#39;ll get \</span>
+<span class="sd">    back a DataFrame with one row for each group, as though you had performed a `.agg` function. \</span>
+<span class="sd">    If you pass a function that returns a value for each _row_ in the group, then you&#39;ll get back a DataFrame \</span>
+<span class="sd">    in your original shape. In this case, you would simply be using grouping to efficiently apply a row-level operation.</span>
+
+<span class="sd">    :param grp: A Pandas DataFrameGroupBy object</span>
+<span class="sd">    :type grp: pandas.core.groupby.generic.DataFrameGroupBy</span>
+<span class="sd">    :param func: A function that accepts a Pandas DataFrame representing a group from the original DataFrame</span>
+<span class="sd">    :type func: function</span>
+<span class="sd">    :param args: Arguments to be passed to the function</span>
+<span class="sd">    :param kwargs: Keyword arguments to be passed to the function</span>
+<span class="sd">    :return: The resulting DataFrame</span>
+<span class="sd">    :rtype: pandas.DataFrame</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        df = pd.DataFrame([</span>
+<span class="sd">            {&quot;group&quot;: 1, &quot;value&quot;: &quot;one two three&quot;},</span>
+<span class="sd">            {&quot;group&quot;: 1, &quot;value&quot;: &quot;one two three four&quot;},</span>
+<span class="sd">            {&quot;group&quot;: 2, &quot;value&quot;: &quot;one two&quot;}</span>
+<span class="sd">        ])</span>
+
+<span class="sd">        ### For efficient aggregation</span>
+
+<span class="sd">        def get_length(grp):</span>
+<span class="sd">            # Simple function that returns the number of rows in each group</span>
+<span class="sd">            return len(grp)</span>
+
+<span class="sd">        &gt;&gt;&gt; df.groupby(&quot;group_col&quot;).apply(lambda x: len(x))</span>
+<span class="sd">        1    2</span>
+<span class="sd">        2    1</span>
+<span class="sd">        dtype: int64</span>
+<span class="sd">        &gt;&gt;&gt; multiprocess_group_apply(df.groupby(&quot;group_col&quot;), get_length)</span>
+<span class="sd">        1    2</span>
+<span class="sd">        2    1</span>
+<span class="sd">        dtype: int64</span>
+
+<span class="sd">        ### For efficient mapping</span>
+
+<span class="sd">        def get_value_length(grp):</span>
+<span class="sd">            # Simple function that returns the word count of each row in the group</span>
+<span class="sd">            return grp[&#39;value&#39;].map(lambda x: len(x.split()))</span>
+
+<span class="sd">        &gt;&gt;&gt; df[&#39;value&#39;].map(lambda x: len(x.split()))</span>
+<span class="sd">        0    3</span>
+<span class="sd">        1    4</span>
+<span class="sd">        2    2</span>
+<span class="sd">        Name: value, dtype: int64</span>
+<span class="sd">        &gt;&gt;&gt; multiprocess_group_apply(df.groupby(&quot;group_col&quot;), get_value_length)</span>
+<span class="sd">        0    3</span>
+<span class="sd">        1    4</span>
+<span class="sd">        2    2</span>
+<span class="sd">        Name: value, dtype: int64</span>
+
+<span class="sd">        # If you just want to efficiently map a function to your DataFrame and you want to evenly split your</span>
+<span class="sd">        # DataFrame into groups, you could do the following:</span>
+
+<span class="sd">        df[&quot;group_col&quot;] = (df.reset_index().index.values / (len(df) / multiprocessing.cpu_count())).astype(int)</span>
+<span class="sd">        df[&quot;mapped_value&quot;] = multiprocess_group_apply(df.groupby(&quot;group_col&quot;), get_value_length)</span>
+<span class="sd">        del df[&quot;group_col&quot;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">(</span><span class="n">group</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;__len__&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Assume it&#39;s an aggregation function</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Assume you&#39;re just mapping the function normally and using the groups to split the data</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="extract_json_from_folder"><a class="viewcode-back" href="../../pewtils_core.html#pewtils.__init__.extract_json_from_folder">[docs]</a><span class="k">def</span> <span class="nf">extract_json_from_folder</span><span class="p">(</span>
     <span class="n">folder_path</span><span class="p">,</span> <span class="n">include_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">concat_subdir_names</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
@@ -1060,6 +1145,24 @@
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
         <span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Timer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">))</span>
 </pre></div>
 
            </div>
