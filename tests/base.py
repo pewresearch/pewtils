@@ -299,6 +299,20 @@ class BaseTests(unittest.TestCase):
         self.assertFalse(test(3))
         self.assertTrue(test(1))
 
+    def test_print_execution_time(self):
+
+        import re
+        import time
+        from io import StringIO
+        from pewtils import PrintExecutionTime
+
+        temp = StringIO()
+        with PrintExecutionTime(label="my function", stdout=temp):
+            time.sleep(5)
+        temp.seek(0)
+        output = temp.getvalue()
+        self.assertIsNotNone(re.match(r"my function: 5\.[0-9]+ seconds", output))
+
     def tearDown(self):
         pass
 

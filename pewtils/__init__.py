@@ -1,14 +1,15 @@
 from __future__ import absolute_import
-import os
-import re
-import json
-import sys
 import chardet
 import copy
+import json
 import multiprocessing
+import os
+import re
+import signal
+import sys
+import time
 import warnings
 import zipcodes
-import signal
 
 try:
     from importlib.machinery import SourceFileLoader
@@ -18,11 +19,11 @@ except ImportError:
 import pandas as pd
 import numpy as np
 
-from random import uniform
 from contextlib import closing
+from hashlib import md5
+from random import uniform
 from scandir import walk
 from unidecode import unidecode
-from hashlib import md5
 
 
 class classproperty(object):
@@ -994,3 +995,40 @@ class timeout_wrapper:
 
     def __exit__(self, t, value, traceback):
         signal.alarm(0)
+
+
+class PrintExecutionTime(object):
+
+    """
+    Simple context manager to print the time it takes for a block of code to execute
+
+    :param label: A label to print alongside the execution time
+    :param stdout: a StringIO-like output stream (sys.stdout by default)
+
+    Usage::
+
+        from pewtils import PrintExecutionTime
+
+        >>> with PrintExecutionTime(label="my function"): time.sleep(5)
+        my function: 5.004292011260986 seconds
+
+    """
+
+    def __init__(self, label=None, stdout=None):
+        self.start_time = None
+        self.end_time = None
+        self.label = label
+        self.stdout = sys.stdout if not stdout else stdout
+
+    def __enter__(self):
+        self.start_time = time.time()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.end_time = time.time()
+        if self.label:
+            self.stdout.write(
+                "{}: {} seconds".format(self.label, self.end_time - self.start_time)
+            )
+        else:
+            self.stdout.write("{} seconds".format(self.end_time - self.start_time))

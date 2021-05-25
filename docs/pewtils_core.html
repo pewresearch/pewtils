@@ -162,7 +162,10 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.classproperty" title="pewtils.__init__.classproperty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classproperty</span></code></a>(fget)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.PrintExecutionTime" title="pewtils.__init__.PrintExecutionTime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrintExecutionTime</span></code></a>([label, stdout])</p></td>
+<td><p>Simple context manager to print the time it takes for a block of code to execute</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.classproperty" title="pewtils.__init__.classproperty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classproperty</span></code></a>(fget)</p></td>
 <td><p>This decorator allows you to define functions on a class that are accessible directly from the class itself (rather than an instance of the class).</p></td>
 </tr>
 </tbody>
@@ -872,6 +875,27 @@ that attribute in as the values.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>if you use Python 2.7 you will need to add <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">absolute_import</span></code> to the top of files         that you want to scan and import using this function.</p>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="pewtils.__init__.PrintExecutionTime">
+<em class="property">class </em><code class="sig-name descname">PrintExecutionTime</code><span class="sig-paren">(</span><em class="sig-param">label=None</em>, <em class="sig-param">stdout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#PrintExecutionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.__init__.PrintExecutionTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple context manager to print the time it takes for a block of code to execute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> – A label to print alongside the execution time</p></li>
+<li><p><strong>stdout</strong> – a StringIO-like output stream (sys.stdout by default)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">PrintExecutionTime</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">PrintExecutionTime</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;my function&quot;</span><span class="p">):</span> <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">my</span> <span class="n">function</span><span class="p">:</span> <span class="mf">5.004292011260986</span> <span class="n">seconds</span>
+</pre></div>
 </div>
 </dd></dl>
 
