@@ -51,10 +51,6 @@ class HTTPTests(unittest.TestCase):
                 "https://www.nbcnews.com/politics/congress/senate-vote-9-11-first-responders-bill-tuesday-n1032831?cid=sm_npd_nn_tw_ma",
             ),
             (
-                "https://www.c-span.org/Live-Video/C-SPAN",
-                "https://www.c-span.org/live/",
-            ),
-            (
                 "https://www.google.com/maps/d/viewer?mid=zQ8Zk-5ey-Y8.kgD9Rxu8JCNQ&hl=en&usp=sharing",
                 "https://www.google.com/maps/d/viewer?mid=1NQVHeBBcVAnz9JwX1frZxX1ZgjY",
             ),

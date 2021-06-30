@@ -33,8 +33,8 @@ class IOTests(unittest.TestCase):
             if not f.endswith(".pyc") and f not in ["__pycache__", ".DS_Store"]
         ]
         self.assertEqual(
-            files,
-            [
+            sorted(files),
+            sorted([
                 "subfolder",
                 "__init__.py",
                 "example.html",
@@ -42,7 +42,7 @@ class IOTests(unittest.TestCase):
                 "json.json",
                 "example_stripped.html",
                 "py.py",
-            ],
+            ])
         )
 
     def test_filehandler_clear_folder(self):
