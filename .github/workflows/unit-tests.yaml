@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
 
 jobs:
   unit-tests:
@@ -18,12 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#       - name: install os dependencies
-#         run: |
-#           set -ex
-#           apt-get -qy update
-#           apt-get -qy --no-install-recommends install zip
-
       - name: Install python dependencies
         run: |
           pip3 install flake8
@@ -31,11 +23,8 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          make python_lint
 
       - name: Run unit tests
         run: |
-          python3 -m unittest tests
+          make python_test

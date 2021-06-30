@@ -410,6 +410,10 @@ class FileHandler(object):
                     data = pd.read_csv(StringIO(data), **io_kwargs)
 
             elif format in ["xlsx", "xls"]:
+                # https://stackoverflow.com/questions/64264563/attributeerror-elementtree-object-has-no-attribute-getiterator-when-trying
+                if "engine" not in io_kwargs:
+                    io_kwargs["engine"] = "openpyxl"
+
                 try:
                     data = pd.read_excel(BytesIO(data), **io_kwargs)
                 except:
