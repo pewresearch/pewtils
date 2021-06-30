@@ -144,9 +144,10 @@ class HTTPTests(unittest.TestCase):
                             )
                         )
                     else:
-                        resolved = re.sub(
-                            "www[0-9]?\.", "", urlparse.urlparse(resp.url).netloc
-                        )
+                        resolved = re.match(
+                            "(www[0-9]?\.)?([^:]+)(:\d+$)?",
+                            urlparse.urlparse(resp.url).netloc
+                        ).group(2)
                         resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
                         self.assertIn(resolved, ["bitly.com", "trib.al", v])
         session.close()
