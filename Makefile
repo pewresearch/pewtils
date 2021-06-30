@@ -23,10 +23,10 @@ python_lint:
 	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
 	flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-python_test: python_lint
+python_test:
 	python3 -m unittest tests
 
-python_build: python_test
+python_build:
 	python3 setup.py sdist bdist_wheel
 
 # Catch-all target: route all unknown targets to Sphinx using the new
