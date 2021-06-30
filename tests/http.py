@@ -148,7 +148,7 @@ class HTTPTests(unittest.TestCase):
                             "www[0-9]?\.", "", urlparse.urlparse(resp.url).netloc
                         )
                         resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
-                        self.assertIn(resolved, ["bitly.com", v])
+                        self.assertIn(resolved, ["bitly.com", "trib.al", v])
         session.close()
 
     def test_extract_domain_from_url(self):
