@@ -21,11 +21,12 @@ github_docs:
 	@make html
 	@cp -a _build/html/. ./docs
 
-python_lint:
+python_lint_errors:
 	# stop the build if there are Python syntax errors or undefined names
-	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-	flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,build,dist
+
+python_lint_quality:
+	flake8 . --exit-zero --statistics --count --show-source --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist
 
 python_test:
 	python3 -m unittest tests
