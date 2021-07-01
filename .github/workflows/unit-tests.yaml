@@ -15,30 +15,13 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip3 install flake8
+          pip3 install flake8 lintly
           pip3 install -r requirements.txt
 
       - name: Lint with flake8
         run: |
           make python_lint_errors
-
-      - uses: grantmcconnaughey/lintly-flake8-github-action@v1.0
-        with:
-          # The GitHub API token to create reviews with
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Fail if "new" violations detected or "any", default "new"
-          failIf: new
-          # Additional arguments to pass to flake8, default "." (current directory)
-          args: ". --exit-zero --statistics --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist"
-
-      - uses: grantmcconnaughey/lintly-flake8-github-action@v1.0
-        with:
-          # The GitHub API token to create reviews with
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Fail if "new" violations detected or "any", default "new"
-          failIf: new
-          # Additional arguments to pass to flake8, default "." (current directory)
-          args: ". --exit-zero --statistics --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist"
+          flake8 . --exit-zero --max-line-length 127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist | lintly --api-key ${{ secrets.GITHUB_TOKEN }} --fail-on any --log --no-post-status
 
       - name: Run unit tests
         run: |
