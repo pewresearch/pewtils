@@ -21,7 +21,9 @@ jobs:
       - name: Lint with flake8
         run: |
           make python_lint_errors
-          flake8 . --max-line-length 127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist | lintly --api-key ${{ secrets.GITHUB_TOKEN }} --fail-on any --log --no-post-status
+          flake8 . --max-line-length 127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist | lintly --format flake8 --fail-on any --log --post-status
+        env:
+          LINTLY_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run unit tests
         run: |
