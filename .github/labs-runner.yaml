@@ -9,13 +9,13 @@ spec:
   template:
     spec:
       repository: pewresearch/pewtils_dev
-      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:99cada3a278bc882e9b10469e3a79daf03819961e10bf4c19aef764249a9049d
+      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:865d5234c11a03a531262c21e495c04ea91c81c5ed1047b83988eb8abd51775b
       imagePullPolicy: Always
       serviceAccountName: labs-runner
       labels:
         - labs-runner
       dockerEnabled: false
-      dockerd`ontainerResources:
+      dockerdContainerResources:
         limits:
           cpu: "4.0"
           memory: "8Gi"

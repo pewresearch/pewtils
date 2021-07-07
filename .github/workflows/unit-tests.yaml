@@ -17,7 +17,7 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          sudo pip install -r requirements.txt
+          pip install --user -r requirements.txt
 
       - name: Lint with flake8
         env:
