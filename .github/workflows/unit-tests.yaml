@@ -4,6 +4,13 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - .github/workflows/unit-tests.yaml
+      - Makefile
+      - pewtils/**
+      - requirements.txt
+      - setup.py
+      - tests/**
 
 jobs:
   unit-tests:
@@ -17,7 +24,8 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip install --user -r requirements.txt
+          while read requirement; do mamba install "conda-forge::$requirement" || true; done < requirements.txt
+          pip install -r requirements.txt
 
       - name: Lint with flake8
         env:

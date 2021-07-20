@@ -8,9 +8,9 @@ cython>=0.25.2
 future>=0.18.2
 lxml>=4.4.1
 nilsimsa>=0.3.8
-numpy>=1.16.0
+numpy>=1.21.0
 openpyxl
-pandas>=0.25.0
+pandas>=1.3.0
 python-dateutil>=2.6.0
 python-levenshtein>=0.12.0
 pytz>=2016.10
