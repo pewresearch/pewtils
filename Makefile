@@ -41,11 +41,14 @@ python_build:
 bump:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
-	bumpversion --commit --tag $(part)
-	git push origin $(BRANCH) --follow-tags
+	bumpversion --commit $(part)
 
 release:
-	make bump part=release
+	git checkout $(BRANCH)
+	git pull origin $(BRANCH)
+	bumpversion --commit --tag release
+	git push origin $(BRANCH) --follow-tags
+	bumpversion --commit patch
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
