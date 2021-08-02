@@ -9,7 +9,7 @@ spec:
   template:
     spec:
       repository: pewresearch/pewtils_dev
-      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:a914d67ef73c309173197d4e710d059a9657149a99cd88f20b28bb1fc34c3912
+      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:f66332fda3c241985542e53a867cb888f21de04d71a8fab16b7784776666c594
       imagePullPolicy: Always
       serviceAccountName: labs-runner
       labels:
