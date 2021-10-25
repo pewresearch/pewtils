@@ -101,8 +101,8 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path):
-                yield self.s3.head_object(Bucket=self.bucket, Key=key)
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
+                yield key
 
         else:
             for f in scandir(self.path):
@@ -128,8 +128,8 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path):
-                key.delete()
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
+                self.s3.delete_object(Bucket=self.bucket, Prefix=key['Key'])
 
         else:
             for f in scandir(self.path):
