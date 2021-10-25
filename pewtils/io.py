@@ -2,8 +2,10 @@ from builtins import object
 from contextlib import closing
 from pewtils import is_not_null
 from scandir import scandir
+import boto3
 import datetime
 import hashlib
+import io
 import json
 import os
 import pandas as pd
@@ -16,8 +18,6 @@ except ImportError:
     from StringIO import StringIO as BytesIO
     from StringIO import StringIO
 
-from boto.s3.key import Key
-from boto.s3.connection import S3Connection, OrdinaryCallingFormat
 
 
 class FileHandler(object):
@@ -29,10 +29,6 @@ class FileHandler(object):
     :type path: str
     :param use_s3: Whether the path is an S3 location or local location
     :type use_s3: bool
-    :param aws_access: The AWS access key; will also try to fetch it from the environment parameter AWS_ACCESS_KEY_ID
-    :type aws_access: str
-    :param aws_secret: The AWS secret token; will also try to fetch from the environment as AWS_SECRET_ACCESS_KEY
-    :type aws_secret: str
     :param bucket: The name of the S3 bucket, required if ``use_s3=True``; will also try to fetch from the environment \
     as S3_BUCKET
     :type bucket: str
@@ -42,7 +38,7 @@ class FileHandler(object):
         accept any serializable Python object and correctly-formatted JSON object respectively.
 
     .. tip:: You can configure your environment to make it easier to automatically connect to S3 by defining the \
-        variables ``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``, and ``S3_BUCKET``.
+        variable ``S3_BUCKET``.
 
     Usage::
 
@@ -59,45 +55,27 @@ class FileHandler(object):
         >>> my_data = ["a", "python", "list"]
         >>> h.write("my_data", my_data, format="pkl")
 
-        # To read/write to an S3 bucket, simply pass your credentials
-        >>> h = FileHandler("/my_folder", use_s3=True, aws_access="12345", aws_secret="67890", bucket="my-bucket")
-        # The FileHandler can also detect your tokens directly from your environment
-        # Just set the environment variables AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_BUCKET
-
+        # To read/write to an S3 bucket
+        # The FileHandler detects your AWS tokens using boto3's standard methods to find them in ~/.aws or defined as environment variables.
+        >>> h = FileHandler("/my_folder", use_s3=True, bucket="my-bucket")
     """
 
     def __init__(
-        self, path, use_s3=None, aws_access=None, aws_secret=None, bucket=None
+        self, path, use_s3=None, bucket=None
     ):
-
-        if aws_access is None:
-            aws_access = os.environ.get("AWS_ACCESS_KEY_ID", None)
-        if aws_secret is None:
-            aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-        if bucket is None:
-            bucket = os.environ.get("S3_BUCKET", None)
-
+        self.bucket = os.environ.get("S3_BUCKET", None) if bucket is None else bucket
         self.path = path
-
         self.use_s3 = use_s3 if is_not_null(bucket) else False
         if self.use_s3:
-
             s3_params = {}
-
-            if aws_access is not None:
-                s3_params["aws_access_key_id"] = aws_access
-                s3_params["aws_secret_access_key"] = aws_secret
-
-            if "." in bucket:
-                s3_params["calling_format"] = OrdinaryCallingFormat()
-
-            self.s3 = S3Connection(**s3_params).get_bucket(bucket)
+            self.s3 = boto3.client('s3')
 
         else:
             self.path = os.path.join(self.path)
             if not os.path.exists(self.path):
                 try:
                     os.makedirs(self.path)
+
                 except Exception as e:
                     print("Warning: couldn't make directory '{}'".format(self.path))
                     print(e)
@@ -123,14 +101,14 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list(prefix=self.path):
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path):
                 yield key
+
         else:
             for f in scandir(self.path):
                 yield f.name
 
     def clear_folder(self):
-
         """
         Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)
 
@@ -150,14 +128,14 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list(prefix=self.path):
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path):
                 key.delete()
+
         else:
             for f in scandir(self.path):
                 os.unlink(os.path.join(self.path, f.name))
 
     def clear_file(self, key, format="pkl", hash_key=False):
-
         """
         Deletes a specific file.
 
@@ -188,10 +166,11 @@ class FileHandler(object):
 
         if hash_key:
             key = self.get_key_hash(key)
+
         if self.use_s3:
             filepath = "/".join([self.path, "{}.{}".format(key, format)])
-            key = self.s3.get_key(filepath)
-            self.s3.delete_key(key.name)
+            key = self.s3.delete_object(Bucket=self.bucket, Key=filepath)
+
         else:
             key += ".{}".format(format)
             path = os.path.join(self.path, key)
@@ -306,13 +285,9 @@ class FileHandler(object):
         key += ".{}".format(format)
 
         if self.use_s3:
-
-            k = Key(self.s3)
-            k.key = "/".join([self.path, key])
-            k.set_contents_from_string(data)
+            self.s3.upload_fileobj(io.BytesIO(data), Bucket=self.bucket, Key="/".join([self.path, key]))
 
         else:
-
             path = os.path.join(self.path, key)
             if os.path.exists(self.path):
                 try:
@@ -355,19 +330,20 @@ class FileHandler(object):
         filepath = "/".join([self.path, "{}.{}".format(key, format)])
 
         if self.use_s3:
+            try:
+                data = io.StringIO()
+                self.s3.download_fileobj(data, Bucket=self.bucket, Key=filepath)
 
-            k = self.s3.get_key(filepath)
-            if k:
-                try:
-                    data = k.get_contents_as_string()
-                except ValueError:
-                    pass
+            except:
+                data = io.BytesIO()
+                self.s3.download_fileobj(data, Bucket=self.bucket, Key=filepath)
+
         else:
-
             if os.path.exists(filepath):
                 try:
                     with closing(open(filepath, "r")) as infile:
                         data = infile.read()
+
                 except:
                     # TODO: handle this exception more explicitly
                     with closing(open(filepath, "rb")) as infile:
