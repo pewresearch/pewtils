@@ -1,12 +1,14 @@
 from builtins import object
-import os
-import hashlib
+from contextlib import closing
+from pewtils import is_not_null
+from scandir import scandir
 import datetime
+import hashlib
 import json
-import time
+import os
 import pandas as pd
 import pickle as pickle
-from scandir import scandir
+import time
 
 try:
     from io import StringIO, BytesIO
@@ -14,11 +16,8 @@ except ImportError:
     from StringIO import StringIO as BytesIO
     from StringIO import StringIO
 
-from contextlib import closing
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat
-
-from pewtils import is_not_null
 
 
 class FileHandler(object):
