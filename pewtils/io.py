@@ -19,7 +19,6 @@ except ImportError:
     from StringIO import StringIO
 
 
-
 class FileHandler(object):
 
     """
@@ -60,15 +59,13 @@ class FileHandler(object):
         >>> h = FileHandler("/my_folder", use_s3=True, bucket="my-bucket")
     """
 
-    def __init__(
-        self, path, use_s3=None, bucket=None
-    ):
+    def __init__(self, path, use_s3=None, bucket=None):
         self.bucket = os.environ.get("S3_BUCKET", None) if bucket is None else bucket
         self.path = path
         self.use_s3 = use_s3 if is_not_null(self.bucket) else False
         if self.use_s3:
             s3_params = {}
-            self.s3 = boto3.client('s3')
+            self.s3 = boto3.client("s3")
 
         else:
             self.path = os.path.join(self.path)
