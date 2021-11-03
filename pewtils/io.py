@@ -289,7 +289,16 @@ class FileHandler(object):
         key += ".{}".format(format)
 
         if self.use_s3:
-            self.s3.upload_fileobj(io.BytesIO(data), Bucket=self.bucket, Key="/".join([self.path, key]))
+            try:
+                self.s3.upload_fileobj(
+                    BytesIO(data), Bucket=self.bucket, Key="/".join([self.path, key])
+                )
+            except TypeError:
+                self.s3.upload_fileobj(
+                    BytesIO(data.encode()),
+                    Bucket=self.bucket,
+                    Key="/".join([self.path, key]),
+                )
 
         else:
             path = os.path.join(self.path, key)
@@ -335,13 +344,12 @@ class FileHandler(object):
 
         if self.use_s3:
             try:
-                data = io.StringIO()
-                self.s3.download_fileobj(data, Bucket=self.bucket, Key=filepath)
-
-            except:
-                data = io.BytesIO()
-                self.s3.download_fileobj(data, Bucket=self.bucket, Key=filepath)
-
+                data = StringIO()
+                self.s3.download_fileobj(Bucket=self.bucket, Key=filepath, Fileobj=data)
+            except TypeError:
+                data = BytesIO()
+                self.s3.download_fileobj(Bucket=self.bucket, Key=filepath, Fileobj=data)
+            data = data.getvalue()
         else:
             if os.path.exists(filepath):
                 try:
