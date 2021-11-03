@@ -65,7 +65,7 @@ class FileHandler(object):
     ):
         self.bucket = os.environ.get("S3_BUCKET", None) if bucket is None else bucket
         self.path = path
-        self.use_s3 = use_s3 if is_not_null(bucket) else False
+        self.use_s3 = use_s3 if is_not_null(self.bucket) else False
         if self.use_s3:
             s3_params = {}
             self.s3 = boto3.client('s3')
