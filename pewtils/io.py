@@ -429,4 +429,8 @@ class FileHandler(object):
                 except:
                     data = pd.read_stata(StringIO(data), **io_kwargs)
 
+            elif format == "txt":
+                if isinstance(data, bytes):
+                    data = data.decode()
+
         return data
