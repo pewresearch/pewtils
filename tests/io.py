@@ -12,7 +12,7 @@ class IOTests(unittest.TestCase):
         import pandas as pd
 
         self.test_df = pd.DataFrame(
-            [{"test": 1}, {"test": 2}, {"test": 3}, {"test": 5}]
+            [{"test": 1}, {"test": 2}, {"test": 3}, {"test": 4}]
         )
         self.test_json = {"test1": 1, "test2": 2, "test3": 3, "test4": 4}
         import json
@@ -34,15 +34,17 @@ class IOTests(unittest.TestCase):
         ]
         self.assertEqual(
             sorted(files),
-            sorted([
-                "subfolder",
-                "__init__.py",
-                "example.html",
-                "example_stripped_simple.html",
-                "json.json",
-                "example_stripped.html",
-                "py.py",
-            ])
+            sorted(
+                [
+                    "subfolder",
+                    "__init__.py",
+                    "example.html",
+                    "example_stripped_simple.html",
+                    "json.json",
+                    "example_stripped.html",
+                    "py.py",
+                ]
+            ),
         )
 
     def test_filehandler_clear_folder(self):
@@ -98,6 +100,20 @@ class IOTests(unittest.TestCase):
             "37e13e1116c86a6e9f3f8926375c7cb977ca74d2d598572ced03cd09",
         )
 
+    def test_filehandler_get_key_hash_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            self.assertEqual(
+                h.get_key_hash("temp"),
+                "c51bf90ccb22befa316b7a561fe9d5fd9650180b14421fc6d71bcd57",
+            )
+            self.assertEqual(
+                h.get_key_hash({"key": "value"}),
+                "37e13e1116c86a6e9f3f8926375c7cb977ca74d2d598572ced03cd09",
+            )
+
     def test_filehandler_read_write_pkl(self):
         from pewtils.io import FileHandler
 
@@ -108,6 +124,15 @@ class IOTests(unittest.TestCase):
 
         os.unlink("tests/files/temp.pkl")
         self.assertEqual(repr(self.test_df), repr(read))
+
+    def test_filehandler_read_write_pkl_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="pkl")
+            read = h.read("temp", format="pkl")
+            self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_csv(self):
         from pewtils.io import FileHandler
@@ -121,6 +146,16 @@ class IOTests(unittest.TestCase):
         os.unlink("tests/files/temp.csv")
         self.assertEqual(repr(self.test_df), repr(read))
 
+    def test_filehandler_read_write_csv_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="csv")
+            read = h.read("temp", format="csv")
+            del read["Unnamed: 0"]
+            self.assertEqual(repr(self.test_df), repr(read))
+
     def test_filehandler_read_write_txt(self):
         from pewtils.io import FileHandler
 
@@ -131,6 +166,15 @@ class IOTests(unittest.TestCase):
 
         os.unlink("tests/files/temp.txt")
         self.assertEqual(read, "test")
+
+    def test_filehandler_read_write_txt_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", "test", format="txt")
+            read = h.read("temp", format="txt")
+            self.assertEqual(read, "test")
 
     def test_filehandler_read_write_tab(self):
         from pewtils.io import FileHandler
@@ -143,6 +187,16 @@ class IOTests(unittest.TestCase):
 
         os.unlink("tests/files/temp.tab")
         self.assertEqual(repr(self.test_df), repr(read))
+
+    def test_filehandler_read_write_tab_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="tab")
+            read = h.read("temp", format="tab")
+            del read["Unnamed: 0"]
+            self.assertEqual(repr(self.test_df), repr(read))
 
     def test_filehandler_read_write_xlsx(self):
         from pewtils.io import FileHandler
@@ -157,6 +211,17 @@ class IOTests(unittest.TestCase):
         os.unlink("tests/files/temp.xlsx")
         self.assertEqual(repr(self.test_df), repr(read))
 
+    def test_filehandler_read_write_xlsx_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="xlsx")
+            read = h.read("temp", format="xlsx")
+            if "Unnamed: 0" in read.columns:
+                del read["Unnamed: 0"]
+            self.assertEqual(repr(self.test_df), repr(read))
+
     def test_filehandler_read_write_xls(self):
         from pewtils.io import FileHandler
 
@@ -170,6 +235,17 @@ class IOTests(unittest.TestCase):
         os.unlink("tests/files/temp.xls")
         self.assertEqual(repr(self.test_df), repr(read))
 
+    def test_filehandler_read_write_xl_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="xls")
+            read = h.read("temp", format="xls")
+            if "Unnamed: 0" in read.columns:
+                del read["Unnamed: 0"]
+            self.assertEqual(repr(self.test_df), repr(read))
+
     def test_filehandler_read_write_dta(self):
         from pewtils.io import FileHandler
 
@@ -182,6 +258,16 @@ class IOTests(unittest.TestCase):
         os.unlink("tests/files/temp.dta")
         self.assertEqual(repr(self.test_df), repr(read))
 
+    def test_filehandler_read_write_dta_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_df, format="dta")
+            read = h.read("temp", format="dta")
+            del read["index"]
+            self.assertEqual(repr(self.test_df), repr(read))
+
     def test_filehandler_read_write_json(self):
         from pewtils.io import FileHandler
 
@@ -192,6 +278,15 @@ class IOTests(unittest.TestCase):
 
         os.unlink("tests/files/temp.json")
         self.assertEqual(repr(self.test_json), repr(dict(read)))
+
+    def test_filehandler_read_write_json_s3(self):
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            h.write("temp", self.test_json, format="json")
+            read = h.read("temp", format="json")
+            self.assertEqual(repr(self.test_json), repr(dict(read)))
 
     def tearDown(self):
 
@@ -210,3 +305,12 @@ class IOTests(unittest.TestCase):
             os.rmdir("tests/files/temp")
         except OSError:
             pass
+
+        from pewtils.io import FileHandler
+
+        if os.environ.get("S3_BUCKET"):
+            h = FileHandler("tests/files", use_s3=True)
+            for file in h.iterate_path():
+                if "." in file:
+                    filename, format = file.split(".")
+                    h.clear_file(filename, format=format)
