@@ -35,10 +35,10 @@ python_lint_errors:
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,build,dist
 
 python_lint_quality:
-	flake8 . --exit-zero --statistics --count --show-source --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist
+	flake8 . --exit-zero --statistics --count --show-source --max-line-length=127 --ignore=E201,E202,E501,E722,W503,W504 --exclude=.git,__pycache__,build,dist
 
 github_lint_flake8:
-	flake8 . --max-line-length 127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist | reviewdog -reporter=github-pr-check -f=flake8
+	flake8 . --max-line-length 127 --ignore=E201,E202,E501,E722,W503,W504 --exclude=.git,__pycache__,build,dist | reviewdog -reporter=github-pr-check -f=flake8
 
 python_test:
 	python3 -m unittest tests
