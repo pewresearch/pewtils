@@ -5,7 +5,6 @@ from scandir import scandir
 import boto3
 import datetime
 import hashlib
-import io
 import json
 import os
 import pandas as pd
@@ -14,6 +13,7 @@ import time
 
 try:
     from io import StringIO, BytesIO
+
 except ImportError:
     from StringIO import StringIO as BytesIO
     from StringIO import StringIO
@@ -98,9 +98,7 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)[
-                "Contents"
-            ]:
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
                 yield key["Key"]
 
         else:
@@ -127,10 +125,8 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)[
-                "Contents"
-            ]:
-                self.s3.delete_object(Bucket=self.bucket, Prefix=key["Key"])
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
+                self.s3.delete_object(Bucket=self.bucket, Prefix=key['Key'])
 
         else:
             for f in scandir(self.path):
@@ -287,15 +283,12 @@ class FileHandler(object):
 
         if self.use_s3:
             try:
-                self.s3.upload_fileobj(
-                    BytesIO(data), Bucket=self.bucket, Key="/".join([self.path, key])
-                )
+                upload = BytesIO(data)
+
             except TypeError:
-                self.s3.upload_fileobj(
-                    BytesIO(data.encode()),
-                    Bucket=self.bucket,
-                    Key="/".join([self.path, key]),
-                )
+                upload = BytesIO(data.encode())
+
+            self.s3.upload_fileobj(upload, Bucket=self.bucket, Key="/".join([self.path, key]))
 
         else:
             path = os.path.join(self.path, key)
@@ -342,10 +335,11 @@ class FileHandler(object):
         if self.use_s3:
             try:
                 data = StringIO()
-                self.s3.download_fileobj(Bucket=self.bucket, Key=filepath, Fileobj=data)
+
             except TypeError:
                 data = BytesIO()
-                self.s3.download_fileobj(Bucket=self.bucket, Key=filepath, Fileobj=data)
+
+            self.s3.download_fileobj(data, Bucket=self.bucket, Key=filepath)
             data = data.getvalue()
         else:
             if os.path.exists(filepath):
