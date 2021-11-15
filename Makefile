@@ -62,6 +62,7 @@ sync_branch:
 release:
 	git checkout $(BRANCH)
 	git pull origin $(BRANCH)
+	bumpversion --commit $(PART)
 	bumpversion --commit --tag release
 	git push origin $(BRANCH) --follow-tags
 
