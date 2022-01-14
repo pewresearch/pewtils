@@ -153,6 +153,7 @@ class HTTPTests(unittest.TestCase):
                     resp = session.head(
                         "http://{}".format(k), allow_redirects=True, timeout=10
                     )
+
                 except requests.exceptions.ConnectionError:
                     print(
                         "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {}".format(
@@ -161,7 +162,9 @@ class HTTPTests(unittest.TestCase):
                     )
                     resp = None
                 if resp:
-                    resolved = re.sub("www\.", "", urlparse.urlparse(resp.url).netloc)
+                    resolved = re.sub(
+                        "www[0-9]?\.", "", urlparse.urlparse(resp.url).netloc
+                    )
                     resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
                     self.assertIn(resolved, ["bitly.com", v])
         session.close()
