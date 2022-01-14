@@ -351,14 +351,16 @@ class FileHandler(object):
 
         if is_not_null(data):
             if format == "pkl":
-
                 try:
                     data = pickle.loads(data)
+
                 except TypeError:
                     data = None
+
                 except ValueError:
                     if "attempt_count" not in io_kwargs:
                         io_kwargs["attempt_count"] = 1
+
                     print(
                         "Insecure pickle string; probably a concurrent read-write, \
                         will try again in 5 seconds (attempt #{})".format(
@@ -366,21 +368,27 @@ class FileHandler(object):
                         )
                     )
                     time.sleep(5)
+
                     if io_kwargs["attempt_count"] <= 3:
                         io_kwargs["attempt_count"] += 1
-                        data = self.read(key, format=format, hash_key=hash_key, **io_kwargs)
+                        data = self.read(
+                            key, format=format, hash_key=hash_key, **io_kwargs
+                        )
+
                     else:
                         data = None
+
                 except Exception as e:
                     print("Couldn't load pickle!  {}".format(e))
                     data = None
 
             elif format in ["tab", "csv"]:
-
                 if format == "tab":
                     io_kwargs["delimiter"] = "\t"
+
                 try:
                     data = pd.read_csv(BytesIO(data), **io_kwargs)
+
                 except:
                     data = pd.read_csv(StringIO(data), **io_kwargs)
 
@@ -391,19 +399,21 @@ class FileHandler(object):
 
                 try:
                     data = pd.read_excel(BytesIO(data), **io_kwargs)
+
                 except:
                     data = pd.read_excel(StringIO(data), **io_kwargs)
 
             elif format == "json":
                 try:
                     data = json.loads(data)
+
                 except:
                     pass
 
             elif format == "dta":
-
                 try:
                     data = pd.read_stata(BytesIO(data), **io_kwargs)
+
                 except:
                     data = pd.read_stata(StringIO(data), **io_kwargs)
 
