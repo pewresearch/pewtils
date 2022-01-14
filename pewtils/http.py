@@ -20,6 +20,9 @@ def hash_url(url):
 
     :param url: string of the url
     :return: hashed string
+
+    Usage::
+
     """
 
     http_regex = re.compile(r"^http(s)?\:\/\/")
@@ -35,10 +38,13 @@ def strip_html(html, simple=False, break_tags=None):
 
     """
     Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.
-    By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document
-    using a process that we have found to work fairly well. Setting `simple=True` will make the function use
-    a much simpler regular expression approach to parsing. This function isn't always 100% effective, but it does a
-    decent job of usually removing the vast majority of HTML without stripping out valuable content.
+
+    | By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document \
+    using a process that we have found to work fairly well. Setting `simple=True` will make the function use \
+    a much simpler regular expression approach to parsing.
+
+    .. note:: This function isn't always 100% effective, but it does a decent job of usually removing the vast \
+    majority of HTML without stripping out valuable content.
 
     :param html: The HTML to process
     :param simple: Whether or not to use a simple regex or more complex parsing rules (default=False)
@@ -312,10 +318,11 @@ VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
     """
-    Tries to resolve a link to the "most correct" version. Especially useful for expanding short URLs \
-    from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not
-    perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases
-    while (usually) avoiding redirects to generic error pages.
+    Tries to resolve a link to the "most correct" version.
+
+    .. note:: Useful for expanding short URLs from bit.ly / Twitter and for checking HTTP status codes without retrieving \
+    the actual data. This function is not perfect but it has been tested on a wide variety of URLs and resolves \
+    to the correct final page in most cases while (usually) avoiding redirects to generic error pages.
 
     :param url: The URL to test. Should be fully qualified.
     :param timeout: How long to wait for a response before giving up (default is one second)

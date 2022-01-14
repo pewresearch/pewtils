@@ -23,13 +23,8 @@ Or install from source ::
     planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
 
 
-Tests ::
-
-    pytest
-
-
-Full Documentation
-------------------
+PewTils Core Functions
+-----------------------
 
 This contains everything you need to know about every function in the source code.
 

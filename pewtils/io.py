@@ -25,7 +25,7 @@ class FileHandler(object):
 
     """
     A class designed to make it easy to read/write data files in a variety of formats, both locally or in S3. File
-    extensions are standardized to promote consistency; Pickle files must have the extension ".pkl", etc.
+    extensions are standardized to promote consistency (e.g., Pickle files must have the extension ".pkl", etc.).
 
     :param path: The path to the folder that you'll be writing to or reading from
     :param use_s3: Whether the path is an S3 location or local location
@@ -134,21 +134,22 @@ class FileHandler(object):
     ):
 
         """
-        Writes arbitrary data objects to a variety of file formats.  If you save something to csv/tab/xlsx/xls/dta,
-        it assumes you've passed it a Pandas DataFrame object. If you're trying to save an object to JSON, it assumes
-        that you're passing it valid JSON. By default, though, the handler attempts to use pickling, allowing you to
-        save (mostly) anything you want.
+        Writes arbitrary data objects to a variety of file formats.
+
+        | If you save something to csv/tab/xlsx/xls/dta, it assumes you've passed it a Pandas DataFrame object. \
+        If you're trying to save an object to JSON, it assumes that you're passing it valid JSON. By default, though, \
+        the handler attempts to use pickling, allowing you to save (mostly) anything you want.
 
         :param key: The name of the file or key (without a file suffix!)
         :param data: The actual data to write to the file
-        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl. This
-        will be used as the file's suffix.
+        :param format: The format the data should be saved in (pkl/csv/tab/xlsx/xls/dta/json). Defaults to pkl. \
+        This will be used as the file's suffix.
         :param hash_key: Whether or not to hash the provided key before saving the file. (Default=False)
         :param add_timestamp: Optionally add a timestamp to the filename
-        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of
-        the file you want to save.  The "dta" format uses `pandas.DataFrame.to_stata`; csv uses `to_csv`; pkl uses
+        :param io_kwargs: Additional parameters to pass along to the save function, which depends on the format of \
+        the file you want to save.  The "dta" format uses `pandas.DataFrame.to_stata`; csv uses `to_csv`; pkl uses \
         `pickle.dumps`; json uses `json.dumps`
-        :return:
+        :return: None
         """
 
         format = format.strip(".")
