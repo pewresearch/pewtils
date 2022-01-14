@@ -12,8 +12,6 @@ numpy<1.17.0; python_version < '3.0'
 numpy>=1.16.0; python_version >= '3.0'
 pandas<0.25.0; python_version < '3.0'
 pandas>=0.25.0; python_version >= '3.0'
-scipy<1.3.0; python_version < '3.0'
-scipy>=1.5.0; python_version >= '3.0'
 polyglot
 python-dateutil>=2.6.0
 python-levenshtein>=0.12.0
