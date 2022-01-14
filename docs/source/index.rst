@@ -1,32 +1,54 @@
-.. pewtils documentation master file, created by
-   sphinx-quickstart on Sun Jan 20 21:03:16 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to pewtils's documentation!
 ===================================
 
-This is a package of useful logging and management functions
+First steps
+-----------
 
-Some code documentation
-***********************
+Pewtils is a package of useful logging and management functions developed \
+at the Pew Research Center over the years.
+
+To install ::
+
+    pip install https://github.com/pewresearch/pewtils#egg=pewtils
+
+Or install from source ::
+
+    git clone https://github.com/pewresearch/pewtils.git
+    cd pewtils
+    python setup.py install
+
+
+.. note::
+    This is a Python3 package. Though it's compatible with Python 2, its dependencies are \
+    planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
+
+
+Tests ::
+
+    pytest
+
+
+Full Documentation
+------------------
+
+This contains everything you need to know about every function in the source code.
+
 
 .. automodule :: pewtils.__init__
-  :members:
+    :members:
 
-File Handler
+
+File Handlers
 ------------
 
 .. automodule :: pewtils.io
     :members:
 
-AWS Handler
------------
+
+AWS Handlers
+------------
+
 .. automodule :: pewtils.aws
-    :members:
-
-
-.. automodule :: pewtils.http
     :members:
 
 
@@ -34,8 +56,8 @@ AWS Handler
    :maxdepth: 2
    :caption: Contents:
 
-   Getting started <howtouse> 
-   HTTPs Utilities <http>
+   How To Use <how_to_use>
+   HTTP Utilities <http>
 
 
 Indices and tables
