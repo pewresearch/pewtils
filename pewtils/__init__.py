@@ -17,9 +17,6 @@ from unidecode import unidecode
 from hashlib import md5
 
 
-NULL_VALUES = [None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"]
-
-
 def decode_text(text, throw_loud_fail=False):
     """
     Attempts to decode and re-encode text as ASCII; if this fails, it will attempt to detect the string's encoding,
@@ -85,12 +82,17 @@ def decode_text(text, throw_loud_fail=False):
 def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
+    Checks whether the value is null, using a variety of potential string values, etc. The following values are always
+    considered null: `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
     :param val: The value to check
     :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
-    :param custom_nulls: list or None - if None defaults to global NULL_VALUES
+    :param custom_nulls: an optional list of additional values to consider as null
     :return: True if the value is not null
     """
 
+    null_values = [None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"]
+    if custom_nulls:
+        null_values.extend(custom_nulls)
     if type(val) == list:
         if empty_lists_are_null and val == []:
             return False
@@ -104,9 +106,7 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
     else:
         try:
             try:
-                good = val not in NULL_VALUES
-                if custom_nulls:
-                    good = good and (val not in custom_nulls)
+                good = val not in null_values
                 if good:
                     try:
                         try:
@@ -125,10 +125,13 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
 def is_null(val, empty_lists_are_null=False, custom_nulls=None):
 
     """
-    :param val: the value to check
-    :param empty_lists_are_null: bool (default=False)
-    :param custom_nulls: list or None - if None defaults to global NULL_VALUES
-    :return: bool (True if the value is null)
+    Returns the opposite of the outcome of is_not_null. The following values are always considered null:
+    `None, "None", "nan", "", " ", "NaN", "none", "n/a", "NONE", "N/A"
+
+    :param val: The value to check
+    :param empty_lists_are_null: Whether or not an empty list or dataframe should be considered null (default=False)
+    :param custom_nulls: an optional list of additional values to consider as null
+    :return: True if the value is null
     """
 
     return not is_not_null(
