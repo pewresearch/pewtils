@@ -154,22 +154,7 @@
   <div class="section" id="http-utilities">
 <h1>HTTP Utilities<a class="headerlink" href="#http-utilities" title="Permalink to this headline">¶</a></h1>
 <p>In this module, you’ll find a variety of useful functions for working with web data. The <cite>canonical_link</cite> function is our best attempt at standardizing and cleaning a URL without losing any information, and the <cite>strip_html</cite> function is useful for attempting to extract text from raw HTML data with minimal fine-tuning.</p>
-<span class="target" id="module-pewtils.http"></span><p><strong>Data</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.http.GENERAL_LINK_SHORTENERS" title="pewtils.http.GENERAL_LINK_SHORTENERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GENERAL_LINK_SHORTENERS</span></code></a></p></td>
-<td><p>A list of known generic URL shorteners</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.http.VANITY_LINK_SHORTENERS" title="pewtils.http.VANITY_LINK_SHORTENERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VANITY_LINK_SHORTENERS</span></code></a></p></td>
-<td><p>A list of known URL shorteners for specific websites (primarily news websites)</p></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Functions</strong></p>
+<span class="target" id="module-pewtils.http"></span><p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -223,94 +208,32 @@ far more effective when used in conjunction with <a class="reference internal" h
 <dl class="function">
 <dt id="pewtils.http.strip_html">
 <code class="sig-name descname">strip_html</code><span class="sig-paren">(</span><em class="sig-param">html</em>, <em class="sig-param">simple=False</em>, <em class="sig-param">break_tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#strip_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.strip_html" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.</p>
-<div class="line-block">
-<div class="line">By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document     using a process that we have found to work fairly well. Setting <cite>simple=True</cite> will make the function use     a much simpler regular expression approach to parsing.</div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function isn’t always 100% effective, but it does a decent job of usually removing the vast     majority of HTML without stripping out valuable content.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">param html</dt>
-<dd class="field-odd"><p>The HTML to process</p>
-</dd>
-<dt class="field-even">type html</dt>
-<dd class="field-even"><p>str</p>
-</dd>
-<dt class="field-odd">param simple</dt>
-<dd class="field-odd"><p>Whether or not to use a simple regex or more complex parsing rules (default=False)</p>
-</dd>
-<dt class="field-even">type simple</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-<dt class="field-odd">param break_tags</dt>
-<dd class="field-odd"><p>A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”])</p>
-</dd>
-<dt class="field-even">type break_tags</dt>
-<dd class="field-even"><p>list</p>
-</dd>
-<dt class="field-odd">return</dt>
-<dd class="field-odd"><p>The text with HTML components removed (perfection not guaranteed)</p>
-</dd>
-<dt class="field-even">rtype</dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-<p>Usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">strip_html</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">my_html</span> <span class="o">=</span> <span class="s2">&quot;&lt;html&gt;&lt;head&gt;Header text&lt;/head&gt;&lt;body&gt;Body text&lt;/body&gt;&lt;/html&gt;&quot;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">strip_html</span><span class="p">(</span><span class="n">my_html</span><span class="p">)</span>
-<span class="s1">&#39;Header text</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Body text’</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="pewtils.http.GENERAL_LINK_SHORTENERS">
-<code class="sig-name descname">GENERAL_LINK_SHORTENERS</code><em class="property"> = ['wp.me', 'trib.al', 't.co', 'spr.ly', 'shout.lt', 'shar.es', 'scr.bi', 'ow.ly', 'ora.cl', 'is.gd', 'ht.ly', 'goo.gl', 'fw.to', 'dlvr.it', 'cutt.ly', 'buff.ly', 'j.mp', 'hubs.ly', 'bit.ly', 'hub.am', 'ht.ly', 'every.tw', 'crwd.fr', 'bit.do', 'snp.tv', 'snip.ly', 'shr.gs', 'qoo.ly', 'po.st', 'fwdaga.in', 'fw.to', 'tiny.cc', 'owl.li', 'mvnt.us', 'msgp.pl', 'flip.it', 'urlm.in', 'trib.it', 'shoo.ly', 'loom.ly', 'disq.us', 'abre.ai', 'bit.do', 'adf.ly', 'su.pr']</em><a class="headerlink" href="#pewtils.http.GENERAL_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of known generic URL shorteners</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="pewtils.http.VANITY_LINK_SHORTENERS">
-<code class="sig-name descname">VANITY_LINK_SHORTENERS</code><em class="property"> = {'ab.co': 'abc.net.au', 'abcn.ws': 'abcnews.com', 'aje.io': 'aljazeera.com', 'ampr.gs': 'americanprogress.org', 'amzn.com': 'amazon.com', 'amzn.to': 'amazon.com', 'ap.org': 'apnews.com', 'apne.ws': 'apnews.com', 'atxne.ws': 'statesman.com', 'azc.cc': 'azcentral.com', 'bayareane.ws': 'eastbaytimes.com', 'bbc.in': 'bbc.co.uk', 'bcove.me': 'brightcove.com', 'bernie.to': 'berniesanders.com', 'bizj.us': 'bizjournals.com', 'ble.ac': 'bleacherreport.com', 'bloom.bg': 'bloomberg.com', 'brook.gs': 'brookings.edu', 'bsun.md': 'baltimoresun.com', 'buswk.co': 'bloomberg.com', 'bv.ms': 'bloomberg.com', 'bzfd.it': 'buzzfeed.com', 'c-spanvideo.org': 'c-span.org', 'cbsloc.al': 'cbslocal.com', 'cbsn.ws': 'cbsnews.com', 'chn.ge': 'change.org', 'chng.it': 'change.org', 'cjky.it': 'courier-journal.com', 'cnb.cx': 'cnbc.com', 'cnn.it': 'cnn.com', 'cnnmon.ie': 'cnn.com', 'comsen.se': 'commonsensemedia.org', 'conta.cc': 'constantcontact.com', 'cour.at': 'courant.com', 'cs.pn': 'c-span.org', 'd-news.co': 'dallasnews.com', 'dai.ly': 'dailymotion.com', 'dailym.ai': 'dailymail.co.uk', 'dailysign.al': 'dailysignal.com', 'dbtg.tv': 'bundestag.de', 'delonline.us': 'delawareonline.com', 'detne.ws': 'detroitnews.com', 'dmreg.co': 'desmoinesregister.com', 'dot.gov': 'transportation.gov', 'dpo.st': 'denverpost.com', 'econ.st': 'economist.com', 'engt.co': 'engadget.com', 'entm.ag': 'entrepreneur.com', 'es.pn': 'espn.com', 'fanda.co': 'fandango.com', 'fb.com': 'facebook.com', 'fb.me': 'facebook.com', 'flic.kr': 'flickr.com', 'fxn.ws': 'foxnews.com', 'g.co': 'google.com', 'gizmo.do': 'gizmodo.com', 'glo.bo': 'globo.com', 'goldenisles.news': 'thebrunswicknews.com', 'gph.is': 'giphy.com', 'grnol.co': 'greenvilleonline.com', 'harlem.in': 'harlemunited.org', 'herit.ag': 'heritage.org', 'hill.cm': 'thehill.com', 'histv.co': 'history.com', 'hrld.us': 'miamiherald.com', 'huff.to': 'huffingtonpost.com', 'huffp.st': 'huffingtonpost.com', 'huffpost.com': 'huffingtonpost.com', 'hulu.tv': 'hulu.com', 'icont.ac': 'icontact-archive.com', 'ihr.fm': 'iheart.com', 'ind.pn': 'independent.co.uk', 'indy.st': 'indystar.com', 'injo.com': 'ijr.com', 'instagr.am': 'instagram.com', 'interc.pt': 'theintercept.com', 'jrnl.ie': 'thejournal.ie', 'jwatch.us': 'judicialwatch.org', 'lat.ms': 'latimes.com', 'linkd.in': 'linkedin.com', 'lnkd.in': 'linkedin.com', 'lp.ca': 'lapresse.ca', 'm.me': 'messenger.com', 'ma.us': 'state.ma.us', 'mailchi.mp': 'mailchimp.com', 'mapq.st': 'mapquest.com', 'md.us': 'state.md.us', 'meetu.ps': 'meetup.com', 'mn.us': 'state.mn.us', 'mol.im': 'dailymail.co.uk', 'n.pr': 'npr.org', 'nbcnews.to': 'nbcnews.com', 'newspr.es': 'news-press.com', 'nj-ne.ws': 'nj.com', 'njersy.co': 'northjersey.com', 'nm.us': 'state.nm.us', 'nws.mx': 'newsmax.com', 'nwsdy.li': 'newsday.com', 'ny.us': 'state.ny.us', 'nydn.us': 'nydailynews.com', 'nyer.cm': 'newyorker.com', 'nyp.st': 'nypost.com', 'nyti.ms': 'nytimes.com', 'ofa.bo': 'ofa.us', 'oh.us': 'state.oh.us', 'ohne.ws': 'newarkadvocate.com', 'on.fb.me': 'facebook.com', 'onforb.es': 'forbes.com', 'pa.us': 'state.pa.us', 'pdora.co': 'pandora.com', 'pewrsr.ch': 'pewresearch.org', 'politi.co': 'politico.com', 'prn.to': 'prnewswire.com', 'ptrtvoic.es': 'patriotvoices.com', 'read.bi': 'businessinsider.com', 'reut.rs': 'reuters.com', 'rol.st': 'rollingstone.com', 'sen.gov': 'senate.gov', 'slate.me': 'slate.com', 'spon.de': 'spiegel.de', 'spoti.fi': 'spotify.com', 'stjr.nl': 'statesmanjournal.com', 'strib.mn': 'startribune.com', 'tgam.ca': 'theglobeandmail.com', 'theatln.tc': 'theatlantic.com', 'thebea.st': 'thedailybeast.com', 'thkpr.gs': 'thinkprogress.org', 'ti.me': 'time.com', 'tnw.to': 'thenextweb.com', 'tonyr.co': 'tonyrobbins.com', 'trib.in': 'chicagotribune.com', 'tws.io': 'weeklystandard.com', 'txnne.ws': 'thetexan.news', 'u.pw': 'upworthy.com', 'uni.vi': 'univision.com', 'usat.ly': 'usatoday.com', 'usm.ag': 'usmagazine.com', 'virg.in': 'virgin.com', 'wapo.st': 'washingtonpost.com', 'washex.am': 'washingtonexaminer.com', 'wef.ch': 'weforum.org', 'wh.gov': 'whitehouse.gov', 'wpo.st': 'washingtonpost.com', 'wrd.cm': 'wired.com', 'wtr.ie': 'water.ie', 'wtrne.ws': 'timesrecordnews.com', 'yhoo.it': 'yahoo.com', 'youtu.be': 'youtube.com'}</em><a class="headerlink" href="#pewtils.http.VANITY_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of known URL shorteners for specific websites (primarily news websites)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pewtils.http.canonical_link">
-<code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to resolve a link to the “most correct” version. Useful for expanding short URLs from bit.ly / Twitter     and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the     most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove     optional GET parameters. This function may not be particularly effective on dead links, but may still be able     to follow redirects enough to return a URL with the correct domain associated with the original link.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function is not perfect but it has been tested on a wide variety of URLs and resolves     to the correct final page in most cases while (usually) avoiding redirects to generic error pages.</p>
-</div>
+<dd><p>Attempts to strip out HTML code from an arbitrary string while preserving meaningful text components.     By default, the function will use BeautifulSoup to parse the HTML and try to parse out text from the document     using a process that we have found to work fairly well. Setting <cite>simple=True</cite> will make the function use     a much simpler regular expression approach to parsing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<em>str</em>) – The URL to test. Should be fully qualified.</p></li>
-<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – How long to wait for a response before giving up (default is one second)</p></li>
-<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional) A persistent session that can optionally be passed (useful if you’re processing many     links at once)</p></li>
-<li><p><strong>user_agent</strong> (<em>str</em>) – User agent for the auto-created requests Session to use, if a preconfigured requests Session     is not provided</p></li>
+<li><p><strong>html</strong> (<em>str</em>) – The HTML to process</p></li>
+<li><p><strong>simple</strong> (<em>bool</em>) – Whether or not to use a simple regex or more complex parsing rules (default=False)</p></li>
+<li><p><strong>break_tags</strong> (<em>list</em>) – A custom list of tags on which to break (default is [“strong”, “em”, “i”, “b”, “p”])</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if the server was not helpful.</p>
+<dd class="field-even"><p>The text with HTML components removed (perfection not guaranteed)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function isn’t always 100% effective, but it does a decent job of usually removing the vast         majority of HTML without stripping out valuable content.</p>
+</div>
 <p>Usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">canonical_link</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">strip_html</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">canonical_link</span><span class="p">(</span><span class="s2">&quot;https://pewrsr.ch/2lxB0EX&quot;</span><span class="p">)</span>
-<span class="s2">&quot;https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_html</span> <span class="o">=</span> <span class="s2">&quot;&lt;html&gt;&lt;head&gt;Header text&lt;/head&gt;&lt;body&gt;Body text&lt;/body&gt;&lt;/html&gt;&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">strip_html</span><span class="p">(</span><span class="n">my_html</span><span class="p">)</span>
+<span class="s1">&#39;Header text Body text&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -380,6 +303,51 @@ ones that can be removed without generating any redirects.</p>
 <span class="s2">&quot;forums.bbc.co.uk&quot;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pewtils.http.canonical_link">
+<code class="sig-name descname">canonical_link</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">timeout=5.0</em>, <em class="sig-param">session=None</em>, <em class="sig-param">user_agent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/http.html#canonical_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pewtils.http.canonical_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to resolve a link to the “most correct” version. Useful for expanding short URLs from bit.ly / Twitter     and for checking HTTP status codes without retrieving the actual data. Follows redirects and tries to pick the     most informative version of a URL while avoiding redirects to generic 404 pages. Also tries to iteratively remove     optional GET parameters. This function may not be particularly effective on dead links, but may still be able     to follow redirects enough to return a URL with the correct domain associated with the original link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is not perfect but it has been tested on a wide variety of URLs and resolves     to the correct final page in most cases while (usually) avoiding redirects to generic error pages.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The URL to test. Should be fully qualified.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> or </em><em>float</em>) – How long to wait for a response before giving up (default is one second)</p></li>
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">requests.Session</span></code> object) – (Optional) A persistent session that can optionally be passed (useful if you’re processing many     links at once)</p></li>
+<li><p><strong>user_agent</strong> (<em>str</em>) – User agent for the auto-created requests Session to use, if a preconfigured requests Session     is not provided</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The “canonical” URL as supplied by the server, or the original URL if the server was not helpful.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pewtils.http</span> <span class="k">import</span> <span class="n">canonical_link</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">canonical_link</span><span class="p">(</span><span class="s2">&quot;https://pewrsr.ch/2lxB0EX&quot;</span><span class="p">)</span>
+<span class="s2">&quot;https://www.pewresearch.org/interactives/how-does-a-computer-see-gender/&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="pewtils.http.GENERAL_LINK_SHORTENERS">
+<code class="sig-name descname">GENERAL_LINK_SHORTENERS</code><a class="headerlink" href="#pewtils.http.GENERAL_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of known generic URL shorteners (<a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a>)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pewtils.http.VANITY_LINK_SHORTENERS">
+<code class="sig-name descname">VANITY_LINK_SHORTENERS</code><a class="headerlink" href="#pewtils.http.VANITY_LINK_SHORTENERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of known URL shorteners for specific websites (primarily news websites) (<a class="reference internal" href="http_link_shorteners.html#link-shorteners"><span class="std std-ref">Link Shorteners</span></a>)</p>
 </dd></dl>
 
 </div>
