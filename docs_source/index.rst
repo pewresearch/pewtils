@@ -1,11 +1,17 @@
-Welcome to pewtils's documentation!
+Getting Started
 ===================================
 
-First steps
------------
+Welcome to pewtils’s documentation!
+
+About
+---------------
 
 Pewtils is a package of useful logging and management functions developed \
 at the Pew Research Center over the years.
+
+
+Installation
+---------------
 
 To install ::
 
@@ -23,23 +29,48 @@ Or install from source ::
     planning to drop support for earlier versions. We highly recommend you upgrade to Python3.
 
 
-pewtils Core Functions
+Example
+---------------
+
+(Use Cases)
+
+
+PewTils
 -----------------------
 
-Here are the list of information on pewtils core functions. 
+Core Functions
+++++++++++++++++++++++++
 
 .. automodule :: pewtils.__init__
+    :noindex:
     :autosummary:
-    :members:
+    :autosummary-members:
 
 
-pewtils Documentation
----------------------
+Http Utilities
+++++++++++++++++++++++++
+
+.. automodule :: pewtils.http
+    :noindex:
+    :autosummary:
+    :autosummary-members:
+
+
+File Handler
+++++++++++++++++++++++++
+
+.. automodule :: pewtils.io
+    :autosummary:
+    :autosummary-members:
+
+
+Table of Contents
+------------------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-   How To Use <how_to_use>
+   Getting Started <index>
+   pewtils Core <pewtils_core>
    HTTP Utilities <http>
    File Handles <file_handler>
 
