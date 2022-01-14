@@ -10,11 +10,13 @@ import time
 import pandas as pd
 import pickle as pickle
 from scandir import scandir
+
 # from six import StringIO
 try:
     from io import StringIO, BytesIO
 except ImportError:
     from StringIO import StringIO as BytesIO
+
     # from io import BytesIO
 from contextlib import closing
 from boto.s3.key import Key
@@ -36,11 +38,16 @@ class FileHandler(object):
     :param bucket: The name of the S3 bucket; required to use S3, obvs
     """
 
-    def __init__(self, path, use_s3=None, aws_access=None, aws_secret=None, bucket=None):
+    def __init__(
+        self, path, use_s3=None, aws_access=None, aws_secret=None, bucket=None
+    ):
 
-        if aws_access is None: aws_access = os.environ.get("AWS_ACCESS_KEY_ID", None)
-        if aws_secret is None: aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-        if bucket is None: bucket = os.environ.get("S3_BUCKET", None)
+        if aws_access is None:
+            aws_access = os.environ.get("AWS_ACCESS_KEY_ID", None)
+        if aws_secret is None:
+            aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
+        if bucket is None:
+            bucket = os.environ.get("S3_BUCKET", None)
 
         self.path = path
 
@@ -50,25 +57,30 @@ class FileHandler(object):
                 s3_params = {}
 
                 if aws_access is not None:
-                    s3_params['aws_access_key_id'] = aws_access
-                    s3_params['aws_secret_access_key'] = aws_secret
+                    s3_params["aws_access_key_id"] = aws_access
+                    s3_params["aws_secret_access_key"] = aws_secret
 
                 if "." in bucket:
-                    s3_params['calling_format'] = OrdinaryCallingFormat()
+                    s3_params["calling_format"] = OrdinaryCallingFormat()
 
                 self.s3 = S3Connection(**s3_params).get_bucket(bucket)
 
             except Exception as e:
-                print("Couldn't find or access the specified bucket, using local storage: {}".format(e))
+                print(
+                    "Couldn't find or access the specified bucket, using local storage: {}".format(
+                        e
+                    )
+                )
                 self.use_s3 = False
 
         if not self.use_s3:
             self.path = os.path.join(self.path)
             if not os.path.exists(self.path):
-                try: os.makedirs(self.path)
+                try:
+                    os.makedirs(self.path)
                 except Exception as e:
-                    print( "Warning: couldn't make directory '{}'".format(self.path))
-                    print( e)
+                    print("Warning: couldn't make directory '{}'".format(self.path))
+                    print(e)
 
     def iterate_path(self):
         """
@@ -94,7 +106,7 @@ class FileHandler(object):
                 key.delete()
         else:
             for f in scandir(self.path):
-                os.unlink(os.path.join (self.path, f.name))
+                os.unlink(os.path.join(self.path, f.name))
 
     def get_key_hash(self, key):
         """
@@ -105,7 +117,9 @@ class FileHandler(object):
 
         return hashlib.sha224(key.encode("utf8")).hexdigest()
 
-    def write(self, key, data, format="pkl", hash_key=False, add_timestamp=False, **io_kwargs):
+    def write(
+        self, key, data, format="pkl", hash_key=False, add_timestamp=False, **io_kwargs
+    ):
         """
         Writes arbitrary data objects to a variety of file formats.  If you save something to csv/tab/xlsx/xls/dta, \
         it assumes you've passed it a Pandas DataFrame object.  Same goes for JSON - if you're trying to save an \
@@ -139,18 +153,23 @@ class FileHandler(object):
             elif format == "dta":
                 data.to_stata(output, **io_kwargs)
             elif format in ["xls", "xlsx"]:
-                writer = pd.ExcelWriter(output, engine='xlsxwriter')
+                writer = pd.ExcelWriter(output, engine="xlsxwriter")
                 data.to_excel(writer, **io_kwargs)
                 writer.save()
             data = output.getvalue()
             return data
 
         if format in ["csv", "xls", "xlsx", "tab", "dta"]:
-            try: data = _get_output(BytesIO(), data, io_kwargs)
+            try:
+                data = _get_output(BytesIO(), data, io_kwargs)
             except Exception as e:
                 print(e)
-                try: data = _get_output(StringIO(), data, io_kwargs)
-                except: raise Exception("Couldn't convert data into '{}' format".format(format))
+                try:
+                    data = _get_output(StringIO(), data, io_kwargs)
+                except:
+                    raise Exception(
+                        "Couldn't convert data into '{}' format".format(format)
+                    )
 
         elif format == "pkl":
             data = pickle.dumps(data, **io_kwargs)
@@ -197,8 +216,10 @@ class FileHandler(object):
 
             k = self.s3.get_key(filepath)
             if k:
-                try: data = k.get_contents_as_string()
-                except ValueError: pass
+                try:
+                    data = k.get_contents_as_string()
+                except ValueError:
+                    pass
         else:
 
             if os.path.exists(filepath):
@@ -211,15 +232,19 @@ class FileHandler(object):
 
         if format == "pkl":
 
-
-            try: data = pickle.loads(data)
-            except TypeError: data = None
+            try:
+                data = pickle.loads(data)
+            except TypeError:
+                data = None
             except ValueError:
                 if "attempt_count" not in io_kwargs:
                     io_kwargs["attempt_count"] = 1
-                print("Insecure pickle string; probably a concurrent read-write, \
-                    will try again in 5 seconds (attempt #{})"\
-                    .format(io_kwargs["attempt_count"]))
+                print(
+                    "Insecure pickle string; probably a concurrent read-write, \
+                    will try again in 5 seconds (attempt #{})".format(
+                        io_kwargs["attempt_count"]
+                    )
+                )
                 time.sleep(5)
                 if io_kwargs["attempt_count"] <= 3:
                     io_kwargs["attempt_count"] += 1
@@ -234,20 +259,28 @@ class FileHandler(object):
 
             if format == "tab":
                 io_kwargs["delimiter"] = "\t"
-            try: data = pd.read_csv(BytesIO(data), **io_kwargs)
-            except: data = pd.read_csv(StringIO(data), **io_kwargs)
+            try:
+                data = pd.read_csv(BytesIO(data), **io_kwargs)
+            except:
+                data = pd.read_csv(StringIO(data), **io_kwargs)
 
         elif format in ["xlsx", "xls"]:
-            try: data = pd.read_excel(BytesIO(data), **io_kwargs)
-            except: data = pd.read_excel(StringIO(data), **io_kwargs)
+            try:
+                data = pd.read_excel(BytesIO(data), **io_kwargs)
+            except:
+                data = pd.read_excel(StringIO(data), **io_kwargs)
 
         elif format == "json":
-            try: data = json.loads(data)
-            except: pass
+            try:
+                data = json.loads(data)
+            except:
+                pass
 
         elif format == "dta":
 
-            try: data = pd.read_stata(BytesIO(data), **io_kwargs)
-            except: data = pd.read_stata(StringIO(data), **io_kwargs)
+            try:
+                data = pd.read_stata(BytesIO(data), **io_kwargs)
+            except:
+                data = pd.read_stata(StringIO(data), **io_kwargs)
 
         return data

@@ -13,19 +13,19 @@ from pewtils import get_hash, decode_text
 
 
 def hash_url(url):
-    '''
+    """
     Clears out http/https prefix and returns an MD5 hash of the URL
 
     :param url: string of the url
     :return: hashed string
-    '''
-    http_regex = re.compile(r'^http(s)?\:\/\/')
-    return get_hash(unidecode(http_regex.sub('', url.lower())), hash_function="md5")
+    """
+    http_regex = re.compile(r"^http(s)?\:\/\/")
+    return get_hash(unidecode(http_regex.sub("", url.lower())), hash_function="md5")
 
 
-def new_random_number(attempt = 1, base_interval = 1.0, max_sleep = 10):
+def new_random_number(attempt=1, base_interval=1.0, max_sleep=10):
 
-    '''
+    """
     Generate a variable waiting time in seconds which exponentially increases with each attempt. \
     Note that this function does NOT itself sleep or block execution, it just adds new_random_number to your timer.
 
@@ -33,7 +33,7 @@ def new_random_number(attempt = 1, base_interval = 1.0, max_sleep = 10):
     :param base_interval: The minimum time. Must be greater than zero.
     :param max_sleep: The maximum amount of time allowed.
     :return: Seconds to sleep
-    '''
+    """
 
     return uniform(0, min(max_sleep, base_interval * 2 ** attempt))
 
@@ -53,11 +53,13 @@ def strip_html(html, simple=False, break_tags=None):
     if not simple:
         try:
 
-            split_re = re.compile(r'\s{2,}')
+            split_re = re.compile(r"\s{2,}")
             soup = BeautifulSoup(html, "lxml")
             for tag in soup():
-                if ("class" in tag.attrs and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])) or \
-                        ("menu" in str(tag.id) or "header" in str(tag.id)):
+                if (
+                    "class" in tag.attrs
+                    and ("menu" in tag.attrs["class"] or "header" in tag.attrs["class"])
+                ) or ("menu" in str(tag.id) or "header" in str(tag.id)):
                     tag.extract()
             for tag in soup(["script", "style"]):
                 tag.extract()
@@ -75,7 +77,7 @@ def strip_html(html, simple=False, break_tags=None):
             lines = [l.strip() for l in text.splitlines()]
             lines = [l2.strip() for l in lines for l2 in split_re.split(l)]
             text = "\n".join([l for l in lines if l])
-            text = re.sub(r'(\sA){2,}\s', ' ', text)
+            text = re.sub(r"(\sA){2,}\s", " ", text)
             text = re.sub(r"\n+(\s+)?", "\n\n", text)
             text = re.sub(r" +", " ", text)
             text = re.sub(r"\t+", " ", text)
@@ -86,16 +88,19 @@ def strip_html(html, simple=False, break_tags=None):
 
             print("strip_html error")
             print(e)
-            text = re.sub(r"<[^>]*>", " ",
-                          re.sub("\\s+", " ", html)
-                          ).strip()
+            text = re.sub(r"<[^>]*>", " ", re.sub("\\s+", " ", html)).strip()
             return text
 
     else:
-        return "\n".join([
-            re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section)) for section in
-                re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split("\n")
-        ])
+        return "\n".join(
+            [
+                re.sub(r"\s+", " ", re.sub(r"\<[^\>]+\>", " ", section))
+                for section in re.sub(r"\<\/?div\>|\<\/?p\>|\<br\>", "\n", html).split(
+                    "\n"
+                )
+            ]
+        )
+
 
 GENERAL_LINK_SHORTENERS = [
     "wp.me",
@@ -142,7 +147,7 @@ GENERAL_LINK_SHORTENERS = [
     "abre.ai",
     "bit.do",
     "adf.ly",
-    "su.pr"
+    "su.pr",
 ]
 
 # TODO: perhaps separate out active and inactive URL shorteners
@@ -306,7 +311,7 @@ VANITY_LINK_SHORTENERS.update(HISTORICAL_VANITY_LINK_SHORTENERS)
 
 
 def canonical_link(url, timeout=5.0, session=None, user_agent=None):
-    '''
+    """
     Tries to resolve a link to the "most correct" version. Especially useful for expanding short URLs \
     from bit.ly / Twitter and for checking HTTP status codes without retrieving the actual data. This function is not
     perfect but it has been tested on a wide variety of URLs and resolves to the correct final page in most cases
@@ -315,10 +320,25 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
     :param timeout: How long to wait for a response before giving up (default is one second)
     :param session: A persistent session that can optionally be passed (useful if you're processing many links at once)
     :return: The "canonical" URL as supplied by the server, or the original URL if the server was not helpful.
-    '''
+    """
 
     # GOOD_STATUS_CODES = [200, 301, 303]
-    BAD_STATUS_CODES = [302, 307, 400, 404, 405, 407, 500, 501, 502, 503, 504, 520, 530, 404]
+    BAD_STATUS_CODES = [
+        302,
+        307,
+        400,
+        404,
+        405,
+        407,
+        500,
+        501,
+        502,
+        503,
+        504,
+        520,
+        530,
+        404,
+    ]
     PROXY_REQUIRED = [307, 407]
     CHECK_LENGTH = [301, 302, 200, 404]
 
@@ -359,7 +379,10 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                 # If it's clearly a 404 landing page, stop and use the last observed good URL
                 break
             parsed = urlparse.urlparse(response_url)
-            if parsed.netloc in VANITY_LINK_SHORTENERS.keys() or parsed.netloc in GENERAL_LINK_SHORTENERS:
+            if (
+                parsed.netloc in VANITY_LINK_SHORTENERS.keys()
+                or parsed.netloc in GENERAL_LINK_SHORTENERS
+            ):
                 # Don't consider known shortened URLs
                 is_shortener = True
             else:
@@ -370,24 +393,34 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                         if len(val) == 1 and val[0].startswith("http"):
                             parsed_possible_url = urlparse.urlparse(val[0])
                             # print("POSSIBLE URL: {}".format(parsed_possible_url))
-                            if parsed_possible_url.scheme and parsed_possible_url.netloc:
+                            if (
+                                parsed_possible_url.scheme
+                                and parsed_possible_url.netloc
+                            ):
                                 # If the URL contains a GET parameter that is, itself, a URL, it's likely redirecting to it
                                 # So we're going to stop this run and start the process over with the new URL
-                                return canonical_link(val[0], timeout=timeout, session=session, user_agent=user_agent)
+                                return canonical_link(
+                                    val[0],
+                                    timeout=timeout,
+                                    session=session,
+                                    user_agent=user_agent,
+                                )
                 if status_code in PROXY_REQUIRED:
                     # These codes tend to indicate the last good URL in the chain
                     last_good_url = response_url
                     last_good_status = status_code
                     break
-                good_path = (not has_path or parsed.path not in ["/", ""])
-                good_query = (not has_query or parsed.query != "")
+                good_path = not has_path or parsed.path not in ["/", ""]
+                good_query = not has_query or parsed.query != ""
                 # If the URL has a path or some GET parameters, we'll inspect further
                 # Otherwise we just go with the previous URL
                 # Link shorteners are very rarely used to reference root domains
                 if good_query or good_path:
-                    if (re.sub("https", "http", response_url) == re.sub("https", "http", last_good_url) or \
-                            parsed.path == original_parsed.path) or \
-                            response_url.lower() == last_good_url.lower():
+                    if (
+                        re.sub("https", "http", response_url)
+                        == re.sub("https", "http", last_good_url)
+                        or parsed.path == original_parsed.path
+                    ) or response_url.lower() == last_good_url.lower():
                         # If it's the same link but only the domain, protocol, or casing changed, it's fine
                         last_good_url = response_url
                         last_good_status = status_code
@@ -402,9 +435,21 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
                         # If these conditions are met and the path or query do not identically match the prior link
                         # Then it's usually a generic error page
                         bad = False
-                        if has_path and len(parsed.netloc) > 7 and len(parsed.path) < 20 and len(parsed.query) == 0 and prev_path != parsed.path:
+                        if (
+                            has_path
+                            and len(parsed.netloc) > 7
+                            and len(parsed.path) < 20
+                            and len(parsed.query) == 0
+                            and prev_path != parsed.path
+                        ):
                             bad = True
-                        elif has_query and len(parsed.netloc) > 7 and len(parsed.query) < 20 and len(parsed.path) <= 1 and prev_query != parsed.query:
+                        elif (
+                            has_query
+                            and len(parsed.netloc) > 7
+                            and len(parsed.query) < 20
+                            and len(parsed.path) <= 1
+                            and prev_query != parsed.query
+                        ):
                             bad = True
                         if not bad or prev_was_shortener:
                             last_good_url = response_url
@@ -438,7 +483,9 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
 
         if status_code not in BAD_STATUS_CODES:
             # If the URL ended on a good status code, we'll try to trim out any unnecessary GET parameters
-            last_good_url = trim_get_parameters(last_good_url, session=session, timeout=timeout, user_agent=user_agent)
+            last_good_url = trim_get_parameters(
+                last_good_url, session=session, timeout=timeout, user_agent=user_agent
+            )
 
         # if last_good_status in GOOD_STATUS_CODES:
         #     print("FINAL GOOD: {}, {}".format(last_good_status, last_good_url))
@@ -489,7 +536,9 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
                 if skipper in v[0].lower():
                     check = False
             if check:
-                new_params = {k2: v2[0] for k2, v2 in params.items() if k2 != k and len(v2) == 1}
+                new_params = {
+                    k2: v2[0] for k2, v2 in params.items() if k2 != k and len(v2) == 1
+                }
                 new_params = urlparse.urlencode(new_params)
                 new_parsed = parsed._replace(query=new_params)
                 new_url = urlparse.urlunparse(new_parsed)
@@ -506,7 +555,9 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
 
     if len(ditch_params) > 0:
         # Now we remove all of the unnecessary get parameters and finalize the URL
-        new_params = {k: v[0] for k, v in params.items() if len(v) == 1 and k not in ditch_params}
+        new_params = {
+            k: v[0] for k, v in params.items() if len(v) == 1 and k not in ditch_params
+        }
         new_params = urlparse.urlencode(new_params)
         parsed = parsed._replace(query=new_params)
         url = urlparse.urlunparse(parsed)
@@ -516,7 +567,10 @@ def trim_get_parameters(url, session=None, timeout=30, user_agent=None):
 
     return url
 
-def extract_domain_from_url(url, include_subdomain=True, resolve_url=False, timeout=1.0):
+
+def extract_domain_from_url(
+    url, include_subdomain=True, resolve_url=False, timeout=1.0
+):
     """
     Attempts to extract a standardized domain from a url by following the link and extracting the TLD.
     :param url:  The link from which to extract the domain

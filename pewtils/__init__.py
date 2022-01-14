@@ -1,6 +1,9 @@
 import os, re, itertools, json, sys, chardet, copy
-try: from importlib.machinery import SourceFileLoader
-except ImportError: import imp
+
+try:
+    from importlib.machinery import SourceFileLoader
+except ImportError:
+    import imp
 
 import pandas as pd
 import numpy as np
@@ -30,28 +33,29 @@ def decode_text(text, throw_loud_fail=False):
     :return: decoded text, or empty string ''
     """
 
-    output_text = ''
+    output_text = ""
     if is_not_null(text):
         try:
             text = u"{}".format(text)
             output_text = text.decode("ascii").encode("ascii")
         except:
             try:
-                output_text = text.decode(
-                    chardet.detect(text)['encoding']
-                )
+                output_text = text.decode(chardet.detect(text)["encoding"])
                 output_text = output_text.encode("ascii")
             except:
                 try:
                     output_text = unidecode(text)
                 except:
                     if throw_loud_fail:
-                        output_text = text.decode('ascii', 'ignore').encode("ascii")
+                        output_text = text.decode("ascii", "ignore").encode("ascii")
                     else:
-                        try: output_text = text.decode('ascii', 'ignore').encode("ascii")
+                        try:
+                            output_text = text.decode("ascii", "ignore").encode("ascii")
                         except:
                             print("could not decode")
                             print(text)
+        output_text = output_text.replace("\x00", "").replace("\u0000", "")
+
     return output_text
 
 
@@ -65,11 +69,15 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
     """
 
     if type(val) == list:
-        if empty_lists_are_null and val == []: return False
-        else: return True
+        if empty_lists_are_null and val == []:
+            return False
+        else:
+            return True
     elif isinstance(val, pd.Series) or isinstance(val, pd.DataFrame):
-        if empty_lists_are_null and len(val) == 0: return False
-        else: return True
+        if empty_lists_are_null and len(val) == 0:
+            return False
+        else:
+            return True
     else:
         try:
             try:
@@ -78,9 +86,12 @@ def is_not_null(val, empty_lists_are_null=False, custom_nulls=None):
                     good = good and (val not in custom_nulls)
                 if good:
                     try:
-                        try: good = not pd.isnull(val)
-                        except IndexError:  good = True
-                    except AttributeError: good = True
+                        try:
+                            good = not pd.isnull(val)
+                        except IndexError:
+                            good = True
+                    except AttributeError:
+                        good = True
                 return good
             except ValueError:
                 return val.any()
@@ -97,7 +108,9 @@ def is_null(val, empty_lists_are_null=False, custom_nulls=None):
     :return: bool (True if the value is null)
     """
 
-    return not is_not_null(val, empty_lists_are_null=empty_lists_are_null, custom_nulls=custom_nulls)
+    return not is_not_null(
+        val, empty_lists_are_null=empty_lists_are_null, custom_nulls=custom_nulls
+    )
 
 
 def recursive_update(existing, new):
@@ -136,7 +149,11 @@ def recursive_update(existing, new):
         for k, v in new.items():
 
             if _hasattr(existing, k):
-                _setattr(existing, k, recursive_update(_getattr(existing, k), _getattr(new, k)))
+                _setattr(
+                    existing,
+                    k,
+                    recursive_update(_getattr(existing, k), _getattr(new, k)),
+                )
             else:
                 _setattr(existing, k, _getattr(new, k))
         return existing
@@ -154,10 +171,12 @@ def chunk_list(seq, size):
     :return: list - A list of lists
     """
 
-    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+    return (seq[pos : pos + size] for pos in range(0, len(seq), size))
 
 
-def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_names=False):
+def extract_json_from_folder(
+    folder_path, include_subdirs=False, concat_subdir_names=False
+):
     """
     Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it
     to a dictionary, with the key being the name of the file and the value being the JSON itself.  Has options for
@@ -178,7 +197,8 @@ def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_n
                     if file.endswith(".json"):
                         key = re.sub(".json", "", file)
                         with closing(open(os.path.join(path, file), "r")) as input:
-                            try: attributes[key] = json.load(input)
+                            try:
+                                attributes[key] = json.load(input)
                             except ValueError:
                                 print("JSON file is invalid: {}".format(file))
             if subdir:
@@ -187,7 +207,11 @@ def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_n
     if include_subdirs and len(subdirs) > 0:
         for subdir in subdirs[0]:
             if subdir != "__pycache__":
-                results = extract_json_from_folder(os.path.join(folder_path, subdir), include_subdirs=True, concat_subdir_names=concat_subdir_names)
+                results = extract_json_from_folder(
+                    os.path.join(folder_path, subdir),
+                    include_subdirs=True,
+                    concat_subdir_names=concat_subdir_names,
+                )
                 if not concat_subdir_names:
                     attributes[subdir] = results
                 else:
@@ -197,11 +221,13 @@ def extract_json_from_folder(folder_path, include_subdirs=False, concat_subdir_n
     return attributes
 
 
-def extract_attributes_from_folder_modules(folder_path,
-                            attribute_name,
-                            include_subdirs=False,
-                            concat_subdir_names=False,
-                            current_subdirs=None):
+def extract_attributes_from_folder_modules(
+    folder_path,
+    attribute_name,
+    include_subdirs=False,
+    concat_subdir_names=False,
+    current_subdirs=None,
+):
     """
     Similar to `extract_json_from_folder`, this function iterates over a folder and looks for Python files that
     contain an attribute (like a class, function, or variable) with a given name. It extracts those attributes and
@@ -227,13 +253,16 @@ def extract_attributes_from_folder_modules(folder_path,
                 for file in files:
                     if file.endswith(".py") and not file.startswith("__init__"):
                         module_name = file.split(".")[0]
-                        unique_name = "_".join(current_subdirs + [current_folder, module_name])
+                        unique_name = "_".join(
+                            current_subdirs + [current_folder, module_name]
+                        )
                         try:
-                            module = SourceFileLoader(unique_name, os.path.join(path, file)).load_module()
+                            module = SourceFileLoader(
+                                unique_name, os.path.join(path, file)
+                            ).load_module()
                         except NameError:
                             module = imp.load_source(
-                                unique_name,
-                                os.path.join(path, file)
+                                unique_name, os.path.join(path, file)
                             )
                         if hasattr(module, attribute_name):
                             attributes[module_name] = getattr(module, attribute_name)
@@ -248,9 +277,13 @@ def extract_attributes_from_folder_modules(folder_path,
 
     if include_subdirs:
         for subdir in set(subdirs):
-            results = extract_attributes_from_folder_modules(os.path.join(folder_path, subdir),
-                attribute_name, concat_subdir_names=concat_subdir_names, include_subdirs=True,
-                current_subdirs=current_subdirs+[current_folder])
+            results = extract_attributes_from_folder_modules(
+                os.path.join(folder_path, subdir),
+                attribute_name,
+                concat_subdir_names=concat_subdir_names,
+                include_subdirs=True,
+                current_subdirs=current_subdirs + [current_folder],
+            )
             if not concat_subdir_names:
                 attributes[subdir] = results
             else:
@@ -288,6 +321,7 @@ def zipcode_num_to_string(zip):
 
     return zip
 
+
 def flatten_list(l):
 
     """
@@ -310,6 +344,7 @@ def get_hash(text, hash_function="ssdeep"):
     """
     if hash_function == "nilsimsa":
         from nilsimsa import Nilsimsa
+
         try:
             hash = Nilsimsa(text).hexdigest()
         except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
@@ -321,6 +356,7 @@ def get_hash(text, hash_function="ssdeep"):
             hash = md5(decode_text(text).encode("utf8")).hexdigest()
     else:
         import ssdeep
+
         try:
             hash = ssdeep.hash(text)
         except (UnicodeEncodeError, UnicodeDecodeError, TypeError):
@@ -336,7 +372,7 @@ def concat_text(*args):
     :return: A single string of the values concatenated by spaces
     """
     strs = [decode_text(arg) for arg in args if not pd.isnull(arg)]
-    return ' '.join(strs) if strs else np.nan
+    return " ".join(strs) if strs else np.nan
 
 
 def vector_concat_text(*args):
@@ -378,7 +414,6 @@ def scale_range(old_val, old_min, old_max, new_min, new_max):
     """
 
     return (((old_val - old_min) * (new_max - new_min)) / (old_max - old_min)) + new_min
-
 
 
 class classproperty(object):
