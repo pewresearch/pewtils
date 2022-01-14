@@ -2,13 +2,13 @@ beautifulsoup4>=4.5.3
 boto>=2.46.1
 boto3>=1.4.4
 chardet>=2.3.0
+celery
 cython>=0.25.2
 future
 fuzzywuzzy>=0.15.0
-lxml>=4.4.1
-nilsimsa>=0.3.8
+nltk>=3.2.2
 numpy<1.17.0; python_version < '3.0'
-numpy>=1.16.0; python_version > '3.0'
+numpy>=1.16.0; python_version >= '3.0'
 pandas>=0.19.2
 polyglot
 python-dateutil>=2.6.0
