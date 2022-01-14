@@ -54,30 +54,30 @@ class HTTPTests(unittest.TestCase):
                 "https://www.google.com/maps/d/viewer?mid=zQ8Zk-5ey-Y8.kgD9Rxu8JCNQ&hl=en&usp=sharing",
                 "https://www.google.com/maps/d/viewer?mid=1NQVHeBBcVAnz9JwX1frZxX1ZgjY",
             ),
-#            (
-#                "https://httpbin.org/redirect/10",
-#                "https://httpbin.org/relative-redirect/1",
-#            ),
-#            (
-#                "https://httpbin.org/redirect-to?url=status%2F303",
-#                "https://httpbin.org/status/303",
-#            ),
-#            (
-#                "https://httpbin.org/redirect-to?url=status%2F307",
-#                "https://httpbin.org/status/307",
-#            ),
-#            (
-#                "https://httpbin.org/redirect-to?url=status%2F308",
-#                "https://httpbin.org/status/308",
-#            ),
-#            (
-#                "https://httpbin.org/redirect-to?url=status%2F401",
-#                "https://httpbin.org/status/401",
-#            ),
-#            (
-#                "https://httpbin.org/redirect-to?url=status%2F403",
-#                "https://httpbin.org/status/403",
-#            ),
+            #            (
+            #                "https://httpbin.org/redirect/10",
+            #                "https://httpbin.org/relative-redirect/1",
+            #            ),
+            #            (
+            #                "https://httpbin.org/redirect-to?url=status%2F303",
+            #                "https://httpbin.org/status/303",
+            #            ),
+            #            (
+            #                "https://httpbin.org/redirect-to?url=status%2F307",
+            #                "https://httpbin.org/status/307",
+            #            ),
+            #            (
+            #                "https://httpbin.org/redirect-to?url=status%2F308",
+            #                "https://httpbin.org/status/308",
+            #            ),
+            #            (
+            #                "https://httpbin.org/redirect-to?url=status%2F401",
+            #                "https://httpbin.org/status/401",
+            #            ),
+            #            (
+            #                "https://httpbin.org/redirect-to?url=status%2F403",
+            #                "https://httpbin.org/status/403",
+            #            ),
             (
                 "https://pewrsr.ch/2kk3VvY",
                 "https://www.pewresearch.org/internet/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
@@ -122,13 +122,25 @@ class HTTPTests(unittest.TestCase):
         )
 
         # These are domains that resolve properly but are alternatives to a preferred version
-        IGNORE_DOMAINS = ["ap.org", "cnet.co", "de.gov", "huffpost.com", "ky.gov", "mt.gov", "sen.gov", "twimg.com"]
+        IGNORE_DOMAINS = [
+            "ap.org",
+            "cnet.co",
+            "de.gov",
+            "huffpost.com",
+            "ky.gov",
+            "mt.gov",
+            "sen.gov",
+            "twimg.com",
+        ]
 
         user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.3; rv:88.0) Gecko/20100101 Firefox/88.0"
         session = requests.Session()
         session.headers.update({"User-Agent": user_agent})
         for k, v in VANITY_LINK_SHORTENERS.items():
-            if k not in HISTORICAL_VANITY_LINK_SHORTENERS.keys() and k not in IGNORE_DOMAINS:
+            if (
+                k not in HISTORICAL_VANITY_LINK_SHORTENERS.keys()
+                and k not in IGNORE_DOMAINS
+            ):
                 try:
                     resp = session.head(
                         "http://{}".format(k), allow_redirects=True, timeout=10
@@ -141,7 +153,9 @@ class HTTPTests(unittest.TestCase):
                     )
                     resp = None
                 if resp:
-                    resp_url = trim_get_parameters(resp.url, session=session, timeout=10).split("?")[0]
+                    resp_url = trim_get_parameters(
+                        resp.url, session=session, timeout=10
+                    ).split("?")[0]
                     if k in resp_url:
                         print(
                             "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (resolved to {})".format(
@@ -149,15 +163,17 @@ class HTTPTests(unittest.TestCase):
                             )
                         )
                     else:
-                        resolved = re.sub(
-                            "www[0-9]?\.", "", urlparse.urlparse(resp_url).netloc
-                        )
-                        resolved = resolved.split(":")[0]
+                        resolved = re.match(
+                            "(www[0-9]?\.)?([^:]+)(:\d+$)?",
+                            urlparse.urlparse(resp.url).netloc,
+                        ).group(2)
                         resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
                         # Vanity domains are often purchased/managed through bit.ly or trib.al, and don't resolve
                         # to their actual website unless paired with an actual page URL; so as long as they resolve
                         # to what we expect, or a generic vanity URL like bit.ly, we'll assume everything's good
-                        self.assertTrue(resolved in GENERAL_LINK_SHORTENERS or v in resolved)
+                        self.assertTrue(
+                            resolved in GENERAL_LINK_SHORTENERS or v in resolved
+                        )
         session.close()
 
     def test_extract_domain_from_url(self):
