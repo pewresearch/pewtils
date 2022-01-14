@@ -98,9 +98,7 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)[
-                "Contents"
-            ]:
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
                 yield key["Key"]
 
         else:
@@ -127,10 +125,8 @@ class FileHandler(object):
         """
 
         if self.use_s3:
-            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)[
-                "Contents"
-            ]:
-                self.s3.delete_object(Bucket=self.bucket, Prefix=key["Key"])
+            for key in self.s3.list_objects(Bucket=self.bucket, Prefix=self.path)['Contents']:
+                self.s3.delete_object(Bucket=self.bucket, Prefix=key['Key'])
 
         else:
             for f in scandir(self.path):
@@ -292,9 +288,7 @@ class FileHandler(object):
             except TypeError:
                 upload = BytesIO(data.encode())
 
-            self.s3.upload_fileobj(
-                upload, Bucket=self.bucket, Key="/".join([self.path, key])
-            )
+            self.s3.upload_fileobj(upload, Bucket=self.bucket, Key="/".join([self.path, key]))
 
         else:
             path = os.path.join(self.path, key)
