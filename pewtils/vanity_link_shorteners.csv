@@ -11,7 +11,7 @@ amzn.to,amazon.com,0
 apne.ws,apnews.com,0
 armytim.es,armytimes.com,0
 atxne.ws,statesman.com,0
-ayre.to,calvinayre.com,0
+ayre.to,calvinayre.com,1
 azc.cc,azcentral.com,0
 bayareane.ws,eastbaytimes.com,0
 bbc.in,bbc.co.uk,0
@@ -24,7 +24,7 @@ bloombg.org,bloomberg.org,0
 bos.gl,bostonglobe.com,0
 brook.gs,brookings.edu,0
 bsun.md,baltimoresun.com,0
-buswk.co,bloomberg.com,0
+buswk.co,businessweek.com,1
 bv.ms,bloomberg.com,0
 bzfd.it,buzzfeed.com,0
 c-spanvideo.org,c-span.org,0
@@ -99,7 +99,7 @@ ift.tt,ifttt.com,0
 il.gov,illinois.gov,0
 ind.pn,independent.co.uk,0
 indy.st,indystar.com,0
-injo.com,ijr.com,0
+injo.com,ijr.com,1
 instagr.am,instagram.com,0
 interc.pt,theintercept.com,0
 itun.es,itunes.com,0
@@ -154,7 +154,7 @@ oh.us,state.oh.us,1
 ohne.ws,newarkadvocate.com,0
 on.fb.me,facebook.com,0
 onforb.es,forbes.com,0
-p4a.us,peteforamerica.com,0
+p4a.us,peteforamerica.com,1
 pa.us,state.pa.us,1
 pbpo.st,palmbeachpost.com,1
 pdora.co,pandora.com,0
@@ -185,12 +185,13 @@ spoti.fi,spotify.com,0
 st.news,seattletimes.com,1
 stjr.nl,statesmanjournal.com,0
 strib.mn,startribune.com,0
-tannos.mx,yarithtannos.com,0
+tannos.mx,yarithtannos.com,1
+tbo.com,tampabay.com,1
 tgam.ca,theglobeandmail.com,0
 theatln.tc,theatlantic.com,0
 thebea.st,thedailybeast.com,0
 thegaz.co,thegazette.com,0
-thkpr.gs,thinkprogress.org,0
+thkpr.gs,thinkprogress.org,1
 thr.cm,hollywoodreporter.com,0
 thr.cm,hollywoodreporter.com,1
 ti.me,time.com,0
@@ -202,7 +203,7 @@ tnw.to,thenextweb.com,0
 tonyr.co,tonyrobbins.com,1
 trib.in,chicagotribune.com,1
 tun.in,tunein.com,0
-tusconne.ws,kold.com,0
+tusconne.ws,kold.com,1
 twimg.com,twitter.com,0
 twnctry.co,towndandcountrymag.com,0
 tws.io,weeklystandard.com,1

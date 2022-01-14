@@ -43,7 +43,7 @@ class HTTPTests(unittest.TestCase):
 
         from pewtils.http import canonical_link
 
-        user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'"
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.3; rv:88.0) Gecko/20100101 Firefox/88.0"
 
         for original_url, canonical_url in [
             (
@@ -97,7 +97,7 @@ class HTTPTests(unittest.TestCase):
     def test_trim_get_parameters(self):
         from pewtils.http import trim_get_parameters
 
-        user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'"
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.3; rv:88.0) Gecko/20100101 Firefox/88.0"
         for original_url, trimmed_url in [
             ("https://httpbin.org/status/200", "https://httpbin.org/status/200"),
             (
@@ -115,41 +115,49 @@ class HTTPTests(unittest.TestCase):
         import requests
         from six.moves.urllib import parse as urlparse
         from pewtils.http import (
+            GENERAL_LINK_SHORTENERS,
             VANITY_LINK_SHORTENERS,
             HISTORICAL_VANITY_LINK_SHORTENERS,
+            trim_get_parameters,
         )
 
-        user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'"
+        # These are domains that resolve properly but are alternatives to a preferred version
+        IGNORE_DOMAINS = ["ap.org", "cnet.co", "de.gov", "huffpost.com", "ky.gov", "mt.gov", "sen.gov", "twimg.com"]
+
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.3; rv:88.0) Gecko/20100101 Firefox/88.0"
         session = requests.Session()
         session.headers.update({"User-Agent": user_agent})
         for k, v in VANITY_LINK_SHORTENERS.items():
-            if k not in HISTORICAL_VANITY_LINK_SHORTENERS.keys():
+            if k not in HISTORICAL_VANITY_LINK_SHORTENERS.keys() and k not in IGNORE_DOMAINS:
                 try:
                     resp = session.head(
                         "http://{}".format(k), allow_redirects=True, timeout=10
                     )
-
                 except requests.exceptions.ConnectionError:
                     print(
-                        "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {}".format(
+                        "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (connection error)".format(
                             k
                         )
                     )
                     resp = None
                 if resp:
-                    if k in resp.url:
+                    resp_url = trim_get_parameters(resp.url, session=session, timeout=10).split("?")[0]
+                    if k in resp_url:
                         print(
-                            "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {}".format(
-                                k
+                            "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (resolved to {})".format(
+                                k, resp_url
                             )
                         )
                     else:
-                        resolved = re.match(
-                            "(www[0-9]?\.)?([^:]+)(:\d+$)?",
-                            urlparse.urlparse(resp.url).netloc
-                        ).group(2)
+                        resolved = re.sub(
+                            "www[0-9]?\.", "", urlparse.urlparse(resp_url).netloc
+                        )
+                        resolved = resolved.split(":")[0]
                         resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
-                        self.assertIn(resolved, ["bitly.com", "trib.al", v])
+                        # Vanity domains are often purchased/managed through bit.ly or trib.al, and don't resolve
+                        # to their actual website unless paired with an actual page URL; so as long as they resolve
+                        # to what we expect, or a generic vanity URL like bit.ly, we'll assume everything's good
+                        self.assertTrue(resolved in GENERAL_LINK_SHORTENERS or v in resolved)
         session.close()
 
     def test_extract_domain_from_url(self):
