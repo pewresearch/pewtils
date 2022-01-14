@@ -1,29 +1,29 @@
-autodocsumm
+autodocsumm>=0.1.13
 beautifulsoup4>=4.5.3
 boto3>=1.4.4
 boto>=2.46.1
 chardet>=2.3.0
 celery
 cython>=0.25.2
-future
-fuzzywuzzy>=0.15.0
-nltk>=3.2.2
+future>=0.18.2
+lxml>=4.4.1
+nilsimsa>=0.3.8
 numpy<1.17.0; python_version < '3.0'
 numpy>=1.16.0; python_version >= '3.0'
 pandas<0.25.0; python_version < '3.0'
 pandas>=0.25.0; python_version >= '3.0'
-polyglot
 python-dateutil>=2.6.0
 python-levenshtein>=0.12.0
 pytz>=2016.10
-sphinx_rtd_theme
 requests>=2.13.0
 scandir>=1.5
 simplejson>=3.10.0
+six>=1.14.0
+sphinx_rtd_theme>=0.4.3
 ssdeep>=3.3
 tldextract>=2.2.1
 tqdm>=4.11.2
-unicode
+unicode>=2.7
 unidecode>=0.4.20
 xlrd>=1.2.0
 xlsxwriter>=1.1.8
