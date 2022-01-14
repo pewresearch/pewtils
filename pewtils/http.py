@@ -1,7 +1,7 @@
 from __future__ import division
 from bs4 import BeautifulSoup
 from builtins import str
-from pewtils import get_hash, decode_text, is_not_null, timeout_wrapper
+from pewtils import get_hash, decode_text, is_not_null
 from six.moves.urllib import parse as urlparse
 from unidecode import unidecode
 import pandas as pd
@@ -11,6 +11,7 @@ import requests
 import tldextract
 import warnings
 from requests.exceptions import ReadTimeout
+from stopit import ThreadingTimeout as Timeout
 
 
 _ = pd.read_csv(
@@ -381,7 +382,7 @@ def canonical_link(url, timeout=5.0, session=None, user_agent=None):
         url = "http://" + url
     response = None
     try:
-        with timeout_wrapper(timeout):
+        with Timeout(timeout):
             try:
                 response = session.head(url, allow_redirects=True, timeout=timeout)
             except requests.ConnectionError:

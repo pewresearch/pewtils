@@ -152,7 +152,7 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span>
-<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span><span class="p">,</span> <span class="n">is_not_null</span><span class="p">,</span> <span class="n">timeout_wrapper</span>
+<span class="kn">from</span> <span class="nn">pewtils</span> <span class="k">import</span> <span class="n">get_hash</span><span class="p">,</span> <span class="n">decode_text</span><span class="p">,</span> <span class="n">is_not_null</span>
 <span class="kn">from</span> <span class="nn">six.moves.urllib</span> <span class="k">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">urlparse</span>
 <span class="kn">from</span> <span class="nn">unidecode</span> <span class="k">import</span> <span class="n">unidecode</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -162,6 +162,7 @@
 <span class="kn">import</span> <span class="nn">tldextract</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">ReadTimeout</span>
+<span class="kn">from</span> <span class="nn">stopit</span> <span class="k">import</span> <span class="n">ThreadingTimeout</span> <span class="k">as</span> <span class="n">Timeout</span>
 
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
@@ -532,7 +533,7 @@
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">url</span>
     <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">timeout_wrapper</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">Timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
