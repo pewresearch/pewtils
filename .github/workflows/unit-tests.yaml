@@ -31,6 +31,15 @@ jobs:
           # Additional arguments to pass to flake8, default "." (current directory)
           args: ". --exit-zero --statistics --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist"
 
+      - uses: grantmcconnaughey/lintly-flake8-github-action@v1.0
+        with:
+          # The GitHub API token to create reviews with
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Fail if "new" violations detected or "any", default "new"
+          failIf: new
+          # Additional arguments to pass to flake8, default "." (current directory)
+          args: ". --exit-zero --statistics --max-line-length=127 --ignore=E201,E202,E221,E251,E501,E722 --exclude=.git,__pycache__,build,dist"
+
       - name: Run unit tests
         run: |
           make python_test
