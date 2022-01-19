@@ -15,6 +15,7 @@ jobs:
     name: build docs
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      DOCS_URL: docs.pewresearch.tech/${{ github.repository }}/
 
     steps:
       - uses: actions/checkout@v2

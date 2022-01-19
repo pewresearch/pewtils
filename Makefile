@@ -11,6 +11,7 @@ ifeq (,$(findstring dev,$(VERSION)))
     endif
 endif
 
+DOCS_URL := $(or $(DOCS_URL), "docs.pewresearch.tech/pewtils_dev")
 
 # Minimal makefile for Sphinx documentation
 
@@ -28,7 +29,7 @@ help:
 docs:
 	-rm -rf _build/
 	make html
-	aws s3 sync --delete _build/html/ s3://docs.pewresearch.tech/pewtils/
+	aws s3 sync --delete _build/html/ $(DOCS_URL)
 
 python_lint_errors:
 	# stop the build if there are Python syntax errors or undefined names
