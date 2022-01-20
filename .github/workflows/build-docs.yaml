@@ -13,6 +13,8 @@ jobs:
   build-docs:
     runs-on: pewtils-runner
     name: build docs
+    permissions:
+      contents: write
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       DOCS_URL: docs.pewresearch.tech/${{ github.repository }}/
@@ -27,4 +29,8 @@ jobs:
 
       - name: Build docs html
         run: |
-          make docs
+          if [[ "${{ github.repository }}" == "pewtils" ]]; then
+              make github_docs
+          else
+              make docs
+          fi

@@ -8,7 +8,7 @@ VERSION := $(shell grep -Po '(?<=current_version = )[\w\d\.]+' .bumpversion.cfg)
 ifeq (,$(findstring dev,$(VERSION)))
 	ifeq ($(PART),build)
 		PART = patch
-    endif
+	endif
 endif
 
 DOCS_URL := $(or $(DOCS_URL), "docs.pewresearch.tech/pewtils_dev")
@@ -30,6 +30,23 @@ docs:
 	-rm -rf _build/
 	make html
 	aws s3 sync --delete _build/html/ $(DOCS_URL)
+
+github_docs:
+	git checkout $(BRANCH)
+	git pull origin $(BRANCH)
+	make html
+	mv _build/html /tmp/html
+	-rm -rf _build/
+	git checkout -b docs
+	mv .git /tmp/.git
+	-rm -rf * .*
+	mv /tmp/.git .
+	cp -a /tmp/html/. .
+	-rm -rf /tmp/html
+	git add -A .
+	git commit -m "latest docs"
+	git push origin docs
+	git checkout $(BRANCH)
 
 python_lint_errors:
 	# stop the build if there are Python syntax errors or undefined names
