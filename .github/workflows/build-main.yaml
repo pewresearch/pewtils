@@ -1,0 +1,57 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-main.yaml
+      - Makefile
+      - pewtils/**
+      - requirements.txt
+      - setup.py
+      - tests/**
+
+name: build-main
+
+jobs:
+  build-main:
+    runs-on: pewtils-runner
+    name: build main branch package
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Bump the build version
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "<>"
+          make bump
+
+      - name: Install python dependencies
+        run : |
+          while read requirement; do mamba install "conda-forge::$requirement" || true; done < requirements.txt
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          make python_lint_errors
+          make python_lint_quality
+
+      - name: Run unit tests
+        run: |
+          make python_test
+
+      - name: Build Python package
+        run: |
+          make python_build
+
+      - name: Upload to Nexus Repository
+        run: |
+          twine upload --non-interactive --repository-url '${{ secrets.PACKAGE_REPO_URL_PYTHON }}' --username '${{ secrets.PACKAGE_REPO_USER }}' --password '${{ secrets.PACKAGE_REPO_PASSWORD }}' dist/*
+
+      - name: Sync new build commits
+        run: |
+          make sync_branch

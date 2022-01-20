@@ -1,0 +1,50 @@
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+name: build-release
+
+jobs:
+  build-release:
+    runs-on: pewtils-runner
+    name: build release package
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install python dependencies
+        run : |
+          while read requirement; do mamba install "conda-forge::$requirement" || true; done < requirements.txt
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          make python_lint_errors
+          make python_lint_quality
+
+      - name: Run unit tests
+        run: |
+          make python_test
+
+      - name: Build Python package
+        run: |
+          make python_build
+
+      - name: Upload to Nexus Repository
+        run: |
+          twine upload --non-interactive --repository-url '${{ secrets.PACKAGE_REPO_URL_PYTHON }}' --username '${{ secrets.PACKAGE_REPO_USER }}' --password '${{ secrets.PACKAGE_REPO_PASSWORD }}' dist/*
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: False
+          body_path: CHANGELOG.md
+          files: |
+            *.whl
