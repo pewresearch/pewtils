@@ -31,5 +31,5 @@ jobs:
           if [[ "${{ github.repository }}" == "pewresearch/pewtils" ]]; then
               make github_docs
           else
-              make docs
+              make s3_docs
           fi

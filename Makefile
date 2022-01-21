@@ -27,6 +27,8 @@ help:
 docs:
 	-rm -rf _build/
 	make html
+
+s3_docs: docs
 	aws s3 sync --delete _build/html/ s3://docs.pewresearch.tech/pewtils/
 
 github_docs:
