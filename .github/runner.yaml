@@ -40,3 +40,35 @@ spec:
     metadata:
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+
+---
+
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: pewtils-runner
+  namespace: github-runners
+
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: pewresearch/pewtils
+      image: 458280294434.dkr.ecr.us-east-1.amazonaws.com/labs-actions-runner@sha256:796eea91dfc248ca2f7af1703ffe24bde833914dca2f60fafb762a34dd5accba
+      imagePullPolicy: Always
+      serviceAccountName: labs-runner
+      labels:
+        - pewtils-runner
+      dockerEnabled: false
+      dockerdContainerResources:
+        limits:
+          cpu: "4.0"
+          memory: "8Gi"
+
+        requests:
+          cpu: "100m"
+          memory: "2Gi"
+
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
