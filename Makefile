@@ -11,8 +11,6 @@ ifeq (,$(findstring dev,$(VERSION)))
 	endif
 endif
 
-DOCS_URL := $(or $(DOCS_URL), "docs.pewresearch.tech/pewtils_dev")
-
 # Minimal makefile for Sphinx documentation
 
 SPHINXOPTS	=
@@ -29,7 +27,7 @@ help:
 docs:
 	-rm -rf _build/
 	make html
-	aws s3 sync --delete _build/html/ $(DOCS_URL)
+	aws s3 sync --delete _build/html/ docs.pewresearch.tech/pewtils/
 
 github_docs:
 	git checkout $(BRANCH)
@@ -37,7 +35,8 @@ github_docs:
 	make html
 	mv _build/html /tmp/html
 	-rm -rf _build/
-	git checkout -b docs
+	git checkout docs
+	git pull origin docs
 	mv .git /tmp/.git
 	-rm -rf * .*
 	mv /tmp/.git .

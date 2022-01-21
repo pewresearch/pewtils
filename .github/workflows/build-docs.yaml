@@ -17,7 +17,6 @@ jobs:
       contents: write
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      DOCS_URL: docs.pewresearch.tech/${{ github.repository }}/
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +28,7 @@ jobs:
 
       - name: Build docs html
         run: |
-          if [[ "${{ github.repository }}" == "pewtils" ]]; then
+          if [[ "${{ github.repository }}" == "pewresearch/pewtils" ]]; then
               make github_docs
           else
               make docs
