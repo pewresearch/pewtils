@@ -27,7 +27,7 @@ help:
 docs:
 	-rm -rf _build/
 	make html
-	aws s3 sync --delete _build/html/ docs.pewresearch.tech/pewtils/
+	aws s3 sync --delete _build/html/ s3://docs.pewresearch.tech/pewtils/
 
 github_docs:
 	git checkout $(BRANCH)
