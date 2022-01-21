@@ -12,6 +12,7 @@ setup(
     version="1.1.3.dev0",
     description="General programming utilities from Pew Research Center",
     long_description=readme,
+    long_description_content_type="text/markdown",
     url="https://github.com/pewresearch/pewtils",
     author="Pew Research Center",
     author_email="info@pewresearch.org",
