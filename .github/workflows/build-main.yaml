@@ -48,7 +48,7 @@ jobs:
         run: |
           make python_build
 
-      - name: Upload to Nexus Repository
+      - name: Upload to Package Repository
         run: |
           twine upload --non-interactive --repository-url '${{ secrets.PACKAGE_REPO_URL_PYTHON }}' --username '${{ secrets.PACKAGE_REPO_USER }}' --password '${{ secrets.PACKAGE_REPO_PASSWORD }}' dist/*
 
