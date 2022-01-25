@@ -9,7 +9,7 @@ with open("requirements.txt") as reqs:
 
 setup(
     name="pewtils",
-    version="1.1.3.dev5",
+    version="1.1.3",
     description="General programming utilities from Pew Research Center",
     long_description=readme,
     long_description_content_type="text/markdown",
