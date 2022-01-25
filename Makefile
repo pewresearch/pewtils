@@ -32,18 +32,16 @@ s3_docs: docs
 	aws s3 sync --delete _build/html/ s3://docs.pewresearch.tech/pewtils/
 
 github_docs:
-	git checkout $(BRANCH)
-	git pull origin $(BRANCH)
 	make html
-	mv _build/html /tmp/html
-	-rm -rf _build/
+	-mv _build/html /tmp/html
+	-rm -rf _build
+	-git branch -D docs
+	git fetch origin --all
 	git checkout docs
-	git pull origin docs
-	mv .git /tmp/.git
+	-mv .git /tmp/.git
 	-rm -rf * .*
-	mv /tmp/.git .
-	cp -a /tmp/html/. .
-	-rm -rf /tmp/html
+	-mv /tmp/.git .
+	rsync -avc --remove-source-files --delete-after /tmp/html/ .
 	git add -A .
 	git commit -m "latest docs"
 	git push origin docs
