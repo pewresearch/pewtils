@@ -54,30 +54,6 @@ class HTTPTests(unittest.TestCase):
                 "https://www.google.com/maps/d/viewer?mid=zQ8Zk-5ey-Y8.kgD9Rxu8JCNQ&hl=en&usp=sharing",
                 "https://www.google.com/maps/d/viewer?mid=1NQVHeBBcVAnz9JwX1frZxX1ZgjY",
             ),
-            #            (
-            #                "https://httpbin.org/redirect/10",
-            #                "https://httpbin.org/relative-redirect/1",
-            #            ),
-            #            (
-            #                "https://httpbin.org/redirect-to?url=status%2F303",
-            #                "https://httpbin.org/status/303",
-            #            ),
-            #            (
-            #                "https://httpbin.org/redirect-to?url=status%2F307",
-            #                "https://httpbin.org/status/307",
-            #            ),
-            #            (
-            #                "https://httpbin.org/redirect-to?url=status%2F308",
-            #                "https://httpbin.org/status/308",
-            #            ),
-            #            (
-            #                "https://httpbin.org/redirect-to?url=status%2F401",
-            #                "https://httpbin.org/status/401",
-            #            ),
-            #            (
-            #                "https://httpbin.org/redirect-to?url=status%2F403",
-            #                "https://httpbin.org/status/403",
-            #            ),
             (
                 "https://pewrsr.ch/2kk3VvY",
                 "https://www.pewresearch.org/internet/2019/09/05/more-than-half-of-u-s-adults-trust-law-enforcement-to-use-facial-recognition-responsibly/",
