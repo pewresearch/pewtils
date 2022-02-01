@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import chardet
 import copy
 import json
+import imp
 import multiprocessing
 import os
 import re
