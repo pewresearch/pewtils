@@ -110,17 +110,16 @@ class HTTPTests(unittest.TestCase):
         ]
 
         user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.3; rv:88.0) Gecko/20100101 Firefox/88.0"
-        session = requests.Session()
-        session.headers.update({"User-Agent": user_agent})
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": user_agent})
         for k, v in VANITY_LINK_SHORTENERS.items():
             if (
                 k not in HISTORICAL_VANITY_LINK_SHORTENERS.keys()
                 and k not in IGNORE_DOMAINS
             ):
                 try:
-                    resp = session.head(
-                        "http://{}".format(k), allow_redirects=True, timeout=10
-                    )
+                    resp = self.session.head("http://{}".format(k), allow_redirects=True, timeout=10)
+
                 except requests.exceptions.ConnectionError:
                     print(
                         "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (connection error)".format(
@@ -129,9 +128,8 @@ class HTTPTests(unittest.TestCase):
                     )
                     resp = None
                 if resp:
-                    resp_url = trim_get_parameters(
-                        resp.url, session=session, timeout=10
-                    ).split("?")[0]
+                    resp_url = trim_get_parameters(resp.url, session=self.session, timeout=10).split("?")[0]
+
                     if k in resp_url:
                         print(
                             "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (resolved to {})".format(
@@ -150,7 +148,7 @@ class HTTPTests(unittest.TestCase):
                         self.assertTrue(
                             resolved in GENERAL_LINK_SHORTENERS or v in resolved
                         )
-        session.close()
+        self.session.close()
 
     def test_extract_domain_from_url(self):
         from pewtils.http import extract_domain_from_url
@@ -174,4 +172,5 @@ class HTTPTests(unittest.TestCase):
             self.assertEqual(extracted_domain, domain)
 
     def tearDown(self):
-        pass
+        if getattr(self, 'session', None) is not None:
+            self.session.close()
