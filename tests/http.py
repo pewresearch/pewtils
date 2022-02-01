@@ -121,21 +121,15 @@ class HTTPTests(unittest.TestCase):
                     resp = self.session.head("http://{}".format(k), allow_redirects=True, timeout=10)
 
                 except requests.exceptions.ConnectionError:
-                    print(
-                        "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (connection error)".format(
-                            k
-                        )
-                    )
+                    print(f"Could not resolve short domain (may be historic): {k} (connection error)")
                     resp = None
+
                 if resp:
                     resp_url = trim_get_parameters(resp.url, session=self.session, timeout=10).split("?")[0]
 
                     if k in resp_url:
-                        print(
-                            "COULD NOT RESOLVE SHORTENED DOMAIN, THIS MAY BE HISTORICAL NOW: {} (resolved to {})".format(
-                                k, resp_url
-                            )
-                        )
+                        print(f"Short domain resolved but full domain unexpected (may be historic): {k} (resolved to {resp_url} but expected {v})")
+
                     else:
                         resolved = re.match(
                             "(www[0-9]?\.)?([^:]+)(:\d+$)?",
@@ -145,9 +139,8 @@ class HTTPTests(unittest.TestCase):
                         # Vanity domains are often purchased/managed through bit.ly or trib.al, and don't resolve
                         # to their actual website unless paired with an actual page URL; so as long as they resolve
                         # to what we expect, or a generic vanity URL like bit.ly, we'll assume everything's good
-                        self.assertTrue(
-                            resolved in GENERAL_LINK_SHORTENERS or v in resolved
-                        )
+                        self.assertTrue(resolved in GENERAL_LINK_SHORTENERS or v in resolved)
+
         self.session.close()
 
     def test_extract_domain_from_url(self):
