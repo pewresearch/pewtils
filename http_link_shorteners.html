@@ -1,70 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Link Shorteners &mdash; pewtils 1.1.4 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Link Shorteners &mdash; pewtils 1.1.6.dev0 documentation</title>
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> pewtils
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +33,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pewtils_core.html">Core Functions</a></li>
@@ -93,76 +43,35 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pewtils</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Link Shorteners</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/http_link_shorteners.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="link-shorteners">
-<span id="id1"></span><h1>Link Shorteners<a class="headerlink" href="#link-shorteners" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="link-shorteners">
+<span id="id1"></span><h1>Link Shorteners<a class="headerlink" href="#link-shorteners" title="Permalink to this headline"></a></h1>
 <p>Lists of known link shorteners recognized by <code class="docutils literal notranslate"><span class="pre">pewtils.http</span></code> utility methods such as <a class="reference internal" href="http.html#pewtils.http.canonical_link" title="pewtils.http.canonical_link"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.canonical_link()</span></code></a> and <a class="reference internal" href="http.html#pewtils.http.extract_domain_from_url" title="pewtils.http.extract_domain_from_url"><code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.http.extract_domain_from_url()</span></code></a>. These lists were compiled from several collections of shortened links found in social media posts and news articles, so most of the shorteners belong to news outlets and large popular websites, especially those with political content. Since domains can be retired or may change ownership and get redirected to different websites over time, these lists may not be perfectly accurate. We will try to keep them updated as we become aware of changes, but if you notice any inaccuracies or wish to add to these lists, please consider making a pull request!</p>
 <span id="gen-link-shorteners"></span><table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">Generic Link Shorteners</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Generic Link Shorteners</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 100%" />
 </colgroup>
@@ -280,7 +189,7 @@
 </tbody>
 </table>
 <span id="vanity-link-shorteners"></span><table class="colwidths-given docutils align-default" id="id3">
-<caption><span class="caption-text">Vanity Link Shorteners</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Vanity Link Shorteners</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -358,7 +267,7 @@
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>bcove.me</p></td>
-<td><p>brightcove.com</p></td>
+<td><p>bcove.me</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>bernie.to</p></td>
@@ -382,7 +291,7 @@
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>bos.gl</p></td>
-<td><p>bostonglobe.com</p></td>
+<td><p>w.bos.gl</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>brook.gs</p></td>
@@ -566,15 +475,15 @@
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>fdrl.st</p></td>
-<td><p>thefederalist.com</p></td>
+<td><p>fdrl.st</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>flic.kr</p></td>
-<td><p>flickr.com</p></td>
+<td><p>flic.kr</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>fmeq.co</p></td>
-<td><p>familyequality.org</p></td>
+<td><p>fmeq.co</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>fpa.ac</p></td>
@@ -674,7 +583,7 @@
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>icont.ac</p></td>
-<td><p>icontact-archive.com</p></td>
+<td><p>icont.ac</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>ift.tt</p></td>
@@ -1235,50 +1144,34 @@
 </tr>
 </tbody>
 </table>
-</div>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Pew Research Center.
-
-    </p>
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

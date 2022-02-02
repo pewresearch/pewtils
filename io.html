@@ -1,72 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>I/O Tools &mdash; pewtils 1.1.4 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>I/O Tools &mdash; pewtils 1.1.6.dev0 documentation</title>
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Regex Patterns" href="regex.html" />
     <link rel="prev" title="HTTP Utilities" href="http.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> pewtils
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="pewtils_core.html">Core Functions</a></li>
@@ -95,73 +45,32 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pewtils</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>I/O Tools</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/io.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="i-o-tools">
-<h1>I/O Tools<a class="headerlink" href="#i-o-tools" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="i-o-tools">
+<h1>I/O Tools<a class="headerlink" href="#i-o-tools" title="Permalink to this headline"></a></h1>
 <p>This module contains utilities related to reading and writing files in a variety of formats. Right now, it consists exclusively of the <a class="reference internal" href="#pewtils.io.FileHandler" title="pewtils.io.FileHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">pewtils.io.FileHandler</span></code></a> class, which provides a standardized interface for loading and saving data both locally and on Amazon S3. It doesn’t always work exactly as intended, but 99% of the time, it gives us a way to read and write files with just one or two lines of code - and accordingly, we use it everywhere. We hope you do too!</p>
 <span class="target" id="module-pewtils.io"></span><p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
@@ -177,7 +86,7 @@
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">FileHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_s3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FileHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_s3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler" title="Permalink to this definition"></a></dt>
 <dd><p>Read/write data files in a variety of formats, locally and in Amazon S3 buckets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -234,7 +143,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.io.FileHandler.get_key_hash" title="pewtils.io.FileHandler.get_key_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_key_hash</span></code></a>(key)</p></td>
 <td><p>Converts a key to a hashed representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.io.FileHandler.write" title="pewtils.io.FileHandler.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(key, data[, format, hash_key, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.io.FileHandler.write" title="pewtils.io.FileHandler.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(key, data[, format, hash_key, ...])</p></td>
 <td><p>Writes arbitrary data objects to a variety of file formats.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.io.FileHandler.read" title="pewtils.io.FileHandler.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(key[, format, hash_key])</p></td>
@@ -244,7 +153,7 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.iterate_path">
-<span class="sig-name descname"><span class="pre">iterate_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.iterate_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.iterate_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">iterate_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.iterate_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.iterate_path" title="Permalink to this definition"></a></dt>
 <dd><p>Iterates over the directory and returns a list of filenames or S3 object keys</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -268,7 +177,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.clear_folder">
-<span class="sig-name descname"><span class="pre">clear_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_folder" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">clear_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_folder" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the path (if local) or unlinks all keys in the bucket folder (if S3)</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -289,7 +198,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.clear_file">
-<span class="sig-name descname"><span class="pre">clear_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">clear_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.clear_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.clear_file" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes a specific file.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -322,7 +231,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.get_key_hash">
-<span class="sig-name descname"><span class="pre">get_key_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.get_key_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.get_key_hash" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_key_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.get_key_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.get_key_hash" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a key to a hashed representation. Allows you to pass arbitrary objects and convert their string         representation into a shorter hashed key, so it can be useful for caching. You can call this method         directly to see the hash that a key will be converted into, but this method is mainly used in conjunction         with the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.write()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">pewtils.FileHandler.read()</span></code> methods by passing in         <code class="docutils literal notranslate"><span class="pre">hash_key=True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -349,7 +258,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">io_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.write" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">io_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.write" title="Permalink to this definition"></a></dt>
 <dd><p>Writes arbitrary data objects to a variety of file formats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -384,7 +293,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pewtils.io.FileHandler.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">io_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">io_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/io.html#FileHandler.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.io.FileHandler.read" title="Permalink to this definition"></a></dt>
 <dd><p>Reads a file from the directory or S3 path, returning its contents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -414,54 +323,37 @@
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="regex.html" class="btn btn-neutral float-right" title="Regex Patterns" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="http.html" class="btn btn-neutral float-left" title="HTTP Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="regex.html" class="btn btn-neutral float-right" title="Regex Patterns" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Pew Research Center.
-
-    </p>
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,72 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Core Functions &mdash; pewtils 1.1.4 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Core Functions &mdash; pewtils 1.1.6.dev0 documentation</title>
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="HTTP Utilities" href="http.html" />
     <link rel="prev" title="Pewtils" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> pewtils
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -74,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Core Functions</a></li>
@@ -95,73 +45,32 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">pewtils</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Core Functions</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/pewtils_core.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="core-functions">
-<h1>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="core-functions">
+<h1>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this headline"></a></h1>
 <p>The main Pewtils module contains a variety of generally useful functions that make our researchers lives easier. For those still working in Python 2.x, the <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code> function can help alleviate headaches related to text encodings. The <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.is_null()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.is_not_null()</span></code> functions provide an easy way to deal with the wide variety of possible null values that exist in the Python (and broader research universe) by using a best-guess approach. When working with dictionaries or JSON records that need to be updated, <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.recursive_update()</span></code> makes it easy to map one version of an object onto another. While we strive to write efficient code that can cover every possible use-case, there are certainly some edge cases that we haven’t encountered, and other existing Python libraries may very well provide many of these same features. This collection simply consists of functions we find ourselves using again and again, and we hope that Pewtils may help expand your daily toolkit in some way as well.</p>
 <span class="target" id="module-pewtils.__init__"></span><p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
@@ -185,10 +94,10 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.is_not_null" title="pewtils.__init__.is_not_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_not_null</span></code></a>(val[, empty_lists_are_null, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.is_not_null" title="pewtils.__init__.is_not_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_not_null</span></code></a>(val[, empty_lists_are_null, ...])</p></td>
 <td><p>Checks whether the value is null, using a variety of potential string values, etc.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.is_null" title="pewtils.__init__.is_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_null</span></code></a>(val[, empty_lists_are_null, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.is_null" title="pewtils.__init__.is_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_null</span></code></a>(val[, empty_lists_are_null, ...])</p></td>
 <td><p>Returns the opposite of the outcome of <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.is_not_null()</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.decode_text" title="pewtils.__init__.decode_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode_text</span></code></a>(text[, throw_loud_fail])</p></td>
@@ -206,7 +115,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.vector_concat_text" title="pewtils.__init__.vector_concat_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vector_concat_text</span></code></a>(*args)</p></td>
 <td><p>Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.scale_range" title="pewtils.__init__.scale_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_range</span></code></a>(old_val, old_min, old_max, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.scale_range" title="pewtils.__init__.scale_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_range</span></code></a>(old_val, old_min, old_max, ...)</p></td>
 <td><p>Scales a value from one range to another.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.new_random_number" title="pewtils.__init__.new_random_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_random_number</span></code></a>([attempt, minimum, maximum])</p></td>
@@ -227,20 +136,20 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.cached_series_mapper" title="pewtils.__init__.cached_series_mapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cached_series_mapper</span></code></a>(series, function)</p></td>
 <td><p>Applies a function to all of the unique values in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> to avoid repeating the operation     on duplicate values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.multiprocess_group_apply" title="pewtils.__init__.multiprocess_group_apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocess_group_apply</span></code></a>(grp, func, *args, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.multiprocess_group_apply" title="pewtils.__init__.multiprocess_group_apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocess_group_apply</span></code></a>(grp, func, *args, ...)</p></td>
 <td><p>Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently     map or aggregate data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.extract_json_from_folder" title="pewtils.__init__.extract_json_from_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_json_from_folder</span></code></a>(folder_path[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pewtils.__init__.extract_json_from_folder" title="pewtils.__init__.extract_json_from_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_json_from_folder</span></code></a>(folder_path[, ...])</p></td>
 <td><p>Takes a folder path and traverses it, looking for JSON files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.extract_attributes_from_folder_modules" title="pewtils.__init__.extract_attributes_from_folder_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_attributes_from_folder_modules</span></code></a>(…)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pewtils.__init__.extract_attributes_from_folder_modules" title="pewtils.__init__.extract_attributes_from_folder_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_attributes_from_folder_modules</span></code></a>(...)</p></td>
 <td><p>Takes a folder path and traverses it, looking for Python files that contain an attribute (i.e., class, function, etc.) with a given name.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="pewtils.__init__.classproperty">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">classproperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fget</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#classproperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.classproperty" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classproperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fget</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#classproperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.classproperty" title="Permalink to this definition"></a></dt>
 <dd><p>This decorator allows you to define functions on a class that are accessible directly from the
 class itself (rather than an instance of the class). It allows you to access <code class="docutils literal notranslate"><span class="pre">classproperty</span></code>
 attributes directly, such as <code class="docutils literal notranslate"><span class="pre">obj.property</span></code>, rather than as a function on a class instance
@@ -266,7 +175,7 @@ attributes directly, such as <code class="docutils literal notranslate"><span cl
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.is_not_null">
-<span class="sig-name descname"><span class="pre">is_not_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_lists_are_null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_not_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.is_not_null" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_not_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_lists_are_null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_not_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.is_not_null" title="Permalink to this definition"></a></dt>
 <dd><p>Checks whether the value is null, using a variety of potential string values, etc. The following values are always
 considered null: <code class="docutils literal notranslate"><span class="pre">numpy.nan,</span> <span class="pre">None,</span> <span class="pre">&quot;None&quot;,</span> <span class="pre">&quot;nan&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;NaN&quot;,</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;n/a&quot;,</span> <span class="pre">&quot;NONE&quot;,</span> <span class="pre">&quot;N/A&quot;</span></code></p>
 <dl class="field-list simple">
@@ -296,7 +205,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.is_null">
-<span class="sig-name descname"><span class="pre">is_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_lists_are_null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.is_null" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_lists_are_null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#is_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.is_null" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the opposite of the outcome of <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.is_not_null()</span></code>. The following values are always     considered null: <code class="docutils literal notranslate"><span class="pre">numpy.nan,</span> <span class="pre">None,</span> <span class="pre">&quot;None&quot;,</span> <span class="pre">&quot;nan&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;NaN&quot;,</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;n/a&quot;,</span> <span class="pre">&quot;NONE&quot;,</span> <span class="pre">&quot;N/A&quot;</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -325,7 +234,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.decode_text">
-<span class="sig-name descname"><span class="pre">decode_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throw_loud_fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#decode_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.decode_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">decode_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">throw_loud_fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#decode_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.decode_text" title="Permalink to this definition"></a></dt>
 <dd><p>Attempts to decode and re-encode text as ASCII. In the case of failure, it will attempt to detect the string’s     encoding, decode it, and convert it to ASCII. If both these attempts fail, it will attempt to use the     <code class="xref py py-mod docutils literal notranslate"><span class="pre">unidecode</span></code> package to transliterate into ASCII. And finally, if that doesn’t work, it will forcibly     encode the text as ASCII and ignore non-ASCII characters.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -353,7 +262,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ssdeep'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.get_hash" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ssdeep'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.get_hash" title="Permalink to this definition"></a></dt>
 <dd><p>Generates hashed text using one of several available hashing functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -389,7 +298,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.zipcode_num_to_string">
-<span class="sig-name descname"><span class="pre">zipcode_num_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#zipcode_num_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.zipcode_num_to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">zipcode_num_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#zipcode_num_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.zipcode_num_to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Attempts to standardize a string/integer/float that contains a U.S. zipcode. Front-pads with zeroes and uses the     <code class="xref py py-mod docutils literal notranslate"><span class="pre">zipcodes</span></code> library to ensure that the zipcode is real. If the zipcode doesn’t validate successfully,     <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -417,7 +326,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.concat_text">
-<span class="sig-name descname"><span class="pre">concat_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#concat_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.concat_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">concat_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#concat_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.concat_text" title="Permalink to this definition"></a></dt>
 <dd><p>A helper function for concatenating text values. Text values are passed through <code class="xref py py-func docutils literal notranslate"><span class="pre">pewtils.decode_text()</span></code>     before concatenation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -442,7 +351,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.vector_concat_text">
-<span class="sig-name descname"><span class="pre">vector_concat_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#vector_concat_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.vector_concat_text" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">vector_concat_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#vector_concat_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.vector_concat_text" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a list of equal-length lists and returns a single list with the rows concatenated by spaces. Useful for     merging multiple columns of text in Pandas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -482,7 +391,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.scale_range">
-<span class="sig-name descname"><span class="pre">scale_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#scale_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.scale_range" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">scale_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#scale_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.scale_range" title="Permalink to this definition"></a></dt>
 <dd><p>Scales a value from one range to another.  Useful for comparing values from different scales, for example.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -513,7 +422,7 @@ considered null: <code class="docutils literal notranslate"><span class="pre">nu
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.new_random_number">
-<span class="sig-name descname"><span class="pre">new_random_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attempt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#new_random_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.new_random_number" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">new_random_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attempt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#new_random_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.new_random_number" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a random number between the boundary that exponentially increases with the number of <code class="docutils literal notranslate"><span class="pre">attempt</span></code>.
 The upper bound is capped using the <code class="docutils literal notranslate"><span class="pre">maximum</span></code> parameter (default 10) but is otherwise determined by the
 function <code class="docutils literal notranslate"><span class="pre">minimum</span> <span class="pre">*</span> <span class="pre">2</span> <span class="pre">**</span> <span class="pre">attempt</span></code>.</p>
@@ -552,7 +461,7 @@ function <code class="docutils literal notranslate"><span class="pre">minimum</s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.chunk_list">
-<span class="sig-name descname"><span class="pre">chunk_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#chunk_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.chunk_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">chunk_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#chunk_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.chunk_list" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a sequence and groups values into smaller lists based on the specified size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -580,7 +489,7 @@ function <code class="docutils literal notranslate"><span class="pre">minimum</s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.flatten_list">
-<span class="sig-name descname"><span class="pre">flatten_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#flatten_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.flatten_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">flatten_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#flatten_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.flatten_list" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a list of lists and flattens it into a single list. Nice shortcut to avoid having to deal with list     comprehension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -605,7 +514,7 @@ function <code class="docutils literal notranslate"><span class="pre">minimum</s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.scan_dictionary">
-<span class="sig-name descname"><span class="pre">scan_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#scan_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.scan_dictionary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">scan_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#scan_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.scan_dictionary" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a dictionary with nested lists and dictionaries, and searches recursively for a specific key. Since keys can
 occur more than once, the function returns a list of all of the found values along with a list of equal length
 that specifies the nested key path to each value.</p>
@@ -637,7 +546,7 @@ that specifies the nested key path to each value.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.recursive_update">
-<span class="sig-name descname"><span class="pre">recursive_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#recursive_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.recursive_update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">recursive_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#recursive_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.recursive_update" title="Permalink to this definition"></a></dt>
 <dd><p>Takes an object and a dictionary representation of attributes and values, and recursively traverses through the
 new values and updates the object.</p>
 <div class="line-block">
@@ -685,7 +594,7 @@ new values and updates the object.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.cached_series_mapper">
-<span class="sig-name descname"><span class="pre">cached_series_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#cached_series_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.cached_series_mapper" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cached_series_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#cached_series_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.cached_series_mapper" title="Permalink to this definition"></a></dt>
 <dd><p>Applies a function to all of the unique values in a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code> to avoid repeating the operation     on duplicate values.</p>
 <div class="line-block">
 <div class="line">Great if you’re doing database lookups or something computationally intensive on a column that may contain     repeating values, etc.</div>
@@ -733,7 +642,7 @@ new values and updates the object.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.multiprocess_group_apply">
-<span class="sig-name descname"><span class="pre">multiprocess_group_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#multiprocess_group_apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.multiprocess_group_apply" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">multiprocess_group_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#multiprocess_group_apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.multiprocess_group_apply" title="Permalink to this definition"></a></dt>
 <dd><p>Apply arbitrary functions to groups or slices of a Pandas DataFrame using multiprocessing, to efficiently     map or aggregate data. Each group gets processed in parallel, and the results are concatenated together after     all processing has finished. If you pass a function that aggregates each group into a single value, you’ll get     back a DataFrame with one row for each group, as though you had performed a <cite>.agg</cite> function.     If you pass a function that returns a value for each _row_ in the group, then you’ll get back a DataFrame     in your original shape. In this case, you would simply be using grouping to efficiently apply a row-level operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -802,7 +711,7 @@ new values and updates the object.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.extract_json_from_folder">
-<span class="sig-name descname"><span class="pre">extract_json_from_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_subdir_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#extract_json_from_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.extract_json_from_folder" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">extract_json_from_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_subdir_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#extract_json_from_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.extract_json_from_folder" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a folder path and traverses it, looking for JSON files. When it finds one, it adds it to a dictionary,
 with the key being the name of the file and the value being the JSON itself. This is useful if you store     configurations or various metadata in a nested folder structure, which we do for things like content analysis     codebooks.</p>
 <div class="line-block">
@@ -855,7 +764,7 @@ with the key being the name of the file and the value being the JSON itself. Thi
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pewtils.__init__.extract_attributes_from_folder_modules">
-<span class="sig-name descname"><span class="pre">extract_attributes_from_folder_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_subdir_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#extract_attributes_from_folder_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.extract_attributes_from_folder_modules" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">extract_attributes_from_folder_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_subdir_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#extract_attributes_from_folder_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.extract_attributes_from_folder_modules" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a folder path and traverses it, looking for Python files that contain an attribute (i.e., class, function,
 etc.) with a given name. It extracts those attributes and returns a dictionary where the keys are the names of the
 files that contained the attributes, and the values are the attributes themselves.</p>
@@ -888,7 +797,7 @@ that attribute in as the values.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pewtils.__init__.PrintExecutionTime">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">PrintExecutionTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#PrintExecutionTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.PrintExecutionTime" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PrintExecutionTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pewtils/__init__.html#PrintExecutionTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pewtils.__init__.PrintExecutionTime" title="Permalink to this definition"></a></dt>
 <dd><p>Simple context manager to print the time it takes for a block of code to execute</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -907,54 +816,37 @@ that attribute in as the values.</p>
 </div>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="http.html" class="btn btn-neutral float-right" title="HTTP Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Pewtils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="http.html" class="btn btn-neutral float-right" title="HTTP Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Pew Research Center.
-
-    </p>
+    <p>&#169; Copyright 2020, Pew Research Center.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
