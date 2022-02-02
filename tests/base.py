@@ -57,8 +57,8 @@ class BaseTests(unittest.TestCase):
         self.assertTrue(is_null("-9", custom_nulls=["-9"]))
         self.assertTrue(is_null([], empty_lists_are_null=True))
         self.assertFalse(is_null([], empty_lists_are_null=False))
-        self.assertTrue(is_null(pd.Series(), empty_lists_are_null=True))
-        self.assertFalse(is_null(pd.Series(), empty_lists_are_null=False))
+        self.assertTrue(is_null(pd.Series(dtype=np.float64), empty_lists_are_null=True))
+        self.assertFalse(is_null(pd.Series(dtype=np.float64), empty_lists_are_null=False))
         self.assertTrue(is_null(pd.DataFrame(), empty_lists_are_null=True))
         self.assertFalse(is_null(pd.DataFrame(), empty_lists_are_null=False))
 
