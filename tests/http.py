@@ -134,7 +134,7 @@ class HTTPTests(unittest.TestCase):
                         resolved = re.match(
                             "(www[0-9]?\.)?([^:]+)(:\d+$)?",
                             urlparse.urlparse(resp.url).netloc,
-                        ).group(2)
+                        ).group(2).rstrip('/')
                         resolved = VANITY_LINK_SHORTENERS.get(resolved, resolved)
                         # Vanity domains are often purchased/managed through bit.ly or trib.al, and don't resolve
                         # to their actual website unless paired with an actual page URL; so as long as they resolve
