@@ -128,7 +128,7 @@ class HTTPTests(unittest.TestCase):
                     resp_url = trim_get_parameters(resp.url, session=self.session, timeout=10).split("?")[0]
 
                     if k in resp_url:
-                        print(f"Short domain resolved but full domain unexpected (may be historic): {k} (resolved to {resp_url} but expected {v})")
+                        print(f"Short domain resolved unexpectedly (may be historic): {k} (resolved to {resp_url} but expected {v})")
 
                     else:
                         resolved = re.match(
